@@ -1,0 +1,842 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>02 - 随机实验 &#8212; 因果推断：献给求真敢为者</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '02-Randomised-Experiments';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="03 - 统计回顾：最危险的方程" href="03-Stats-Review-The-Most-Dangerous-Equation.html" />
+    <link rel="prev" title="01 - 因果性导论" href="01-Introduction-To-Causality.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">因果推断：献给求真敢为者</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    因果推断：献给求真敢为者
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">第一部分 - 阳</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01-Introduction-To-Causality.html">01 - 因果性导论</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">02 - 随机实验</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03-Stats-Review-The-Most-Dangerous-Equation.html">03 - 统计回顾：最危险的方程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04-Graphical-Causal-Models.html">04 - 图形因果模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05-The-Unreasonable-Effectiveness-of-Linear-Regression.html">05 - 线性回归的惊人有效性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06-Grouped-and-Dummy-Regression.html">06 - 分组与虚拟变量回归</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07-Beyond-Confounders.html">07 - 超越混杂因素</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-Instrumental-Variables.html">08 - 工具变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-Non-Compliance-and-LATE.html">09 - 不依从性与局部平均处理效应</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10-Matching.html">10 - 匹配法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11-Propensity-Score.html">11 - 倾向得分</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12-Doubly-Robust-Estimation.html">12 - 双重稳健估计</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13-Difference-in-Differences.html">13 - 双重差分法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="14-Panel-Data-and-Fixed-Effects.html">14 - 面板数据与固定效应</a></li>
+<li class="toctree-l1"><a class="reference internal" href="15-Synthetic-Control.html">15 - 合成控制法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="16-Regression-Discontinuity-Design.html">16 - 断点回归设计</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2F02-Randomised-Experiments.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/02-Randomised-Experiments.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>02 - 随机实验</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">黄金标准</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">一个遥远学校的例子</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">理想实验</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">分配机制</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">核心要点</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">致谢</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">贡献</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1>02 - 随机实验<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<section id="id2">
+<h2>黄金标准<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>在上一节中，我们探讨了相关性与因果性之间的差异及其原因，并明确了将相关转化为因果所需的条件。</p>
+<p><span class="math notranslate nohighlight">\(
+E[Y|T=1] - E[Y|T=0] = \underbrace{E[Y_1 - Y_0|T=1]}_{ATT} + \underbrace{\{ E[Y_0|T=1] - E[Y_0|T=0] \}}_{BIAS}
+\)</span></p>
+<p>回顾一下，若不存在偏差（bias），相关即可转化为因果。当 <span class="math notranslate nohighlight">\(E[Y_0|T=0]=E[Y_0|T=1]\)</span> 时，偏差便不会产生。换言之，若处理组与对照组除处理因素外其他条件均等或可比，则相关即成为因果。或用更专业的术语来说，当未处理组的结果等同于处理组的反事实结果时。需记住，此反事实结果指的是处理组若未接受处理时将会出现的结果。</p>
+<p>我认为我们在用数学术语解释如何将相关等同于因果关系方面做得还算不错。但那仅是理论层面的探讨。现在，我们介绍消除偏差的第一个工具：<strong>随机实验（Randomised Experiments）</strong>。随机实验将群体中的个体随机分配到处理组或控制组。接受处理的比例不必是50%，实验中可能仅有10%的样本接受处理。</p>
+<p>随机化通过使潜在结果独立于处理方式，彻底消除了偏差。</p>
+<p><span class="math notranslate nohighlight">\(
+(Y_0, Y_1) \perp\!\!\!\perp T
+\)</span></p>
+<p>这一点起初可能令人困惑（对我而言确实如此）。但别担心，我会进一步解释的。如果结果和处理方式无关，这是否也意味着处理毫无效果？确实如此！但请注意，我这里说的不是实际结果（outcomes）而是<strong>潜在结果（potential outcomes）</strong>。潜在结果指的是在接受处理（<span class="math notranslate nohighlight">\(Y_1\)</span>）或处于对照组（<span class="math notranslate nohighlight">\(Y_0\)</span>）时可能出现的结果。在随机实验中，我们不希望结果独立于处理方式，因为我们相信处理会导致结果变化。但我们期望潜在结果能独立于处理方式。</p>
+<p><img alt="img" src="_images/indep.png" /></p>
+<p>所谓潜在结果独立于处理，即意味着在期望值上，处理组与对照组的结果是相同的。简而言之，这表明处理组和对照组具有可比性。或者说，了解处理分配情况并不能提供任何关于处理前结果的信息。因此，<span class="math notranslate nohighlight">\((Y_0, Y_1)\perp T\)</span> 意味着：处理是导致处理组与对照组结果差异的唯一因素。要理解这一点，需注意到独立性恰好意味着</p>
+<p><span class="math notranslate nohighlight">\(
+E[Y_0|T=0]=E[Y_0|T=1]=E[Y_0]
+\)</span></p>
+<p>正如我们所见，这使得</p>
+<p><span class="math notranslate nohighlight">\(
+E[Y|T=1] - E[Y|T=0] = E[Y_1 - Y_0]=ATE
+\)</span></p>
+<p>因此，随机化为我们提供了一种方法，即通过处理组与对照组均值的简单差异来定义处理效应。</p>
+</section>
+<section id="id3">
+<h2>一个遥远学校的例子<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>2020 年，新冠疫情迫使企业适应社交距离措施。送货服务变得普及，大型企业转向远程工作策略。学校也不例外，许多机构开始建立自己的在线课程资源库。</p>
+<p>危机爆发四个月后，许多人思考这些引入的变革能否持续。毫无疑问，在线学习有其优势：它能节省房地产和交通成本，因而更为经济；同时，通过整合全球顶尖教学内容而非局限于固定教师群体，它还能实现更高程度的数字化。尽管如此，我们仍需解答在线学习对学生学业表现究竟产生消极还是积极影响。</p>
+<p>一种解法方法是选取主要提供在线课程的学校学生，与采用面对面授课的学校学生进行比较。但如今我们已明白，这并非最佳途径。可能在线学校仅吸引了自律性强、即使面对面授课也能表现优异的学生群体。若如此，我们将面临正向偏差——接受在线教育的学生学术表现优于未接受者： <span class="math notranslate nohighlight">\(E[Y_0|T=1] &gt; E[Y_0|T=0]\)</span>.</p>
+<p>反之，也可能是因为在线课程更便宜，主要吸引经济条件较差、需半工半读的学生群体。在这种情况下，即便他们参与面对面授课，其表现仍可能逊于传统学校学生。若该假设成立，则会出现反向偏差——接受在线教育的学生学术表现反而更差： <span class="math notranslate nohighlight">\(E[Y_0|T=1] &lt; E[Y_0|T=0]\)</span>.</p>
+<p>因此，尽管可进行简单对比，其结论却缺乏说服力。无论如何，我们永远无法确定是否存在潜在偏差掩盖了真实的因果效应。</p>
+<p><img alt="img" src="_images/lurking_bias.png" /></p>
+<p>为解决这一问题，我们需要使处理组与未处理组具备可比性 <span class="math notranslate nohighlight">\(E[Y_0|T=1] = E[Y_0|T=0]\)</span>。实现这一目标的方法是随机将在线课程和面对面课程分配给学生。若能成功实施，除所接受的处理方式不同外，处理组和未处理组在其他方面平均而言将保持一致。</p>
+<p>幸运的是，已有经济学家为我们完成了这项工作。他们通过随机分配课程，使部分学生接受面对面授课，另一部分仅参与在线课程，第三组则采用线上线下混合教学模式。学期末，研究者收集了标准化考试的成绩数据。</p>
+<p>数据呈现如下：</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./data/online_classroom.csv&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(323, 10)
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>gender</th>
+      <th>asian</th>
+      <th>black</th>
+      <th>hawaiian</th>
+      <th>hispanic</th>
+      <th>unknown</th>
+      <th>white</th>
+      <th>format_ol</th>
+      <th>format_blended</th>
+      <th>falsexam</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>63.29997</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>79.96000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0</td>
+      <td>1.0</td>
+      <td>83.37000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0</td>
+      <td>1.0</td>
+      <td>90.01994</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>1</td>
+      <td>0.0</td>
+      <td>83.30000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>可以看到我们拥有 323 个样本。虽然称不上大数据，但足以开展工作。为了估计因果效应，我们可以简单地计算各处理组的平均得分。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">data</span>
+ <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">class_format</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
+     <span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;format_ol&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">),</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;format_blended&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)],</span>
+     <span class="p">[</span><span class="s2">&quot;online&quot;</span><span class="p">,</span> <span class="s2">&quot;blended&quot;</span><span class="p">],</span>
+     <span class="n">default</span><span class="o">=</span><span class="s2">&quot;face_to_face&quot;</span>
+ <span class="p">))</span>
+ <span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;class_format&quot;</span><span class="p">])</span>
+ <span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>gender</th>
+      <th>asian</th>
+      <th>black</th>
+      <th>hawaiian</th>
+      <th>hispanic</th>
+      <th>unknown</th>
+      <th>white</th>
+      <th>format_ol</th>
+      <th>format_blended</th>
+      <th>falsexam</th>
+    </tr>
+    <tr>
+      <th>class_format</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>blended</th>
+      <td>0.550459</td>
+      <td>0.217949</td>
+      <td>0.102564</td>
+      <td>0.025641</td>
+      <td>0.012821</td>
+      <td>0.012821</td>
+      <td>0.628205</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>77.093731</td>
+    </tr>
+    <tr>
+      <th>face_to_face</th>
+      <td>0.633333</td>
+      <td>0.202020</td>
+      <td>0.070707</td>
+      <td>0.000000</td>
+      <td>0.010101</td>
+      <td>0.000000</td>
+      <td>0.717172</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>78.547485</td>
+    </tr>
+    <tr>
+      <th>online</th>
+      <td>0.542553</td>
+      <td>0.228571</td>
+      <td>0.028571</td>
+      <td>0.014286</td>
+      <td>0.028571</td>
+      <td>0.000000</td>
+      <td>0.700000</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>73.635263</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>是的，就这么简单。我们可以看到，面对面课程的平均得分为 78.54 分，而在线课程的平均得分为 73.63 分。这对在线学习的支持者来说不是什么好消息。因此，在线课程的 <span class="math notranslate nohighlight">\(ATE\)</span> 为 -4.91。这意味着，平均而言，<strong>在线课程会导致学生的成绩下降约 5 分</strong>。就是这样。你无需担心在线课程可能有负担不起面对面课程的较差学生，或者就此而言，你不必担心不同处理组的学生在接受处理之外有任何其他差异。通过设计，随机实验旨在消除这些差异。</p>
+<p>因此，验证随机化过程是否正确（或确认所查看的数据无误）的一个有效方法是检查处理组与对照组在预处理变量上是否均衡。我们的数据包含性别和种族信息，可用于观察各群体间这些特征是否相似。可以看出，在 <code class="docutils literal notranslate"><span class="pre">gender</span></code> 、 <code class="docutils literal notranslate"><span class="pre">asian</span></code> 、 <code class="docutils literal notranslate"><span class="pre">hispanic</span></code> 和 <code class="docutils literal notranslate"><span class="pre">white</span></code> 变量上，两组表现相当接近。然而， <code class="docutils literal notranslate"><span class="pre">black</span></code> 变量似乎存在些许差异。这提醒我们注意小样本数据集可能出现的情况：即使在随机化条件下，也可能偶然出现组间差异。而在大样本中，此类差异往往会消失。</p>
+</section>
+<section id="id4">
+<h2>理想实验<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<p>随机实验或随机对照试验（RCT），是获得因果效应最可靠的方法。这种方法非常直接，效果也极具说服力，强大到很多国家都要求用它来验证新药是否有效。</p>
+<p>打个通俗的比方：你可以把 RCT 想象成高铁，而其他因果推断方法更像是大巴车。大巴也能把人从一个地方送到另一个地方，但路上堵车、颠簸不定、速度慢。而高铁速度快、路线清晰、几乎不受干扰。</p>
+<p>所以说，如果条件允许，我们当然希望所有的因果研究都能坐“高铁”。一个设计精良的随机对照试验，是科学家心目中的理想工具。</p>
+<p><img alt="img" src="_images/science_dream.png" /></p>
+<p>遗憾的是，这些方法往往要么成本极高，要么完全违背伦理。有时，我们根本无法控制分配机制。设想你是一名医生，试图评估孕期吸烟对新生儿体重的影响，你不可能随机强制一部分孕妇在孕期吸烟。又或者，假设你供职于一家大型银行，需要评估信用额度对客户流失率的影响，向客户随机分配信用额度的成本将过于高昂。再比如，你想了解提高最低工资对失业率的影响，但显然语法随意指定各国采用不同的最低工资标准。道理不言自明。</p>
+<p>后文我们将探讨如何通过条件随机化降低实验成本，但对于违背伦理或不可行的实验仍束手无策。尽管如此，在处理因果问题时，始终值得思考理想实验的形态。不妨自问：倘若可能，为揭示这一因果效应，你会设计怎样的完美实验？这种思考往往能为我们指明方向，即便在缺乏理想实验条件时，也能找到揭示因果效应的途径。</p>
+</section>
+<section id="id5">
+<h2>分配机制<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<p>在随机实验中，将个体分配到处理组或控制组的机制是随机的。正如我们之后会看到的，所有的因果推断方法，其实都在试图识别“处理是如何被分配的”这一机制。如果我们能够明确知道这个机制是如何运作的，即使它不是随机的，我们的因果推断也会更加可信。</p>
+<p>但遗憾的是，这种“分配机制”不能仅靠观察数据就识别出来。举个例子：假设你有一个数据集，显示“受教育程度”和“财富”之间存在相关性。你无法仅凭这点判断到底是教育导致了财富，还是财富影响了教育。你必须依赖自己对现实世界的理解，来推断一个合理的分配机制。</p>
+<p>比如你可以认为：学校通过教育提升了人的生产力，从而让人获得更高收入；或者如果你对教育持悲观态度，也可以说学校对生产力没什么帮助，这种相关性只是因为富裕家庭更有条件让孩子接受高等教育，所以它是一个“伪相关”。</p>
+<p>在因果问题中，我们常常可以提出两种相反的解释：一种是“X 导致了 Y”，另一种是“有个第三变量 Z 同时导致了 X 和 Y，从而造成 X 与 Y 之间的表面相关”。</p>
+<p>正因为如此，了解和掌握“处理是如何被分配的”这一机制，会让你的因果结论更有说服力。这也是因果推断最吸引人的地方之一：应用机器学习往往只是“按对顺序点按钮”，而应用因果推断则要求你深入思考数据背后真正的生成机制。</p>
+</section>
+<section id="id6">
+<h2>核心要点<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<p>我们探讨了随机实验是揭示因果影响最简单且最有效的方法。它之所以有效，是因为它让处理组和控制组在其他方面具有可比性。</p>
+<p>当然，我们并不能在所有情况下都进行随机实验，但思考一下“如果可以做，我们会怎么设计理想实验”依然是非常有帮助的。</p>
+<p>这时候，熟悉统计学的人可能会跳出来质疑：“你没有考虑因果效应估计值的方差啊！怎么知道这 4.91 分的下降不是偶然的呢？”换句话说，怎么判断这个差异是否具有统计显著性呢？</p>
+<p>他们的质疑是完全正确的。别担心，我接下来就会回顾一些相关的统计概念。</p>
+</section>
+<section id="id7">
+<h2>致谢<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
+<p>我愿将这一系列作品视为对 Joshua Angrist、Alberto Abadie 和 Christopher Walters 杰出计量经济学课程的致敬。第一部分的大部分思想源自他们在美国经济学会授课的内容。在艰难的 2020 年，正是观看他们的课程视频让我保持了理智。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.aeaweb.org/conference/cont-ed/2017-webcasts">Cross-Section Econometrics</a></p></li>
+<li><p><a class="reference external" href="https://www.aeaweb.org/conference/cont-ed/2020-webcasts">Mastering Mostly Harmless Econometrics</a></p></li>
+</ul>
+<p>我还想引用 Angrist 的精彩著作。它们向我展示了计量经济学（他们称之为“Metrics”）不仅极为实用，而且充满乐趣。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mostlyharmlesseconometrics.com">Mostly Harmless Econometrics</a></p></li>
+<li><p><a class="reference external" href="https://www.masteringmetrics.com">Mastering ‘Metrics</a></p></li>
+</ul>
+<p>最后还要感谢 Miguel Hernán 和 Jamie Robins 的<a class="reference external" href="https://hsph.harvard.edu/profile/miguel-hernan/">《Causal Inference》</a>一书。它是我在面对最棘手的因果问题时的可靠伙伴。</p>
+<p><img alt="img" src="_images/poetry.png" /></p>
+</section>
+<section id="id8">
+<h2>贡献<a class="headerlink" href="#id8" title="Link to this heading">#</a></h2>
+<p>《因果推断：献给求真敢为者》是一份关于因果推断的开源材料，属于科学统计领域。它仅基于 Python 使用免费软件，旨在实现经济与智力上的双重可及性。若您认为此书有价值并希望支持，请前往 <a class="reference external" href="https://www.patreon.com/causal_inference_for_the_brave_and_true">Patreon</a>。若暂无法经济支持，您也可以通过修正拼写错误、建议修改或对不理解的内容提供反馈来帮助改进。只需访问书籍仓库并提交问题。最后，若您喜欢此内容，请分享给可能受益的人，并在 GitHub 上为其加星。</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="01-Introduction-To-Causality.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">01 - 因果性导论</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="03-Stats-Review-The-Most-Dangerous-Equation.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">03 - 统计回顾：最危险的方程</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">黄金标准</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">一个遥远学校的例子</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">理想实验</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">分配机制</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">核心要点</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">致谢</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">贡献</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Matheus Facure
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
