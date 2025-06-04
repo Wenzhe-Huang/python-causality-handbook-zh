@@ -1,0 +1,1292 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>08 - 工具变量 &#8212; 因果推断：献给求真敢为者</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '08-Instrumental-Variables';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="09 - 不依从性与局部平均处理效应" href="09-Non-Compliance-and-LATE.html" />
+    <link rel="prev" title="07 - 超越混杂因素" href="07-Beyond-Confounders.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">因果推断：献给求真敢为者</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    因果推断：献给求真敢为者
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">第一部分 - 阳</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01-Introduction-To-Causality.html">01 - 因果性导论</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-Randomised-Experiments.html">02 - 随机实验</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03-Stats-Review-The-Most-Dangerous-Equation.html">03 - 统计回顾：最危险的方程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04-Graphical-Causal-Models.html">04 - 图形因果模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05-The-Unreasonable-Effectiveness-of-Linear-Regression.html">05 - 线性回归的惊人有效性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06-Grouped-and-Dummy-Regression.html">06 - 分组与虚拟变量回归</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07-Beyond-Confounders.html">07 - 超越混杂因素</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">08 - 工具变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-Non-Compliance-and-LATE.html">09 - 不依从性与局部平均处理效应</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10-Matching.html">10 - 匹配法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11-Propensity-Score.html">11 - 倾向得分</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12-Doubly-Robust-Estimation.html">12 - 双重稳健估计</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13-Difference-in-Differences.html">13 - 双重差分法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="14-Panel-Data-and-Fixed-Effects.html">14 - 面板数据与固定效应</a></li>
+<li class="toctree-l1"><a class="reference internal" href="15-Synthetic-Control.html">15 - 合成控制法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="16-Regression-Discontinuity-Design.html">16 - 断点回归设计</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">第二部分 - 阴</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="17-Predictive-Models-101.html">17 - 预测模型入门</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2F08-Instrumental-Variables.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/08-Instrumental-Variables.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>08 - 工具变量</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">规避遗漏变量偏误</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">出生季度与教育对工资的影响</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">第一阶段</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">简化形式</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">手工操作工具变量</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">多重工具变量</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">工具变量的弱点</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">核心要点</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">参考文献</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">参与贡献</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1>08 - 工具变量<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<section id="id2">
+<h2>规避遗漏变量偏误<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>控制遗漏变量偏误（OVB）的一种方法是直接将遗漏变量加入模型中。然而，这并非总是可行，主要原因在于我们往往缺乏关于遗漏变量的数据。例如，回到我们关于教育对工资影响的模型：</p>
+<p><span class="math notranslate nohighlight">\(
+\log(\mathrm{wage})_i = \beta_0 + \kappa \ \mathrm{educ}_i + \pmb{\beta}\mathrm{Ability}_i + u_i
+\)</span></p>
+<p>要确定教育 <span class="math notranslate nohighlight">\(\kappa\)</span> 对 <span class="math notranslate nohighlight">\(\log\mathrm{(wage)}\)</span>  的因果效应，我们需要控制能力因素 <span class="math notranslate nohighlight">\(\mathrm{Ability}_i\)</span>。若不这样做，很可能会产生偏误，毕竟能力很可能是一个混杂因素，既影响处理变量（教育），也影响结果变量（收入）。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">style</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.formula.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">smf</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">graphviz</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">linearmodels.iv</span><span class="w"> </span><span class="kn">import</span> <span class="n">IV2SLS</span>
+
+<span class="o">%</span><span class="k">matplotlib</span> inline
+
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">&quot;display.max_columns&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;fivethirtyeight&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Digraph</span><span class="p">()</span>
+
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;ability&quot;</span><span class="p">,</span> <span class="s2">&quot;educ&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;ability&quot;</span><span class="p">,</span> <span class="s2">&quot;wage&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;educ&quot;</span><span class="p">,</span> <span class="s2">&quot;wage&quot;</span><span class="p">)</span>
+<span class="n">g</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/bb6af473ed7812581c50ee2e18e2d79e5c4cf136b6449fe07e4f06527df48cc2.svg" src="_images/bb6af473ed7812581c50ee2e18e2d79e5c4cf136b6449fe07e4f06527df48cc2.svg" /></div>
+</div>
+<p>避免这一问题的一种方法是在衡量教育对工资影响时，控制能力水平的恒定。我们可以通过在线性回归模型中纳入能力变量来实现这一点。然而，我们缺乏对能力的良好测量指标。目前最好的替代是一些非常存疑的代理变量，比如智商。</p>
+<p>但并非全无希望。这时工具变量（Instrumental Variables）便派上用场。IV 的核心思想是找到另一个变量，该变量能影响处理变量，且仅通过处理变量与结果相关。换言之，该工具变量 <span class="math notranslate nohighlight">\(Z_i\)</span> 与 <span class="math notranslate nohighlight">\(Y_0\)</span> 不相关，但与 <span class="math notranslate nohighlight">\(T\)</span> 相关。这一条件有时被称为排他性约束。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Digraph</span><span class="p">()</span>
+
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;ability&quot;</span><span class="p">,</span> <span class="s2">&quot;educ&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;ability&quot;</span><span class="p">,</span> <span class="s2">&quot;wage&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;educ&quot;</span><span class="p">,</span> <span class="s2">&quot;wage&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;instrument&quot;</span><span class="p">,</span> <span class="s2">&quot;educ&quot;</span><span class="p">)</span>
+<span class="n">g</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/40b431def7c282dcd8616d5bc3eeafaa615bfb10caf4e507aad05e360807f29c.svg" src="_images/40b431def7c282dcd8616d5bc3eeafaa615bfb10caf4e507aad05e360807f29c.svg" /></div>
+</div>
+<p>若存在这样的变量，我们便可通过即将介绍的 IV 公式还原因果效应 <span class="math notranslate nohighlight">\(\kappa\)</span>。为此，让我们先构想理想情况下希望建立的方程。使用更通用的术语，如以 <span class="math notranslate nohighlight">\(T\)</span> 表示处理变量、<span class="math notranslate nohighlight">\(W\)</span>  表示混杂因素，我们期望的模型如下：</p>
+<p><span class="math notranslate nohighlight">\(
+Y_i = \beta_0 + \kappa \ T_i + \pmb{\beta}W_i + u_i
+\)</span></p>
+<p>然而，我们缺乏关于 <span class="math notranslate nohighlight">\(W\)</span> 的数据，因此实际只能建立如下模型：</p>
+<p><span class="math notranslate nohighlight">\(
+Y_i = \beta_0 + \kappa\ T_i + v_i
+\)</span></p>
+<p><span class="math notranslate nohighlight">\(
+v_i = \pmb{\beta}W_i + u_i
+\)</span></p>
+<p>由于 <span class="math notranslate nohighlight">\(W\)</span> 是一个混杂因素，<span class="math notranslate nohighlight">\(\mathrm{Cov}(T, v) \neq 0\)</span>。我们有一个简短而非冗长的方程。在我们的例子中，这意味着能力与教育程度相关。如果情况如此，运行短回归将由于遗漏变量而对 <span class="math notranslate nohighlight">\(\kappa\)</span> 产生有偏估计。</p>
+<p>现在，见证工具变量（IV）的神奇之处！由于工具 Z 仅通过 T 与结果相关，这意味着 <span class="math notranslate nohighlight">\(\mathrm{Cov}(Z,v) = 0\)</span>，否则会存在第二条从 Z 到 Y 通过 W 的路径。考虑到这一点，我们可以写出</p>
+<p><span class="math notranslate nohighlight">\(
+\mathrm{Cov}(Z,Y) = \mathrm{Cov}(Z,\beta_0 + \kappa\ T_i + v_i) = \kappa \mathrm{Cov}(Z,T) + \mathrm{Cov}(Z, v) = \kappa \mathrm{Cov}(Z,T)
+\)</span></p>
+<p>两边同时除以 <span class="math notranslate nohighlight">\(V(Z_i)\)</span> 并重新排列各项后，我们得到</p>
+<p><span class="math notranslate nohighlight">\(
+\kappa = \dfrac{\mathrm{Cov}(Y_i, Z_i)/V(Z_i)}{\mathrm{Cov}(T_i, Z_i)/V(Z_i)} = \dfrac{\text{Reduced Form}}{\text{1st Stage}} 
+\)</span></p>
+<p>注意分子和分母都是回归系数（协方差除以方差）。分子是 Y 对 Z 回归的结果。换句话说，这是 Z 对 Y 的“影响”。记住，这并不是说 Z 导致了 Y，因为我们有要求 Z 仅通过 T 影响 Y。相反，它仅捕捉了 Z 通过 T 对 Y 的影响有多大。这个分子非常著名，甚至有自己的名字：简化形式系数。</p>
+<p>分母同样是一个回归系数，但此处表示的是 T 对 Z 的回归。这一回归捕捉了 Z 对 T 的影响，因其重要性而被广泛称为第一阶段系数。</p>
+<p>理解该方程的另一个巧妙方式是通过偏导数的视角。我们可以证明 T 对 Y 的影响等于 Z 对 Y 的影响，按 Z 对 T 的影响进行缩放：</p>
+<p><span class="math notranslate nohighlight">\(
+\kappa = \dfrac{\frac{\partial y}{\partial z}}{\frac{\partial T}{\partial z}} = \dfrac{\partial y}{\partial z} * \dfrac{\partial z}{\partial T} =  \dfrac{\partial y}{\partial T}
+\)</span></p>
+<p>这一公式揭示的内涵比多数人理解的更为精妙，其精妙程度也远超普遍认知。通过工具变量（IV）的这种表述方式，我们实际上在表达：“由于混杂因素的存在，直接测量 T 对 Y 的影响十分困难。但 Z 对 Y 的影响则易于获取，因为 Z 与 Y 之间不存在共同成因（排他性约束）。然而，我们真正关注的是 T 而非 Z 对 Y 的效应。因此，我将先估算 Z 对 Y 的简易效应，再<strong>通过 Z 对 T 的效应进行尺度转换</strong>，从而将效应单位从 Z 转换为 T。”</p>
+<p>在工具变量为虚拟变量的简化情形中，我们还能看到工具变量估计量进一步简化为两组均值差的比值。</p>
+<p><span class="math notranslate nohighlight">\(
+\kappa = \dfrac{E[Y|Z=1]-E[Y|Z=0]}{E[T|Z=1]-E[T|Z=0]}
+\)</span></p>
+<p>这一比率有时被称为 <strong>沃尔德估计量（Wald Estimator）</strong>。重申一下，我们可以通过工具变量（IV）的故事来理解：我们关注的是 T 对 Y 的影响，这难以直接获取，因此转而研究 Z 对 Y 的效应，后者更为容易。根据定义，Z 仅通过 T 影响 Y，因此我们可以将 Z 对 Y 的作用转化为 T 对 Y 的作用。具体方法是将 Z 对 Y 的效应按 Z 对 T 的效应比例进行缩放。</p>
+</section>
+<section id="id3">
+<h2>出生季度与教育对工资的影响<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>迄今为止，我们一直将这些工具变量视为某种神奇变量 <span class="math notranslate nohighlight">\(Z\)</span>，它们拥有仅通过处理变量影响结果的奇妙特性。坦白说，优质工具变量如此难寻，几乎可被视为奇迹。可以说，这绝非胆小者所能轻易尝试。传闻中，芝加哥经济学院的精英们常在酒吧里讨论他们是如何灵光一现想出这样或那样的工具变量。</p>
+<p><img alt="img" src="_images/good-iv.png" /></p>
+<p>不过，我们确实有一些有趣的工具变量例子，可以让事情更具体一些。我们将再次尝试估计教育对工资的影响。为此，我们将使用个人的出生季度作为工具变量 Z。</p>
+<p>这一观点利用了美国的义务教育法。通常，法律规定孩子在入学年份的 1 月 1 日之前必须年满 6 岁。因此，年初出生的孩子入学时年龄会更大。义务教育法还要求学生必须在校学习直至 16 岁，届时他们可以合法辍学。结果是，平均而言，一年中较晚出生的孩子比年初出生的孩子接受教育的年限更长。</p>
+<p><img alt="img" src="_images/qob.png" /></p>
+<p>如果我们承认出生季度与能力因素无关，即它不会混淆教育对工资的影响，那么我们可以将其作为工具变量。换句话说，我们需要相信出生季度除了通过影响教育外，对工资没有其他影响。如果你不相信占星术，这是一个非常有说服力的论点。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Digraph</span><span class="p">()</span>
+
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;ability&quot;</span><span class="p">,</span> <span class="s2">&quot;educ&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;ability&quot;</span><span class="p">,</span> <span class="s2">&quot;wage&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;educ&quot;</span><span class="p">,</span> <span class="s2">&quot;wage&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;qob&quot;</span><span class="p">,</span> <span class="s2">&quot;educ&quot;</span><span class="p">)</span>
+<span class="n">g</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/1b6c18900a885415012edea3845ac228930a670933fd5d79bd25d80d093f3496.svg" src="_images/1b6c18900a885415012edea3845ac228930a670933fd5d79bd25d80d093f3496.svg" /></div>
+</div>
+<p>为了进行这一分析，我们可以使用来自三次十年一度的人口普查数据，这些数据与<a class="reference external" href="https://economics.mit.edu/faculty/angrist/data1/data/angkru1991">Angrist and Krueger</a>在其关于工具变量的文章中所使用的相同。该数据集包含对数工资（我们的结果变量）和受教育年限（我们的处理变量）的信息。此外，它还提供了出生季度（我们的工具变量）以及其他控制变量，如出生年份和出生州的数据。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./data/ak91.csv&quot;</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>log_wage</th>
+      <th>years_of_schooling</th>
+      <th>year_of_birth</th>
+      <th>quarter_of_birth</th>
+      <th>state_of_birth</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>5.790019</td>
+      <td>12.0</td>
+      <td>30.0</td>
+      <td>1.0</td>
+      <td>45.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>5.952494</td>
+      <td>11.0</td>
+      <td>30.0</td>
+      <td>1.0</td>
+      <td>45.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>5.315949</td>
+      <td>12.0</td>
+      <td>30.0</td>
+      <td>1.0</td>
+      <td>45.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>5.595926</td>
+      <td>12.0</td>
+      <td>30.0</td>
+      <td>1.0</td>
+      <td>45.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>6.068915</td>
+      <td>12.0</td>
+      <td>30.0</td>
+      <td>1.0</td>
+      <td>37.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="id4">
+<h2>第一阶段<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<p>在使用出生季度作为工具变量前，我们必须确保其有效性。这意味着需要论证支持工具变量的两个假设条件：</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\mathrm{Cov}(Z, T) \neq 0\)</span>。这表明我们应具备强第一阶段，即工具变量确实能影响处理变量。</p></li>
+<li><p><span class="math notranslate nohighlight">\(Y \perp Z | T \)</span>。这就是排他性约束，表明工具变量 Z 仅通过处理 T 影响结果 Y。</p></li>
+</ol>
+<p>幸运的是，第一个假设是可验证的。从数据中我们可以看出 <span class="math notranslate nohighlight">\(\mathrm{Cov}(Z, T)\)</span> 不为零。在我们的例子中，如果出生季度确实如我们所说的那样是一个工具变量，那么我们应该预期出生在一年最后一季度的人比年初出生的人受教育时间略长。在运行任何统计检验来验证这一点之前，让我们先绘制数据并用肉眼观察。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">group_data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span>
+              <span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;year_of_birth&quot;</span><span class="p">,</span> <span class="s2">&quot;quarter_of_birth&quot;</span><span class="p">])</span>
+              <span class="p">[[</span><span class="s2">&quot;log_wage&quot;</span><span class="p">,</span> <span class="s2">&quot;years_of_schooling&quot;</span><span class="p">]]</span>
+              <span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+              <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+              <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">time_of_birth</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;year_of_birth&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;quarter_of_birth&quot;</span><span class="p">])</span><span class="o">/</span><span class="mi">4</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">group_data</span><span class="p">[</span><span class="s2">&quot;time_of_birth&quot;</span><span class="p">],</span> <span class="n">group_data</span><span class="p">[</span><span class="s2">&quot;years_of_schooling&quot;</span><span class="p">],</span> <span class="n">zorder</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">group_data</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;quarter_of_birth==</span><span class="si">{</span><span class="n">q</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)[</span><span class="s2">&quot;time_of_birth&quot;</span><span class="p">]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">group_data</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;quarter_of_birth==</span><span class="si">{</span><span class="n">q</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)[</span><span class="s2">&quot;years_of_schooling&quot;</span><span class="p">]</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;C</span><span class="si">{</span><span class="n">q</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;$</span><span class="si">{</span><span class="n">q</span><span class="si">}</span><span class="s2">$&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Years of Education by Quarter of Birth (first stage)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Year of Birth&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Years of Schooling&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span> <span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/a9a8cb404e35550f161d75af5122ae804f75aa15d7e1b160c487977dd75d0df5.png" src="_images/a9a8cb404e35550f161d75af5122ae804f75aa15d7e1b160c487977dd75d0df5.png" />
+</div>
+</div>
+<p>值得注意的是，受教育年限存在与出生季度相符的季节性模式。从视觉上看，我们可以发现，出生在一年第一季度的人几乎总是比最后一季度出生的人受教育程度低（毕竟，在控制了出生年份后，一般来说，出生年份较晚的人受教育程度更高）。</p>
+<p>为了更加严谨，我们可以将第一阶段作为线性回归来运行。首先，我们将出生季度转换为虚拟变量：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">factor_data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="sa">f</span><span class="s2">&quot;q</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;quarter_of_birth&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+                             <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;quarter_of_birth&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()})</span>
+
+<span class="n">factor_data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>log_wage</th>
+      <th>years_of_schooling</th>
+      <th>...</th>
+      <th>q3</th>
+      <th>q4</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>5.790019</td>
+      <td>12.0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>5.952494</td>
+      <td>11.0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>5.315949</td>
+      <td>12.0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>5.595926</td>
+      <td>12.0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>6.068915</td>
+      <td>12.0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 9 columns</p>
+</div></div></div>
+</div>
+<p>为简化起见，我们暂且仅使用最后一个季度（第四季度）作为工具变量。我们将对受教育年限（处理变量）与出生季度（工具变量）进行回归分析，以验证是否如前述图表所示，出生季度确实对教育时长产生正向影响。在此过程中，还需控制出生年份，并额外加入出生州作为控制变量。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">first_stage</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;years_of_schooling ~ C(year_of_birth) + C(state_of_birth) + q4&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">factor_data</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;q4 parameter estimate:, &quot;</span><span class="p">,</span> <span class="n">first_stage</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;q4&quot;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;q4 p-value:, &quot;</span><span class="p">,</span> <span class="n">first_stage</span><span class="o">.</span><span class="n">pvalues</span><span class="p">[</span><span class="s2">&quot;q4&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>q4 parameter estimate:,  0.10085809272785526
+q4 p-value:,  5.4648294166544506e-15
+</pre></div>
+</div>
+</div>
+</div>
+<p>数据显示，相较于其他季度出生的人群，年末第四季度出生者平均多接受 0.1 年的教育，且 p 值趋近于零。这为”出生季度是否导致受教育年限差异”的争论提供了明确结论。</p>
+<p><img alt="img" src="_images/incomplete-files.png" /></p>
+</section>
+<section id="id5">
+<h2>简化形式<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<p>遗憾的是，我们无法验证第二个工具变量（IV）条件，只能为其合理性进行辩护。我们可以表达这样一种信念：出生季度不会影响潜在收入。换言之，除教育影响外，人们的出生时间并不能反映其个人能力或其他可能导致收入差异的因素。一个有力的论证方式是说明，当我们考虑出生季度对收入的影响时，其分配效果近乎随机（实际上并非真正随机。有证据表明人们倾向于在夏末或某些节假日前后受孕。但我无法想象这种模式会通过教育以外的任何途径影响收入）。</p>
+<p>在论证了排除限制条件的合理性后，我们可以着手进行简化形式的分析。简化形式旨在揭示工具变量如何影响结果变量。根据假设，这种影响完全通过对处理变量的作用实现，从而间接展现处理变量对结果变量的影响机制。让我们再次通过可视化评估这一关系，然后再进行严谨的回归分析。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">group_data</span><span class="p">[</span><span class="s2">&quot;time_of_birth&quot;</span><span class="p">],</span> <span class="n">group_data</span><span class="p">[</span><span class="s2">&quot;log_wage&quot;</span><span class="p">],</span> <span class="n">zorder</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">group_data</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;quarter_of_birth==</span><span class="si">{</span><span class="n">q</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)[</span><span class="s2">&quot;time_of_birth&quot;</span><span class="p">]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">group_data</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;quarter_of_birth==</span><span class="si">{</span><span class="n">q</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)[</span><span class="s2">&quot;log_wage&quot;</span><span class="p">]</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;C</span><span class="si">{</span><span class="n">q</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;$</span><span class="si">{</span><span class="n">q</span><span class="si">}</span><span class="s2">$&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Average Weekly Wage by Quarter of Birth (reduced form)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Year of Birth&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Log Weekly Earnings&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/ae36d2c79ce60106db07454edb2a9a9b401b58f926e42874b089fb5024db335d.png" src="_images/ae36d2c79ce60106db07454edb2a9a9b401b58f926e42874b089fb5024db335d.png" />
+</div>
+</div>
+<p>我们再次观察到按出生季度划分的收入呈现季节性模式。年末出生者的收入略高于年初出生者。为验证这一假设，我们将再次对工具变量 q4 与对数工资进行回归分析，并如第一阶段那样加入相同的额外控制变量：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reduced_form</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;log_wage ~ C(year_of_birth) + C(state_of_birth) + q4&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">factor_data</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;q4 parameter estimate:, &quot;</span><span class="p">,</span> <span class="n">reduced_form</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;q4&quot;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;q4 p-value:, &quot;</span><span class="p">,</span> <span class="n">reduced_form</span><span class="o">.</span><span class="n">pvalues</span><span class="p">[</span><span class="s2">&quot;q4&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>q4 parameter estimate:,  0.008603484260150531
+q4 p-value:,  0.001494912718345724
+</pre></div>
+</div>
+</div>
+</div>
+<p>我们再次得到了一个显著的结果。那些在一年最后三个月出生的人，平均工资要高出 0.8%。这次的 p 值虽然不像之前那样接近于零，但仍然相当显著，仅为 0.0015。</p>
+</section>
+<section id="id6">
+<h2>手工操作工具变量<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<p>既然我们已经有了简化形式和第一阶段的结果，现在可以通过简化形式来缩放第一阶段的影响。由于第一阶段的系数大约是 0.1，这将使简化形式系数的影响几乎放大 10 倍。这将为我们提供无偏的工具变量估计，即平均因果效应：</p>
+<p><span class="math notranslate nohighlight">\(
+\mathrm{ATE}_{IV} = \dfrac{\text{Reduced Form}}{\text{1st Stage}} 
+\)</span></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reduced_form</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;q4&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">first_stage</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;q4&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.08530286492096631
+</pre></div>
+</div>
+</div>
+</div>
+<p>这意味着，我们预计每多接受一年教育，工资将增加 8%。</p>
+<p>另一种获取工具变量估计值的方法是采用两阶段最小二乘法（<strong>2SLS</strong>）。按照这一程序，我们首先进行与之前相同的第一阶段操作，然后在第二阶段中将处理变量替换为第一阶段的拟合值。</p>
+<p><span class="math notranslate nohighlight">\(
+\mathrm{educ}_i = \gamma_0 + \gamma_1 \times \mathrm{q4}_i + \gamma_2\times \mathrm{yob}_i + \gamma_3\times \mathrm{sob}_i + v_i
+\)</span></p>
+<p><span class="math notranslate nohighlight">\(
+\log(\mathrm{wage})_i = \beta_0 + \beta_1\times \mathrm{educ}_i + \beta_2\times \mathrm{yob}_i + \beta_3\times \mathrm{sob}_i + u_i
+\)</span></p>
+<p><span class="math notranslate nohighlight">\(
+\log(\mathrm{wage})_i = \beta_0 + \beta_1 [\gamma_0 + \gamma_1 \times \mathrm{q4}_i + \gamma_2\times \mathrm{yob}_i + \gamma_3\times \mathrm{sob}_i + v_i ]  + \beta_2\times \mathrm{yob}_i + \beta_3\times \mathrm{sob}_i + u_i
+\)</span></p>
+<p>需要注意的是，<strong>在实施工具变量法时，我们对第二阶段添加的任何额外控制变量也应同样添加到第一阶段</strong>。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">iv_by_hand</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;log_wage ~ C(year_of_birth) + C(state_of_birth) + years_of_schooling_fitted&quot;</span><span class="p">,</span>
+                     <span class="n">data</span><span class="o">=</span><span class="n">factor_data</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">years_of_schooling_fitted</span><span class="o">=</span><span class="n">first_stage</span><span class="o">.</span><span class="n">fittedvalues</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="n">iv_by_hand</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;years_of_schooling_fitted&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.08530286491929225
+</pre></div>
+</div>
+</div>
+</div>
+<p>如您所见，这些参数完全一致。从直觉角度出发，这种理解工具变量（IV）的第二方式颇具启发性。在两阶段最小二乘法（2SLS）中，第一阶段会生成一个经过遗漏变量偏误净化处理的新治疗变量版本。随后，我们在线性回归中使用这一净化后的治疗变量——即第一阶段的拟合值。</p>
+<p>然而实际操作中，我们并不手动进行工具变量分析。并非因其繁琐，而是由于第二阶段所得标准误存在些许偏误。正确的做法是始终让计算机代劳。在 Python 中，我们可以借助 <a class="reference external" href="https://bashtage.github.io/linearmodels/">linearmodels</a> 库以规范方式运行 2SLS。</p>
+<p>2SLS 的公式设定略有不同。我们需在公式内的方括号[]间加入第一阶段。本例中我们添加 <code class="docutils literal notranslate"><span class="pre">years_of_schooling</span> <span class="pre">~</span> <span class="pre">q4</span></code> 。额外控制变量无需显式加入第一阶段，因为只要它们在第二阶段被包含，计算机会自动处理。因此，我们将 <code class="docutils literal notranslate"><span class="pre">year_of_birth</span></code> 和 <code class="docutils literal notranslate"><span class="pre">state_of_birth</span></code> 置于第一阶段公式之外。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">exog</span><span class="o">=</span><span class="s2">&quot;years_of_schooling&quot;</span><span class="p">):</span>
+    <span class="n">param</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">exog</span><span class="p">]</span>
+    <span class="n">se</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">std_errors</span><span class="p">[</span><span class="n">exog</span><span class="p">]</span>
+    <span class="n">p_val</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">pvalues</span><span class="p">[</span><span class="n">exog</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Parameter: </span><span class="si">{</span><span class="n">param</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SE: </span><span class="si">{</span><span class="n">se</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;95 CI: </span><span class="si">{</span><span class="p">(</span><span class="o">-</span><span class="mf">1.96</span><span class="o">*</span><span class="n">se</span><span class="p">,</span><span class="mf">1.96</span><span class="o">*</span><span class="n">se</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">param</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;P-value: </span><span class="si">{</span><span class="n">p_val</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+<span class="n">formula</span> <span class="o">=</span> <span class="s1">&#39;log_wage ~ 1 + C(year_of_birth) + C(state_of_birth) + [years_of_schooling ~ q4]&#39;</span>
+<span class="n">iv2sls</span> <span class="o">=</span> <span class="n">IV2SLS</span><span class="o">.</span><span class="n">from_formula</span><span class="p">(</span><span class="n">formula</span><span class="p">,</span> <span class="n">factor_data</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">parse</span><span class="p">(</span><span class="n">iv2sls</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parameter: 0.0853028649110826
+SE: 0.025540812817820696
+95 CI: [0.03524287 0.13536286]
+P-value: 0.000838191468812699
+</pre></div>
+</div>
+</div>
+</div>
+<p>再次可见，该参数与我们之前所得完全一致。额外的优势在于，我们现在拥有了有效的标准误差。基于此，可以说，我们预计平均每多接受一年教育，工资将增长 8.5%。</p>
+</section>
+<section id="id7">
+<h2>多重工具变量<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
+<p>利用计算机运行 2SLS 的另一项优势在于，能够便捷地引入多重工具变量。在本例中，我们将所有出生季度的虚拟变量作为教育年限的工具变量使用。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">formula</span> <span class="o">=</span> <span class="s1">&#39;log_wage ~ 1 + C(year_of_birth) + C(state_of_birth) + [years_of_schooling ~ q1+q2+q3]&#39;</span>
+<span class="n">iv_many_zs</span> <span class="o">=</span> <span class="n">IV2SLS</span><span class="o">.</span><span class="n">from_formula</span><span class="p">(</span><span class="n">formula</span><span class="p">,</span> <span class="n">factor_data</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">parse</span><span class="p">(</span><span class="n">iv_many_zs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parameter: 0.10769370486966799
+SE: 0.01955714900793806
+95 CI: [0.06936169 0.14602572]
+P-value: 3.657974678716869e-08
+</pre></div>
+</div>
+</div>
+</div>
+<p>在包含所有三个虚拟变量的情况下，教育回报的估计值现为 0.1，这意味着每多接受一年教育，我们预期收入平均将增加 10%。让我们将此与传统 OLS 估计进行比较。为此，我们可以再次使用 2SLS，但这次无需第一阶段。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">formula</span> <span class="o">=</span> <span class="s2">&quot;log_wage ~ years_of_schooling + C(state_of_birth) + C(year_of_birth) + C(quarter_of_birth)&quot;</span>
+<span class="n">ols</span> <span class="o">=</span> <span class="n">IV2SLS</span><span class="o">.</span><span class="n">from_formula</span><span class="p">(</span><span class="n">formula</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">parse</span><span class="p">(</span><span class="n">ols</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parameter: 0.06732572817657356
+SE: 0.00038839984390487154
+95 CI: [0.06656446 0.06808699]
+P-value: 0.0
+</pre></div>
+</div>
+</div>
+</div>
+<p>教育回报率的估计值在普通最小二乘法（OLS）中低于两阶段最小二乘法（2SLS）。这表明遗漏变量偏误（OVB）可能不如最初设想的那样严重。同时，注意置信区间的差异：2SLS 的置信区间较 OLS 估计值显著更宽。我们将进一步探讨这一现象。</p>
+</section>
+<section id="id8">
+<h2>工具变量的弱点<a class="headerlink" href="#id8" title="Link to this heading">#</a></h2>
+<p><img alt="img" src="_images/weak-iv.png" /></p>
+<p>在使用工具变量（IV）时，需谨记我们是在间接估计平均处理效应（ATE）。估计结果同时依赖于第一阶段和第二阶段。若处理对结果的影响确实强烈，第二阶段也会表现强劲。然而，若第一阶段薄弱，无论第二阶段多强都无济于事。薄弱的第一阶段意味着工具变量与处理仅存在极微弱的相关性，因此我们无法通过工具变量获取关于处理的足够信息。</p>
+<p>工具变量标准误的公式较为复杂且不够直观，为此我们将采用其他方法理解该问题。我们将模拟一组数据：处理变量 T 对结果 Y 具有 2.0 的效应，存在未观测混杂因素 U 及额外控制变量 X，并模拟多个第一阶段强度不同的工具变量。</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+X \sim &amp; N(0, 2^2)\\
+U \sim &amp; N(0, 2^2)\\
+T \sim &amp; N(1+0.5U, 5^2)\\
+Y \sim &amp; N(2+ X - 0.5U + 2T, 5^2)\\
+Z \sim &amp; N(T, \sigma^2) \text{ for }\sigma^2 \text{ in 0.1 to 100}
+\end{align}
+\end{split}\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="c1"># observable variable</span>
+<span class="n">U</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="c1"># unobservable (omitted) variable</span>
+<span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">U</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="c1"># treatment</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="n">X</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">U</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">T</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="c1"># outcome</span>
+
+<span class="n">stddevs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+<span class="n">Zs</span> <span class="o">=</span> <span class="p">{</span><span class="sa">f</span><span class="s2">&quot;Z_</span><span class="si">{</span><span class="n">z</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">z</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">stddevs</span><span class="p">)}</span> <span class="c1"># instruments with decreasing \mathrm{Cov}(Z, T)</span>
+
+<span class="n">sim_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">U</span><span class="o">=</span><span class="n">U</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">T</span><span class="p">,</span> <span class="n">Y</span><span class="o">=</span><span class="n">Y</span><span class="p">))</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="o">**</span><span class="n">Zs</span><span class="p">)</span>
+
+<span class="n">sim_data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>U</th>
+      <th>T</th>
+      <th>...</th>
+      <th>Z_48</th>
+      <th>Z_49</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2.696148</td>
+      <td>8.056988</td>
+      <td>...</td>
+      <td>-117.798705</td>
+      <td>-13.485292</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2.570240</td>
+      <td>0.245067</td>
+      <td>...</td>
+      <td>-209.727577</td>
+      <td>-70.792948</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.664741</td>
+      <td>5.597510</td>
+      <td>...</td>
+      <td>60.562232</td>
+      <td>47.619414</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1.037725</td>
+      <td>0.493532</td>
+      <td>...</td>
+      <td>78.136513</td>
+      <td>-108.322304</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>-2.590591</td>
+      <td>-6.263014</td>
+      <td>...</td>
+      <td>78.776566</td>
+      <td>-80.547214</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 53 columns</p>
+</div></div></div>
+</div>
+<p>只是为了再次确认，我们可以看到 Z 和 T 之间的相关性确实在下降。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">corr</span> <span class="o">=</span> <span class="p">(</span><span class="n">sim_data</span><span class="o">.</span><span class="n">corr</span><span class="p">()[</span><span class="s2">&quot;T&quot;</span><span class="p">]</span>
+        <span class="p">[</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Z&quot;</span><span class="p">)])</span>
+
+<span class="n">corr</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Z_0    0.999807
+Z_1    0.919713
+Z_2    0.773434
+Z_3    0.634614
+Z_4    0.523719
+Name: T, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<p>现在，我们将为每种工具运行一个 IV 模型，并收集 ATE 估计值和标准误差。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">se</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">ate</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Zs</span><span class="p">)):</span>
+    <span class="n">formula</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Y ~ 1 + X + [T ~ Z_</span><span class="si">{</span><span class="n">z</span><span class="si">}</span><span class="s1">]&#39;</span>
+    <span class="n">iv</span> <span class="o">=</span> <span class="n">IV2SLS</span><span class="o">.</span><span class="n">from_formula</span><span class="p">(</span><span class="n">formula</span><span class="p">,</span> <span class="n">sim_data</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+    <span class="n">se</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">iv</span><span class="o">.</span><span class="n">std_errors</span><span class="p">[</span><span class="s2">&quot;T&quot;</span><span class="p">])</span>
+    <span class="n">ate</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">iv</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;T&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">se</span><span class="o">=</span><span class="n">se</span><span class="p">,</span> <span class="n">ate</span><span class="o">=</span><span class="n">ate</span><span class="p">,</span> <span class="n">corr</span><span class="o">=</span><span class="n">corr</span><span class="p">))</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;corr&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">plot_data</span><span class="p">[</span><span class="s2">&quot;corr&quot;</span><span class="p">],</span> <span class="n">plot_data</span><span class="p">[</span><span class="s2">&quot;se&quot;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Corr(Z, T)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;IV Standard Error&quot;</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Variance of the IV Estimates by 1st Stage Strength&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span> <span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/4f160be02acdca507afb64db6cd7b1dc40a8be3272c741c27ef950ae7361b1f7.png" src="_images/4f160be02acdca507afb64db6cd7b1dc40a8be3272c741c27ef950ae7361b1f7.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">plot_data</span><span class="p">[</span><span class="s2">&quot;corr&quot;</span><span class="p">],</span> <span class="n">plot_data</span><span class="p">[</span><span class="s2">&quot;ate&quot;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">plot_data</span><span class="p">[</span><span class="s2">&quot;corr&quot;</span><span class="p">],</span>
+                 <span class="n">plot_data</span><span class="p">[</span><span class="s2">&quot;ate&quot;</span><span class="p">]</span><span class="o">+</span><span class="mf">1.96</span><span class="o">*</span><span class="n">plot_data</span><span class="p">[</span><span class="s2">&quot;se&quot;</span><span class="p">],</span>
+                 <span class="n">plot_data</span><span class="p">[</span><span class="s2">&quot;ate&quot;</span><span class="p">]</span><span class="o">-</span><span class="mf">1.96</span><span class="o">*</span><span class="n">plot_data</span><span class="p">[</span><span class="s2">&quot;se&quot;</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Corr(Z, T)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;$\hat</span><span class="si">{ATE}</span><span class="s2">$&quot;</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;IV ATE Estimates by 1st Stage Strength&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/3386e5c2f77201ab8f6fc59ae1a472697d74909d761569022e1b581338eedebf.png" src="_images/3386e5c2f77201ab8f6fc59ae1a472697d74909d761569022e1b581338eedebf.png" />
+</div>
+</div>
+<p>如上图所示，当 T 与 Z 之间的相关性较弱时，估计值波动极大。这是因为在相关性较低的情况下，标准误（SE）也会显著增加。</p>
+<p>另一个需要注意的现象是，<strong>两阶段最小二乘法（2SLS）存在偏误</strong>！即便在高度相关的情况下，参数估计值仍未达到真实平均处理效应（ATE）2.0。实际上，2.0 甚至不在 95%置信区间内！2SLS 仅具有一致性，这意味着当样本量足够大时，它会趋近于真实参数值。然而，我们无法确切知道“足够大”的具体标准，只能依据经验法则来理解这种偏误的表现规律：</p>
+<ol class="arabic simple">
+<li><p>2SLS 的偏误方向与普通最小二乘法（OLS）相同。即若 OLS 存在负/正偏误，2SLS 也会呈现相同偏误。2SLS 的优势在于，在存在遗漏变量的情况下，它至少具有一致性（而 OLS 不具备）。上例中，未观测变量 U 对结果产生负向影响，但与处理变量正相关，这将导致负偏误。因此我们看到的 ATE 估计值低于真实值（负偏误）。</p></li>
+<li><p>偏误会随着工具变量数量的增加而增大。若添加过多工具变量，2SLS 会越来越接近 OLS 的估计结果。</p></li>
+</ol>
+<p>除了理解这种偏误的特性外，最后还要提醒<strong>在实施工具变量法时应避免以下常见错误</strong>：</p>
+<ol class="arabic simple">
+<li><p>手动进行工具变量（IV）分析。正如我们所观察到的，手动操作 IV 虽可能得到正确的参数估计，但标准误差（SE）会出错。标准误差虽不至于完全偏离，但既然使用软件能获得准确的 SE，何必手动冒险？</p></li>
+<li><p>在第一阶段采用非普通最小二乘法（OLS）的其他方法。许多数据科学家接触工具变量时，常自信能优化传统做法。例如，面对虚拟处理变量时，他们可能考虑用逻辑回归替代第一阶段的 OLS，毕竟是在预测二元变量，对吧？问题在于这种做法根本错误。IV 的稳健性依赖于 OLS 独有的残差正交特性，任何非 OLS 的第一阶段方法都将导致估计偏误。（注：虽有现代技术尝试将机器学习应用于 IV，但其效果至今最多只能说是存疑）。</p></li>
+</ol>
+</section>
+<section id="id9">
+<h2>核心要点<a class="headerlink" href="#id9" title="Link to this heading">#</a></h2>
+<p>我们在此花费了一些时间来探讨，在拥有工具变量的情况下如何规避遗漏变量偏误。工具变量是指与处理变量相关（存在第一阶段效应），但仅通过处理变量影响结果（满足排他性约束）的变量。我们以出生季度作为工具变量来估计教育对收入影响的例子进行了说明。</p>
+<p>随后我们深入研究了利用工具变量（IV）估计因果效应的机制，即采用两阶段最小二乘法（2SLS）。同时我们也认识到，工具变量并非万能良药。当第一阶段效应较弱时，该方法可能带来较大困扰。此外，尽管 2SLS 具有一致性，但它仍是一种存在偏误的因果效应估计方法。</p>
+</section>
+<section id="id10">
+<h2>参考文献<a class="headerlink" href="#id10" title="Link to this heading">#</a></h2>
+<p>我愿将这一系列作品视为对 Joshua Angrist、Alberto Abadie 和 Christopher Walters 杰出计量经济学课程的致敬。第一部分的大部分思想源自他们在美国经济学会授课的内容。在艰难的 2020 年，正是观看他们的课程视频让我保持了理智。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.aeaweb.org/conference/cont-ed/2017-webcasts">Cross-Section Econometrics</a></p></li>
+<li><p><a class="reference external" href="https://www.aeaweb.org/conference/cont-ed/2020-webcasts">Mastering Mostly Harmless Econometrics</a></p></li>
+</ul>
+<p>我还想引用 Angrist 的精彩著作。它们向我展示了计量经济学（他们称之为“Metrics”）不仅极为实用，而且充满乐趣。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mostlyharmlesseconometrics.com">Mostly Harmless Econometrics</a></p></li>
+<li><p><a class="reference external" href="https://www.masteringmetrics.com">Mastering ‘Metrics</a></p></li>
+</ul>
+<p>最后还要感谢 Miguel Hernán 和 Jamie Robins 的<a class="reference external" href="https://hsph.harvard.edu/profile/miguel-hernan/">《Causal Inference》</a>一书。它是我在面对最棘手的因果问题时的可靠伙伴。</p>
+<p><img alt="img" src="_images/poetry.png" /></p>
+</section>
+<section id="id11">
+<h2>参与贡献<a class="headerlink" href="#id11" title="Link to this heading">#</a></h2>
+<p><strong>《Causal Inference for the Brave and True》</strong> 是一本关于因果推断的开源教材，致力于以经济上可负担、认知上可理解的方式，普及这门“科学的统计基础”。全书基于 Python，仅使用自由开源软件编写，原始英文版本由 <a class="reference external" href="https://github.com/matheusfacure">Matheus Facure</a> 编写与维护。</p>
+<p>本书的中文版由黄文喆与许文立教授合作翻译，并托管在 <a class="reference external" href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh">GitHub 中文主页</a>。希望本地化的内容能帮助更多中文读者学习和掌握因果推断方法。</p>
+<p>如果你觉得这本书对你有帮助，并希望支持该项目，可以前往 <a class="reference external" href="https://www.patreon.com/causal_inference_for_the_brave_and_true">Patreon</a> 支持原作者。</p>
+<p>如果你暂时不方便进行经济支持，也可以通过以下方式参与贡献：</p>
+<ul class="simple">
+<li><p>修正错别字</p></li>
+<li><p>提出翻译或表达建议</p></li>
+<li><p>反馈你未能理解的部分内容</p></li>
+</ul>
+<p>欢迎前往英文版或中文版仓库点击 <a class="reference external" href="https://github.com/matheusfacure/python-causality-handbook/issues">issues 区</a> 或 <a class="reference external" href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh/issues">中文版 issues 区</a> 提出反馈。</p>
+<p>最后，如果你喜欢这本书的内容，也请将其分享给可能感兴趣的朋友，并为项目在 GitHub 上点亮一颗星：<a class="reference external" href="https://github.com/matheusfacure/python-causality-handbook">英文版仓库</a> / <a class="reference external" href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh">中文版仓库</a>。</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="07-Beyond-Confounders.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">07 - 超越混杂因素</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="09-Non-Compliance-and-LATE.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">09 - 不依从性与局部平均处理效应</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">规避遗漏变量偏误</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">出生季度与教育对工资的影响</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">第一阶段</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">简化形式</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">手工操作工具变量</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">多重工具变量</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">工具变量的弱点</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">核心要点</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">参考文献</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">参与贡献</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Matheus Facure
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
