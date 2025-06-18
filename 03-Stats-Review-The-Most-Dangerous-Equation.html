@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -421,7 +421,24 @@ SE = \dfrac{\sigma}{\sqrt{n}}
 <p>其中 <span class="math notranslate nohighlight">\(SE\)</span> 代表均值的标准误差，<span class="math notranslate nohighlight">\(\sigma\)</span> 为标准差，<span class="math notranslate nohighlight">\(n\)</span> 为样本容量。这听起来像是求真敢为者应当掌握的数学知识，让我们开始学习吧。</p>
 <p>为了说明不了解这个公式为何极其危险，我们来看一些教育数据。我整理了三年间不同学校的 ENEM 成绩（巴西标准化高中考试分数，类似 SAT），并清理数据仅保留相关部分。原始数据可在 <a class="reference external" href="http://portal.inep.gov.br/web/guest/microdados#">Inep 官网</a>下载。</p>
 <p>观察表现最优的学校时，有一点引人注目：这些学校的学生数量相对较少。</p>
-<div class="cell tag_hide-input docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Clear any existing data from memory</span>
+<span class="k">clear</span>
+
+<span class="c1">* Import the CSV file from local path</span>
+import delimited <span class="s">&quot;./data/enem_scores.csv&quot;</span>, encoding(UTF<span class="m">-8</span>) 
+
+<span class="c1">* Sort the dataset by avg_score in descending order</span>
+<span class="k">gsort</span> <span class="o">-</span>avg_score
+
+<span class="c1">* Display the top 10 observations</span>
+<span class="k">list in</span> <span class="m">1</span><span class="o">/</span><span class="m">10</span>, clean noobs
+</pre></div>
+</div>
+</div>
+</details><div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
 <span class="collapsed">Show code cell source</span>
@@ -551,7 +568,39 @@ SE = \dfrac{\sigma}{\sqrt{n}}
 </div></div></div>
 </div>
 <p>换一个角度来看，我们可以仅分离出前 1%的顶尖学校进行研究。它们有何特点？或许我们能从这些佼佼者身上学到些什么，并在其他地方复制其成功经验。果然，当我们观察这前 1%的学校时，发现它们平均而言学生数量较少。</p>
-<div class="cell tag_hide-input docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Calculate percentiles for thresholds</span>
+<span class="k">sum</span> avg_score, detail
+<span class="k">local</span> top_score_p99 = <span class="nf">r</span>(p99)  <span class="c1">// 99th percentile of avg_score</span>
+
+<span class="k">sum</span> number_of_students, detail
+<span class="k">local</span> students_p98 = <span class="nf">r</span>(p98)   <span class="c1">// 98th percentile of number_of_students</span>
+
+<span class="c1">* Create top_school indicator (1 = top 1% school, 0 = others)</span>
+<span class="k">gen</span> top_school = (avg_score <span class="o">&gt;=</span> <span class="nv">`top_score_p99&#39;</span>)<span class="k"> if</span> <span class="o">!</span><span class="nf">missing</span>(avg_score)
+<span class="k">label</span> define top_school_label <span class="m">0</span> <span class="s">&quot;Other Schools&quot;</span> <span class="m">1</span> <span class="s">&quot;Top 1% Schools&quot;</span>
+<span class="k">label</span> values top_school top_school_label
+
+<span class="c1">* Filter data (remove outliers in number_of_students)</span>
+<span class="k">preserve</span>
+<span class="k">    keep if</span> number_of_students <span class="o">&lt;</span> <span class="nv">`students_p98&#39;</span> <span class="o">&amp;</span> <span class="o">!</span><span class="nf">missing</span>(number_of_students)
+<span class="c1">    </span>
+<span class="c1">    * Create boxplot</span>
+<span class="k">    graph</span> box number_of_students, over(top_school) <span class="cs">///</span>
+        title(<span class="s">&quot;Number of Students of 1% Top Schools (Right)&quot;</span>) <span class="cs">///</span>
+        ytitle(<span class="s">&quot;Number of Students&quot;</span>) <span class="cs">///</span>
+        box(<span class="m">1</span>, color(blue)) <span class="cs">///</span>
+        box(<span class="m">2</span>, color(orange)) <span class="cs">///</span>
+        graphregion(color(white)) <span class="cs">///</span>
+        plotregion(color(white)) <span class="cs">///</span>
+        xsize(<span class="m">6</span>) ysize(<span class="m">6</span>)
+<span class="k">restore</span>
+</pre></div>
+</div>
+</div>
+</details><div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
 <span class="collapsed">Show code cell source</span>
@@ -578,7 +627,41 @@ SE = \dfrac{\sigma}{\sqrt{n}}
 <p>然而，一旦人们开始依据这些信息做出重要且代价高昂的决策，情况就变得危险了。霍华德在文章中继续写道：</p>
 <p>“20 世纪 90 年代，提倡缩小学校规模的做法盛行一时。众多慈善组织和政府机构资助拆分大型学校，因为小规模学校的学生在考试成绩优异群体中占比过高。”</p>
 <p>人们却忽视了去关注成绩最差的 1%学校。当我们这样做时，瞧！这些学校的学生人数同样寥寥无几！</p>
-<div class="cell tag_hide-input docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Calculate percentiles</span>
+<span class="k">sum</span> avg_score, detail
+<span class="k">local</span> q_99 = <span class="nf">r</span>(p99)  <span class="c1">// 99th percentile</span>
+<span class="k">local</span> q_01 = <span class="nf">r</span>(p1)    <span class="c1">// 1st percentile</span>
+
+<span class="c1">* Take random sample and create groups</span>
+<span class="k">preserve</span>
+<span class="k">    if</span> _N <span class="o">&gt;</span> <span class="m">10000</span> {
+<span class="k">        sample</span> <span class="m">10000</span>,<span class="k"> count</span>
+    }
+<span class="k">    </span>
+<span class="k">    gen</span> Group = <span class="s">&quot;Middle&quot;</span>
+<span class="k">    replace</span> Group = <span class="s">&quot;Top&quot;</span><span class="k"> if</span> avg_score <span class="o">&gt;</span> <span class="nv">`q_99&#39;</span> <span class="o">&amp;</span> <span class="o">!</span><span class="nf">missing</span>(avg_score)
+<span class="k">    replace</span> Group = <span class="s">&quot;Bottom&quot;</span><span class="k"> if</span> avg_score <span class="o">&lt;</span> <span class="nv">`q_01&#39;</span> <span class="o">&amp;</span> <span class="o">!</span><span class="nf">missing</span>(avg_score)
+<span class="c1">    </span>
+<span class="c1">    * Create scatterplot with legend inside</span>
+<span class="k">    twoway</span> (scatter avg_score number_of_students<span class="k"> if</span> Group <span class="o">==</span> <span class="s">&quot;Top&quot;</span>, mcolor(red) msymbol(Oh)) <span class="cs">///</span>
+           (scatter avg_score number_of_students<span class="k"> if</span> Group <span class="o">==</span> <span class="s">&quot;Middle&quot;</span>, mcolor(blue) msymbol(Oh)) <span class="cs">///</span>
+           (scatter avg_score number_of_students<span class="k"> if</span> Group <span class="o">==</span> <span class="s">&quot;Bottom&quot;</span>, mcolor(green) msymbol(Oh)), <span class="cs">///</span>
+           title(<span class="s">&quot;ENEM Score by Number of Students in the School&quot;</span>) <span class="cs">///</span>
+           ytitle(<span class="s">&quot;Average ENEM Score&quot;</span>) <span class="cs">///</span>
+           xtitle(<span class="s">&quot;Number of Students in School&quot;</span>) <span class="cs">///</span>
+           legend(order(<span class="m">1</span> <span class="s">&quot;Top 1%&quot;</span> <span class="m">2</span> <span class="s">&quot;Middle 98%&quot;</span> <span class="m">3</span> <span class="s">&quot;Bottom 1%&quot;</span>) <span class="cs">///</span>
+                  position(<span class="m">13</span>) ring(<span class="m">0</span>) cols(<span class="m">1</span>) region(lcolor(none))) <span class="cs">///</span>
+           graphregion(color(white)) <span class="cs">///</span>
+           plotregion(color(white)) <span class="cs">///</span>
+           xsize(<span class="m">10</span>) ysize(<span class="m">5</span>)
+<span class="k">restore</span>
+</pre></div>
+</div>
+</div>
+</details><div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
 <span class="collapsed">Show code cell source</span>
@@ -600,7 +683,7 @@ SE = \dfrac{\sigma}{\sqrt{n}}
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="_images/3b41b9aa8238db8e5363bd37a50b30427e2e2fca6a2e1bb22a8ead384fb876d9.png" src="_images/3b41b9aa8238db8e5363bd37a50b30427e2e2fca6a2e1bb22a8ead384fb876d9.png" />
+<img alt="_images/bab0c3a26f01dda4c17da2d10673b0d7263b3561e901ab337e02047ffde1d707.png" src="_images/bab0c3a26f01dda4c17da2d10673b0d7263b3561e901ab337e02047ffde1d707.png" />
 </div>
 </div>
 <p>上述现象正是莫瓦方程（Moivre’s equation）所预期的现象：随着学生人数的增加，平均成绩变得越来越精确。学校如果样本量很小，就可能因为纯粹的随机性而出现极高或极低的分数，这种情况在大规模学校中就不太可能发生。莫瓦方程揭示了一个关于现实中信息与数据记录的基本事实：数据永远是不精确的。那么问题就变成：它到底有多不精确？</p>
@@ -620,7 +703,39 @@ SE = \dfrac{\sigma}{\sqrt{n}}
 \hat{\sigma}=\sqrt{\frac{1}{N-1}\sum_{i=1}^N (x_i-\bar{x})^2}
 \]</div>
 <p>其中 <span class="math notranslate nohighlight">\(\bar{x}\)</span> 是 <span class="math notranslate nohighlight">\(x\)</span> 的平均值。幸运的是，大多数编程软件已经实现了这一点。在 Pandas 中，我们可以使用 <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.std.html">std</a> 方法。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Clear any existing data from memory</span>
+<span class="k">clear</span>
+
+<span class="c1">* Import the CSV file from local path</span>
+import delimited <span class="s">&quot;./data/online_classroom.csv&quot;</span>, encoding(UTF<span class="m">-8</span>) 
+
+<span class="c1">* Calculate standard error for online group (format_ol==1)</span>
+<span class="k">sum</span> falsexam<span class="k"> if</span> format_ol <span class="o">==</span> <span class="m">1</span>
+<span class="k">local</span> se_online = <span class="nf">r</span>(sd)<span class="o">/</span><span class="nf">sqrt</span>(<span class="nf">r</span>(N))
+<span class="k">display</span> <span class="s">&quot;SE for Online: &quot;</span> <span class="nv">`se_online&#39;</span>
+
+<span class="c1">* Calculate standard error for face-to-face group (format_ol==0 &amp; format_blended==0)</span>
+<span class="k">sum</span> falsexam<span class="k"> if</span> format_ol <span class="o">==</span> <span class="m">0</span> <span class="o">&amp;</span> format_blended <span class="o">==</span> <span class="m">0</span>
+<span class="k">local</span> se_ftf = <span class="nf">r</span>(sd)<span class="o">/</span><span class="nf">sqrt</span>(<span class="nf">r</span>(N))
+<span class="k">display</span> <span class="s">&quot;SE for Face to Face: &quot;</span> <span class="nv">`se_ftf&#39;</span>
+
+<span class="c1">* Alternative approach using Stata&#39;s built-in standard error calculation:</span>
+<span class="c1">* For online group</span>
+<span class="k">ci mean</span> falsexam<span class="k"> if</span> format_ol <span class="o">==</span> <span class="m">1</span>
+<span class="k">local</span> se_online = <span class="nf">r</span>(se)
+<span class="k">display</span> <span class="s">&quot;SE for Online: &quot;</span> <span class="nv">`se_online&#39;</span>
+
+<span class="c1">* For face-to-face group</span>
+<span class="k">ci mean</span> falsexam<span class="k"> if</span> format_ol <span class="o">==</span> <span class="m">0</span> <span class="o">&amp;</span> format_blended <span class="o">==</span> <span class="m">0</span>
+<span class="k">local</span> se_ftf = <span class="nf">r</span>(se)
+<span class="k">display</span> <span class="s">&quot;SE for Face to Face: &quot;</span> <span class="nv">`se_ftf&#39;</span>
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./data/online_classroom.csv&quot;</span><span class="p">)</span>
 <span class="n">online</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;format_ol==1&quot;</span><span class="p">)[</span><span class="s2">&quot;falsexam&quot;</span><span class="p">]</span>
@@ -649,7 +764,46 @@ SE for Face to Face: 0.8723511456319104
 <div><p>每一个本质的理念（essential form），都在与行为、与物质事物、以及彼此之间的各种组合中呈现出来，每一个理念看起来仿佛是多样的、纷繁的。</p>
 </div></blockquote>
 <p>为了更好地理解这个概念，假设我们有一个学生考试成绩的真实抽象分布。这个分布是一个均值为 74、标准差为 2 的正态分布。基于这个分布，我们可以进行 10,000 次实验，每次从中抽取 500 个样本。如果我们将这些实验中每次的样本均值绘制成直方图，就会发现它们围绕着真实均值呈现分布。有些实验的样本均值会低于真实均值，而有些则会高于真实均值。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="k">clear</span> all
+<span class="k">set</span> seed <span class="m">42</span>
+
+<span class="c1">* Parameters</span>
+<span class="k">local</span> true_mean = <span class="m">74</span>
+<span class="k">local</span> true_std = <span class="m">2</span>
+<span class="k">local n</span> = <span class="m">500</span>
+
+<span class="c1">* Define the experiment program correctly</span>
+<span class="k">capture program drop</span> run_experiment
+<span class="k">program</span> define run_experiment, rclass
+<span class="k">    quietly</span> {
+<span class="k">        clear</span>
+<span class="k">        set</span> obs <span class="nv">`n&#39;</span>
+<span class="k">        gen</span> x = <span class="nf">rnormal</span>(<span class="nv">`true_mean&#39;</span>, <span class="nv">`true_std&#39;</span>)
+<span class="k">        summarize</span> x
+<span class="k">        return scalar mean</span> = <span class="nf">r</span>(mean)
+    }
+<span class="k">end</span>
+
+<span class="c1">* Run the simulation</span>
+<span class="k">simulate mean</span>=<span class="nf">r</span>(mean), reps(<span class="m">10000</span>) nodots: run_experiment
+
+<span class="c1">* Create the histogram</span>
+<span class="k">hist mean</span>, bin(<span class="m">40</span>) <span class="cs">///</span>
+    title(<span class="s">&quot;Distribution of Sample Means&quot;</span>) <span class="cs">///</span>
+    xtitle(<span class="s">&quot;Sample Mean&quot;</span>) <span class="cs">///</span>
+    ytitle(<span class="s">&quot;Frequency&quot;</span>) <span class="cs">///</span>
+    xline(<span class="nv">`true_mean&#39;</span>, lpattern(dash) lcolor(orange)) <span class="cs">///</span>
+    legend(label(<span class="m">1</span> <span class="s">&quot;Experiment Means&quot;</span>)<span class="k"> label</span>(<span class="m">2</span> <span class="s">&quot;True Mean&quot;</span>)) <span class="cs">///</span>
+    graphregion(color(white)) <span class="cs">///</span>
+    plotregion(color(white)) <span class="cs">///</span>
+    xsize(<span class="m">8</span>) ysize(<span class="m">5</span>)
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">true_std</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="n">true_mean</span> <span class="o">=</span> <span class="mi">74</span>
@@ -676,7 +830,36 @@ SE for Face to Face: 0.8723511456319104
 <p>为计算置信区间，我们采用<strong>中心极限定理</strong>。该定理指出，实验<strong>均值的分布服从正态分布</strong>。根据统计学理论，我们已知正态分布 95%的质量集中于均值上下两个标准差范围内。严格而言应为 1.96 倍标准差，但近似取 2 已足够精确。</p>
 <p><img alt="normal_density" src="_images/normal_dist.jpeg" /></p>
 <p>均值标准误可作为实验均值分布的估计量。因此，若将其乘以 2 后与单次实验均值相加减，即可构建出真实均值 95%置信区间。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="k">clear</span>	
+<span class="c1">* Set random seed for reproducibility</span>
+<span class="k">set</span> seed <span class="m">321</span>
+
+<span class="c1">* Parameters (same as before)</span>
+<span class="k">local</span> true_mean = <span class="m">74</span>
+<span class="k">local</span> true_std = <span class="m">2</span>
+<span class="k">local n</span> = <span class="m">500</span>
+
+<span class="c1">* Run one experiment</span>
+<span class="k">clear</span>
+<span class="k">set</span> obs <span class="nv">`n&#39;</span>
+<span class="k">gen</span> x = <span class="nf">rnormal</span>(<span class="nv">`true_mean&#39;</span>, <span class="nv">`true_std&#39;</span>)
+
+<span class="c1">* Calculate statistics</span>
+<span class="k">sum</span> x
+<span class="k">local</span> exp_mu = <span class="nf">r</span>(mean)
+<span class="k">local</span> exp_se = <span class="nf">r</span>(sd)<span class="o">/</span><span class="nf">sqrt</span>(<span class="nf">r</span>(N))
+<span class="k">local</span> ci_lower = exp_mu <span class="o">-</span> <span class="m">2</span> <span class="o">*</span> exp_se
+<span class="k">local</span> ci_upper = exp_mu <span class="o">+</span> <span class="m">2</span> <span class="o">*</span> exp_se
+
+<span class="c1">* Display results</span>
+<span class="k">display</span> <span class="s">&quot;95% Confidence Interval: (&quot;</span> <span class="nx">%4.2f</span> ci_lower <span class="s">&quot;, &quot;</span> <span class="nx">%4.2f</span> ci_upper <span class="s">&quot;)&quot;</span>	
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">321</span><span class="p">)</span>
 <span class="n">exp_data</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">()</span>
@@ -693,7 +876,31 @@ SE for Face to Face: 0.8723511456319104
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Generate x values (4 SEs around mean)</span>
+<span class="k">drop</span> x
+<span class="k">range</span> x <span class="nv">`=exp_mu - 4*exp_se&#39;</span> <span class="nv">`=exp_mu + 4*exp_se&#39;</span> <span class="m">100</span>
+
+<span class="c1">* Calculate normal PDF values</span>
+<span class="k">gen</span> y = <span class="nf">normalden</span>(x, <span class="nv">`=exp_mu&#39;</span>, <span class="nv">`=exp_se&#39;</span>)
+
+<span class="c1">* Create the plot</span>
+<span class="k">twoway</span> (line y x, lcolor(blue)) <span class="cs">///</span>
+       (function y = <span class="m">0</span>,<span class="k"> range</span>(<span class="nv">`=ci_lower&#39;</span> <span class="nv">`=ci_upper&#39;</span>) lcolor(none) <span class="cs">///</span>
+<span class="k">           recast</span>(area) color(gs12) legend(label(<span class="m">2</span> <span class="s">&quot;95% CI&quot;</span>))) <span class="cs">///</span>
+       , <span class="cs">///</span>
+       title(<span class="s">&quot;Sampling Distribution&quot;</span>) <span class="cs">///</span>
+       ytitle(<span class="s">&quot;Density&quot;</span>) <span class="cs">///</span>
+       xtitle(<span class="s">&quot;Sample Mean&quot;</span>) <span class="cs">///</span>
+       legend(order(<span class="m">1</span> <span class="s">&quot;Normal PDF&quot;</span> <span class="m">2</span> <span class="s">&quot;95% CI&quot;</span>)) <span class="cs">///</span>
+       graphregion(color(white)) <span class="cs">///</span>
+       plotregion(color(white))	
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">exp_mu</span> <span class="o">-</span> <span class="mi">4</span><span class="o">*</span><span class="n">exp_se</span><span class="p">,</span> <span class="n">exp_mu</span> <span class="o">+</span> <span class="mi">4</span><span class="o">*</span><span class="n">exp_se</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">exp_mu</span><span class="p">,</span> <span class="n">exp_se</span><span class="p">)</span>

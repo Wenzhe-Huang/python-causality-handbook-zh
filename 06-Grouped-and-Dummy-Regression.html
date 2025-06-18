@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -413,7 +413,30 @@ document.write(`
 <section id="id2">
 <h2>分组数据回归<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
 <p>并非所有数据点生而平等。再次审视我们的 ENEM 数据集时，相较于小型学校的成绩，我们更信任大规模学校的成绩。这并非意味着大型学校更优越，而是因其规模庞大意味着方差更小。</p>
-<div class="cell tag_hide-input docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Load data (assuming CSV is in current directory)</span>
+import delimited <span class="s">&quot;/Users/xuwenli/Library/CloudStorage/OneDrive-个人/DSGE建模及软件编程/教学大纲与讲稿/应用计量经济学讲稿/python-causality-handbook/causal-inference-for-the-brave-and-true/data/enem_scores.csv&quot;</span>,<span class="k"> clear</span>
+
+<span class="c1">* Create basic scatterplot	   </span>
+<span class="c1">* Find max values</span>
+<span class="k">sum</span> number_of_students, meanonly
+<span class="k">local</span> max_students = <span class="nf">r</span>(max)
+<span class="k">sum</span> avg_score, meanonly
+<span class="k">local</span> max_score = <span class="nf">r</span>(max)
+
+<span class="k">twoway</span> (scatter avg_score number_of_students) <span class="cs">///</span>
+       (scatter avg_score number_of_students<span class="k"> if</span> number_of_students <span class="o">==</span> <span class="nv">`max_students&#39;</span>, <span class="cs">///</span>
+           mlabel(school_id) mlabcolor(black)) <span class="cs">///</span>
+       (scatter avg_score number_of_students<span class="k"> if</span> avg_score <span class="o">==</span> <span class="nv">`max_score&#39;</span>, <span class="cs">///</span>
+           mlabel(school_id) mlabcolor(black)), <span class="cs">///</span>
+       title(<span class="s">&quot;ENEM Score by Number of Students&quot;</span>) <span class="cs">///</span>
+       legend(off)
+</pre></div>
+</div>
+</div>
+</details><div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
 <span class="collapsed">Show code cell source</span>
@@ -465,7 +488,17 @@ document.write(`
 <p>这种现象，即存在一个低方差区域与另一个高方差区域并存的情况，被称为<strong>异方差性</strong>。简而言之，异方差性是指特征值在不同取值上方差不恒定的现象。在上述例子中，我们可以看到随着特征样本量的增加，方差逐渐减小。再举一个存在异方差的例子：若绘制工资随年龄变化的图表，会发现年长者的工资方差明显高于年轻群体。然而，迄今为止，导致方差差异最常见的原因仍是分组数据。</p>
 <p>类似上述的分组数据在数据分析中极为常见。其中一个原因是保密性要求。政府和企业无法公开个人数据，否则将违反其必须遵守的数据隐私法规。当需要向外部研究人员提供数据时，他们只能通过分组方式导出数据。这种方法使得个体被归入群体之中，从而无法单独识别具体身份。</p>
 <p>幸运的是，回归分析能很好地处理这类数据。为了理解其原理，我们首先以未分组的数据为例，比如之前提到的工资与教育年限数据。该数据集每位工人对应一行记录，因此我们不仅知道其中每个人的工资，还了解其受教育年限。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Load data (assuming CSV is in current directory)</span>
+import delimited <span class="s">&quot;./data/wage.csv&quot;</span>,<span class="k"> clear</span>	   
+<span class="k">	   </span>
+<span class="k">list in</span> <span class="m">1</span><span class="o">/</span><span class="m">5</span>	  
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wage</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./data/wage.csv&quot;</span><span class="p">)[[</span><span class="s2">&quot;wage&quot;</span><span class="p">,</span> <span class="s2">&quot;lhwage&quot;</span><span class="p">,</span> <span class="s2">&quot;educ&quot;</span><span class="p">,</span> <span class="s2">&quot;IQ&quot;</span><span class="p">]]</span>
 
@@ -539,7 +572,35 @@ document.write(`
 </div></div></div>
 </div>
 <p>当我们运行回归模型来探究教育年限与小时工资对数之间的关联时，得到了以下结果。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Run regression and store results</span>
+<span class="k">regress</span> lhwage educ
+eststo model1
+
+<span class="c1">* Export publication-ready table (English output)</span>
+esttab model1 using <span class="s">&quot;wage_regression.rtf&quot;</span>, <span class="cs">///</span>
+<span class="k">    replace</span> <span class="cs">///</span>
+    b(<span class="m">3</span>)<span class="k"> se</span>(<span class="m">3</span>) <span class="cs">///</span>
+    star(<span class="o">*</span> <span class="m">0.05</span> <span class="o">**</span> <span class="m">0.01</span> <span class="o">***</span> <span class="m">0.001</span>) <span class="cs">///</span>
+    stats(N r2_a, fmt(<span class="m">0</span> <span class="m">3</span>) labels(<span class="s">&quot;Observations&quot;</span> <span class="s">&quot;Adj. R-squared&quot;</span>)) <span class="cs">///</span>
+    title(<span class="s">&quot;Returns to Schooling: Wage Regression Results&quot;</span>) <span class="cs">///</span>
+<span class="k">    label</span> <span class="cs">///</span>
+    varwidth(<span class="m">20</span>) <span class="cs">///</span>
+    addnotes(<span class="s">&quot;*** p&lt;0.001, ** p&lt;0.01, * p&lt;0.05&quot;</span>) <span class="cs">///</span>
+    nogaps
+
+<span class="c1">* Simplified console output</span>
+esttab model1, cells(<span class="s">&quot;b(fmt(3) star)&quot;</span>) <span class="cs">///</span>
+    star(<span class="o">*</span> <span class="m">0.05</span> <span class="o">**</span> <span class="m">0.01</span> <span class="o">***</span> <span class="m">0.001</span>) <span class="cs">///</span>
+    stats(N r2_a, fmt(<span class="m">0</span> <span class="m">3</span>)) <span class="cs">///</span>
+    mtitle(<span class="s">&quot;Model (1)&quot;</span>) <span class="cs">///</span>
+    noomitted
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_1</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s1">&#39;lhwage ~ educ&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">wage</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 <span class="n">model_1</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span><span class="o">.</span><span class="n">tables</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -560,7 +621,15 @@ document.write(`
 </table></div></div>
 </div>
 <p>现在，假设这些数据受到保密条款限制。数据提供方无法给出个体层面的信息。于是我们要求其按教育年限分组，仅提供每组的平均小时工资对数及组内人数。这样我们最终只得到 10 个数据点。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Alternative using tabstat</span>
+<span class="k">tabstat</span> lhwage,<span class="k"> by</span>(educ) stat(mean<span class="k"> count</span>) nototal	
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">group_wage</span> <span class="o">=</span> <span class="p">(</span><span class="n">wage</span>
               <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -662,7 +731,33 @@ document.write(`
 </div></div></div>
 </div>
 <p>别担心！回归分析并不依赖大数据也能发挥作用！我们可以为线性回归模型赋予权重，这样它会更重视样本量较大的组别，而非小样本组。注意我已将 <code class="docutils literal notranslate"><span class="pre">smf.ols</span></code> 替换为 <code class="docutils literal notranslate"><span class="pre">smf.wls</span></code> ，以实现加权最小二乘法。这一改动虽不易察觉，却将带来显著差异。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Correct way to collapse with counts</span>
+<span class="k">preserve</span>
+<span class="c1">    * First create an ID variable for counting</span>
+<span class="k">    gen</span> id = <span class="m">1</span>
+<span class="c1">    </span>
+<span class="c1">    * Then collapse</span>
+<span class="k">    collapse</span> (mean) lhwage (sum)<span class="k"> count</span>=id,<span class="k"> by</span>(educ)
+<span class="c1">    </span>
+<span class="c1">    * Now run WLS regression</span>
+<span class="k">    regress</span> lhwage educ [aweight=count]
+    eststo model2
+<span class="c1">    * Display results</span>
+    esttab model2, cells(<span class="s">&quot;b(star fmt(3))&quot;</span>) <span class="cs">///</span>
+        stats(N r2_a, labels(<span class="s">&quot;N&quot;</span> <span class="s">&quot;Adj. R2&quot;</span>))
+<span class="k">restore</span>	
+<span class="c1">	</span>
+<span class="c1">* Display both models</span>
+esttab model1 model2, <span class="cs">///</span>
+    mtitle(<span class="s">&quot;OLS&quot;</span> <span class="s">&quot;WLS&quot;</span>) <span class="cs">///</span>
+    stats(N r2_a, fmt(<span class="m">0</span> <span class="m">3</span>))	   
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_2</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">wls</span><span class="p">(</span><span class="s1">&#39;lhwage ~ educ&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">group_wage</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">group_wage</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 <span class="n">model_2</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span><span class="o">.</span><span class="n">tables</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -683,7 +778,33 @@ document.write(`
 </table></div></div>
 </div>
 <p>请注意分组模型中 <code class="docutils literal notranslate"><span class="pre">educ</span></code> 的参数估计值与未分组数据中的结果极为接近（本例中两者实际完全相同）。即便仅有 10 个数据点，我们仍成功获得了统计显著的系数。这是因为虽然数据点减少，但分组大幅降低了方差。同时注意标准误略小、t 统计量略大的现象——这是由于部分方差信息丢失，我们需要采取更保守的估计。数据分组后，我们无法获知组内方差的具体大小。请将上述结果与下方非加权模型的结果进行对比。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* First create the grouped data</span>
+<span class="k">preserve</span>
+<span class="k">    gen</span> id = <span class="m">1</span>
+<span class="k">    collapse</span> (mean) lhwage (sum)<span class="k"> count</span>=id,<span class="k"> by</span>(educ)
+<span class="c1">    </span>
+<span class="c1">    * Run OLS on group means (unweighted)</span>
+<span class="k">    regress</span> lhwage educ
+<span class="c1">    </span>
+<span class="c1">    * Display formatted results</span>
+    eststo model3
+    esttab model3, cells(<span class="s">&quot;b(star fmt(3))&quot;</span>) <span class="cs">///</span>
+        stats(N r2, labels(<span class="s">&quot;Groups&quot;</span> <span class="s">&quot;R-squared&quot;</span>)) <span class="cs">///</span>
+        title(<span class="s">&quot;OLS on Group Means&quot;</span>) <span class="cs">///</span>
+        varwidth(<span class="m">15</span>)
+<span class="k">restore</span>	 
+
+
+esttab model1 model2 model3, <span class="cs">///</span>
+    mtitle(<span class="s">&quot;Original OLS&quot;</span> <span class="s">&quot;WLS&quot;</span> <span class="s">&quot;Grouped OLS&quot;</span>) <span class="cs">///</span>
+    stats(N r2, fmt(<span class="m">0</span> <span class="m">3</span>))  
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_3</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s1">&#39;lhwage ~ educ&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">group_wage</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 <span class="n">model_3</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span><span class="o">.</span><span class="n">tables</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -704,7 +825,38 @@ document.write(`
 </table></div></div>
 </div>
 <p>参数估计值较小。此处的情况是，回归分析对所有数据点赋予同等权重。若将模型与分组点一同绘制，可见未加权模型过度重视了左下角的小点群，导致拟合直线的斜率偏低。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Create grouped data if not already done</span>
+<span class="k">preserve</span>
+<span class="k">    gen</span> id = <span class="m">1</span>
+<span class="k">    collapse</span> (mean) lhwage (sum)<span class="k"> count</span>=id,<span class="k"> by</span>(educ)
+<span class="c1">    </span>
+<span class="c1">    * Run both regressions</span>
+<span class="k">    regress</span> lhwage educ [aweight=count]  <span class="c1">// Weighted</span>
+<span class="k">    predict</span> weighted_pred
+<span class="k">    regress</span> lhwage educ                  <span class="c1">// Unweighted</span>
+<span class="k">    predict</span> unweighted_pred
+<span class="c1">    </span>
+<span class="c1">    * Create the plot</span>
+<span class="k">    twoway</span> (scatter lhwage educ [weight=count], <span class="cs">///</span>
+               msymbol(Oh) msize(<span class="o">*</span>.<span class="m">5</span>) mcolor(blue)) <span class="cs">///</span>
+           (line weighted_pred educ, lcolor(orange) lwidth(medthick)) <span class="cs">///</span>
+           (line unweighted_pred educ, lcolor(green) lwidth(medthick)), <span class="cs">///</span>
+           title(<span class="s">&quot;Log Wage by Education&quot;</span>) <span class="cs">///</span>
+           xtitle(<span class="s">&quot;Years of Education&quot;</span>) <span class="cs">///</span>
+           ytitle(<span class="s">&quot;Log Hourly Wage&quot;</span>) <span class="cs">///</span>
+           legend(order(<span class="m">2</span> <span class="s">&quot;Weighted&quot;</span> <span class="m">3</span> <span class="s">&quot;Non Weighted&quot;</span>) pos(<span class="m">6</span>) row(<span class="m">1</span>)) <span class="cs">///</span>
+           graphregion(color(white)) <span class="cs">///</span>
+           plotregion(color(white)) <span class="cs">///</span>
+           xlabel(<span class="m">8</span>(<span class="m">2</span>)<span class="m">20</span>) <span class="cs">///</span>
+           ylabel(, angle(horizontal))
+<span class="k">restore</span>	   
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;educ&quot;</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;lhwage&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">group_wage</span><span class="p">,</span> <span class="n">sizes</span><span class="o">=</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">400</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wage</span><span class="p">[</span><span class="s2">&quot;educ&quot;</span><span class="p">],</span> <span class="n">model_2</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">wage</span><span class="p">[</span><span class="s2">&quot;educ&quot;</span><span class="p">]),</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;C1&quot;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;Weighted&quot;</span><span class="p">)</span>
@@ -722,7 +874,33 @@ document.write(`
 <p>关键在于回归分析这一卓越工具既适用于个体数据也适用于聚合数据，但在后者情况下必须使用加权处理。加权回归需要均值统计量——既非总和，也非标准差或中位数，而是协变量与因变量的均值！需注意，分组数据的加权回归结果虽不会与未分组数据的回归完全一致，但会非常接近。</p>
 <p><img alt="img" src="_images/heterosk.png" /></p>
 <p>我将以一个在分组数据模型中引入额外协变量的最终示例作为结束。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Create grouped data with means and counts</span>
+<span class="k">preserve</span>
+<span class="k">    gen count</span> = <span class="m">1</span>
+<span class="k">    collapse</span> (mean) lhwage iq (sum)<span class="k"> count</span>,<span class="k"> by</span>(educ)
+<span class="c1">    </span>
+<span class="c1">    * Run WLS regression</span>
+<span class="k">    regress</span> lhwage educ iq [aweight=count]
+<span class="c1">    </span>
+<span class="c1">    * Display results</span>
+<span class="k">    estimates</span> store model4
+<span class="k">    display</span> <span class="s">&quot;Number of observations: &quot;</span><span class="k"> e</span>(N)
+    esttab model4, cells(<span class="s">&quot;b(star fmt(3))&quot;</span>) <span class="cs">///</span>
+        stats(N r2_a, labels(<span class="s">&quot;Observations&quot;</span> <span class="s">&quot;Adj. R-squared&quot;</span>)) <span class="cs">///</span>
+        title(<span class="s">&quot;WLS Results with IQ&quot;</span>) <span class="cs">///</span>
+        varwidth(<span class="m">20</span>)
+<span class="k">restore</span>	   
+	   
+esttab model1 model2 model3 model4, <span class="cs">///</span>
+    mtitle(<span class="s">&quot;Original OLS&quot;</span> <span class="s">&quot;WLS&quot;</span> <span class="s">&quot;Grouped OLS&quot;</span> <span class="s">&quot;With Covariate&quot;</span>) <span class="cs">///</span>
+    stats(N r2, fmt(<span class="m">0</span> <span class="m">3</span>))	   
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">group_wage</span> <span class="o">=</span> <span class="p">(</span><span class="n">wage</span>
               <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -813,7 +991,25 @@ document.write(`
 </div>
 <p>在讨论 A/B 测试时，我们已经处理过虚拟回归的一种简单形式。更一般地说，当我们处理二元处理变量时，会将其表示为虚拟变量。这种情况下，<strong>该虚拟变量的回归系数即为回归线截距的增量</strong>，或者说处理组与未处理组均值之差。</p>
 <p>为了更具体地说明这一点，让我们考虑一个估计完成 12 年级教育对时薪影响的例子（暂且忽略混杂因素）。在下面的代码中，我们创建了一个处理虚拟变量 <code class="docutils literal notranslate"><span class="pre">T</span></code> ，用于指示受教育年限是否超过 12 年。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Create hourly wage (wage divided by hours)</span>
+<span class="k">gen</span> hwage = wage <span class="o">/</span> hours
+
+<span class="c1">* Create treatment indicator (education &gt; 12 years)</span>
+<span class="k">gen</span> T = (educ <span class="o">&gt;</span> <span class="m">12</span>)<span class="k"> if</span> <span class="o">!</span><span class="nf">missing</span>(educ)
+
+<span class="c1">* Label variables</span>
+<span class="k">label</span> variable hwage <span class="s">&quot;Hourly wage&quot;</span>
+<span class="k">label</span> variable T <span class="s">&quot;Higher education (educ &gt; 12)&quot;</span>
+
+<span class="c1">* Display first 5 observations of selected variables</span>
+<span class="k">list</span> hwage iq T<span class="k"> in</span> <span class="m">1</span><span class="o">/</span><span class="m">5</span>, noobs clean	   
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wage</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./data/wage.csv&quot;</span><span class="p">)</span>
         <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">hwage</span><span class="o">=</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;wage&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;hours&quot;</span><span class="p">])</span>
@@ -883,7 +1079,24 @@ document.write(`
 </div></div></div>
 </div>
 <p>该虚拟变量起到一种开关的作用。在我们的例子中，如果虚拟变量开启，预测值就是截距加上虚拟变量的系数；如果关闭，预测值则仅为截距。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Run OLS regression of hourly wage on treatment indicator</span>
+<span class="k">regress</span> hwage T
+
+<span class="c1">* Display formatted coefficient table</span>
+eststo model5
+
+<span class="c1">* Alternative using esttab for publication-quality output</span>
+esttab model5, cells(<span class="s">&quot;b(star fmt(3))&quot;</span>) <span class="cs">///</span>
+    stats(N r2_a, labels(<span class="s">&quot;Observations&quot;</span> <span class="s">&quot;Adj. R-squared&quot;</span>)) <span class="cs">///</span>
+    title(<span class="s">&quot;Treatment Effect of Higher Education on Hourly Wage&quot;</span>) <span class="cs">///</span>
+    varwidth(<span class="m">20</span>)	
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s1">&#39;hwage ~ T&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">wage</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span><span class="o">.</span><span class="n">tables</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 </pre></div>
@@ -912,7 +1125,29 @@ E[Y_i|T_i] =  E[Y_i|T_i=0] + \beta T_i = \alpha + \beta T_i
 \beta = [Y_i|T_i=1] - [Y_i|T_i=0]
 \)</span></p>
 <p>若引入额外变量，虚拟变量的系数即转化为<strong>条件均值差</strong>。例如，假设我们在原有模型中添加智商（IQ）这一变量。此时，虚拟系数表示在<strong>智商固定</strong>的情况下，完成 12 年级学业预期带来的增长幅度。若绘制预测图，我们将看到两条平行线。从一条线跃升至另一条线的高度，即为完成 12 年级学业所预期的提升量。这也说明效应具有恒定性——无论智商高低，完成 12 年级学业对所有人的益处均等。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Run OLS regression with treatment and IQ</span>
+<span class="k">regress</span> hwage T iq
+
+<span class="c1">* Store fitted values</span>
+<span class="k">predict</span> y_hat, xb
+
+<span class="c1">* Create separate prediction lines</span>
+<span class="k">twoway</span> (line y_hat iq<span class="k"> if</span> T <span class="o">==</span> <span class="m">1</span>, lcolor(orange) lwidth(medthick)) <span class="cs">///</span>
+       (line y_hat iq<span class="k"> if</span> T <span class="o">==</span> <span class="m">0</span>, lcolor(green) lwidth(medthick)), <span class="cs">///</span>
+       title(<span class="s">&quot;Treatment Effect Conditional on IQ&quot;</span>) <span class="cs">///</span>
+       subtitle(<span class="s">&quot;E[T=1|IQ] - E[T=0|IQ] = &quot;</span> <span class="o">+</span> <span class="nf">string</span>(_b[T], <span class="s">&quot;%4.2f&quot;</span>)) <span class="cs">///</span>
+       ytitle(<span class="s">&quot;Predicted Hourly Wage&quot;</span>) <span class="cs">///</span>
+       xtitle(<span class="s">&quot;IQ Score&quot;</span>) <span class="cs">///</span>
+       legend(order(<span class="m">1</span> <span class="s">&quot;T=1 (educ &gt;12)&quot;</span> <span class="m">2</span> <span class="s">&quot;T=0 (educ ≤12)&quot;</span>)) <span class="cs">///</span>
+       graphregion(color(white)) <span class="cs">///</span>
+       plotregion(color(white))	   
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">m</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s1">&#39;hwage ~ T+IQ&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">wage</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 <span class="n">plt_df</span> <span class="o">=</span> <span class="n">wage</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">y_hat</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">fittedvalues</span><span class="p">)</span>
@@ -940,7 +1175,33 @@ wage_i = \beta_0 + \beta_1T_i + \beta_2 IQ_i + \beta_3 IQ_i * T_i  + e_i
 \)</span></p>
 <p>情况变得稍微复杂一些，让我们看看这个模型中每个参数的含义。首先是截距 <span class="math notranslate nohighlight">\(\beta_0\)</span>。这个参数本身并没有特别有趣的解释，它表示当处理变量为零（即个人未完成 12 年级教育）且智商为零时的预期工资。由于我们预期任何人的智商都不会为零，因此这一参数的意义不大。至于 <span class="math notranslate nohighlight">\(\beta_1\)</span>，情况类似。该参数表示在<strong>智商为零</strong>时，完成 12 年级教育对工资的预期增加量。同样，因为智商不可能为零，所以这一参数也没有特别的实际意义。现在来看 <span class="math notranslate nohighlight">\(\beta_2\)</span> ，它稍微有趣一些。它告诉我们对于<strong>未接受处理</strong>的群体，智商每增加一点对工资的影响。在我们的例子中，这个值大约是 0.11，意味着每增加 1 个智商点，未完成 12 年级教育的人每小时工资预计会增加 11 美分。最后，最有趣的参数是 <span class="math notranslate nohighlight">\(\beta_3\)</span>。它揭示了智商如何放大完成 12 年级教育的效果。在我们的案例中，该参数为 0.024，表示每增加 1 个智商点，完成 12 年级教育能额外带来 2 美分的工资增长。 这看起来或许不多，但比较一下智商 60 和 140 的人。前者工资将增加 1.44（60 乘以 0.024），而智商 140 的人在完成 12 年级学业时，收入将额外增加 3.36 美元（140 乘以 0.024）。</p>
 <p>用简单的建模术语来说，这一交互项允许处理效应随特征水平（本例中仅为智商）而变化。结果是，如果我们绘制预测线，会发现它们不再平行，且那些完成 12 年级学业（T=1）的个体在智商维度上具有更高的斜率——高智商者比低智商者从毕业中获益更多。这种现象有时被称为效应修饰或异质性处理效应。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* 1. Run regression with interaction term</span>
+<span class="k">regress</span> hwage c<span class="m">.</span>T##c<span class="m">.</span>iq
+
+<span class="c1">* 2. Store coefficients for dynamic title</span>
+<span class="k">scalar</span> T_effect = _b[T]
+<span class="k">scalar</span> IQ_effect = _b[iq]
+<span class="k">scalar</span> interaction = _b[T#c<span class="m">.</span>iq]
+
+<span class="c1">* 3. Generate predicted values</span>
+<span class="k">predict</span> y_hat1, xb
+
+<span class="c1">* 4. Create plot with interaction lines</span>
+<span class="k">twoway</span> (line y_hat1 iq<span class="k"> if</span> T <span class="o">==</span> <span class="m">1</span>, lcolor(orange) lwidth(medthick)) <span class="cs">///</span>
+       (line y_hat1 iq<span class="k"> if</span> T <span class="o">==</span> <span class="m">0</span>, lcolor(green) lwidth(medthick)), <span class="cs">///</span>
+       title(<span class="s">&quot;Treatment Effect with IQ Interaction&quot;</span>) <span class="cs">///</span>
+       ytitle(<span class="s">&quot;Predicted Hourly Wage&quot;</span>) <span class="cs">///</span>
+       xtitle(<span class="s">&quot;IQ Score&quot;</span>) <span class="cs">///</span>
+       legend(order(<span class="m">1</span> <span class="s">&quot;T=1 (educ &gt;12)&quot;</span> <span class="m">2</span> <span class="s">&quot;T=0 (educ ≤12)&quot;</span>)) <span class="cs">///</span>
+       graphregion(color(white)) <span class="cs">///</span>
+       plotregion(color(white))	   
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">m</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s1">&#39;hwage ~ T*IQ&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">wage</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 <span class="n">plt_df</span> <span class="o">=</span> <span class="n">wage</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">y_hat</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">fittedvalues</span><span class="p">)</span>
@@ -959,7 +1220,25 @@ wage_i = \beta_0 + \beta_1T_i + \beta_2 IQ_i + \beta_3 IQ_i * T_i  + e_i
 </div>
 </div>
 <p>最后，我们来看模型中所有变量均为虚拟变量的情况。为此，我们将智商（IQ）离散化为 4 个区间，并将受教育年限视为类别变量。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Create IQ quartile bins (4 equal-sized groups)</span>
+<span class="k">xtile</span> iq_bins = iq, nq(<span class="m">4</span>)
+
+<span class="c1">* Label the bins for clarity</span>
+<span class="k">label</span> define iq_bins <span class="m">1</span> <span class="s">&quot;Q1 (Lowest)&quot;</span> <span class="m">2</span> <span class="s">&quot;Q2&quot;</span> <span class="m">3</span> <span class="s">&quot;Q3&quot;</span> <span class="m">4</span> <span class="s">&quot;Q4 (Highest)&quot;</span>
+<span class="k">label</span> values iq_bins iq_bins
+
+<span class="c1">* Keep only needed variables</span>
+<span class="k">keep</span> hwage educ iq_bins
+
+<span class="c1">* Display first 5 observations</span>
+<span class="k">list in</span> <span class="m">1</span><span class="o">/</span><span class="m">5</span>, noobs clean
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wage_ed_bins</span> <span class="o">=</span> <span class="p">(</span><span class="n">wage</span>
                 <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">IQ_bins</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">qcut</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;IQ&quot;</span><span class="p">],</span> <span class="n">q</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)))</span>
@@ -1029,7 +1308,27 @@ wage_i = \beta_0 + \beta_1T_i + \beta_2 IQ_i + \beta_3 IQ_i * T_i  + e_i
 </div></div></div>
 </div>
 <p>将教育视为类别变量后，我们不再将教育的影响限制于单一参数，而是允许每一年的教育都有其独特的影响。这样做增加了模型的灵活性，因为教育效应不再受参数化约束。该模型仅计算每一年教育对应的平均工资。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Run regression with education category dummies</span>
+<span class="k">regress</span> hwage i<span class="m">.</span>educ
+
+<span class="c1">* Display formatted coefficient table</span>
+eststo model6
+
+<span class="c1">* Alternative using esttab for publication-quality output</span>
+esttab model6, cells(<span class="s">&quot;b(star fmt(3))&quot;</span>) <span class="cs">///</span>
+    stats(N r2_a, labels(<span class="s">&quot;Observations&quot;</span> <span class="s">&quot;Adj. R-squared&quot;</span>)) <span class="cs">///</span>
+    title(<span class="s">&quot;Hourly Wage by Education Level&quot;</span>) <span class="cs">///</span>
+    varwidth(<span class="m">20</span>)
+<span class="k">	</span>
+<span class="k">	</span>
+<span class="k">predict</span> y_hat2, xb
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_dummy</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s1">&#39;hwage ~ C(educ)&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">wage</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 <span class="n">model_dummy</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span><span class="o">.</span><span class="n">tables</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -1073,7 +1372,23 @@ wage_i = \beta_0 + \beta_1T_i + \beta_2 IQ_i + \beta_3 IQ_i * T_i  + e_i
 </tr>
 </table></div></div>
 </div>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Create scatterplot with regression line</span>
+<span class="k">twoway</span> (scatter hwage educ, mcolor(blue%<span class="m">50</span>) msymbol(Oh)) <span class="cs">///</span>
+       (line y_hat2 educ,<span class="k"> sort</span> lcolor(orange) lwidth(medthick)), <span class="cs">///</span>
+       title(<span class="s">&quot;Hourly Wage by Education&quot;</span>) <span class="cs">///</span>
+       xtitle(<span class="s">&quot;Years of Education&quot;</span>) <span class="cs">///</span>
+       ytitle(<span class="s">&quot;Hourly Wage&quot;</span>) <span class="cs">///</span>
+       legend(off) <span class="cs">///</span>
+       graphregion(color(white)) <span class="cs">///</span>
+       plotregion(color(white)) <span class="cs">///</span>
+       xlabel(<span class="m">8</span>(<span class="m">2</span>)<span class="m">20</span>)
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">wage</span><span class="p">[</span><span class="s2">&quot;educ&quot;</span><span class="p">],</span> <span class="n">wage</span><span class="p">[</span><span class="s2">&quot;hwage&quot;</span><span class="p">])</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wage</span><span class="p">[</span><span class="s2">&quot;educ&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(),</span> <span class="n">model_dummy</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">wage</span><span class="p">[</span><span class="s2">&quot;educ&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()),</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;C1&quot;</span><span class="p">)</span>
@@ -1091,7 +1406,22 @@ wage_i = \beta_0 + \beta_1T_i + \beta_2 IQ_i + \beta_3 IQ_i * T_i  + e_i
 \beta_{17} = E[Y|T=17]-E[Y|T=9]
 \)</span></p>
 <p>代价是当我们允许如此大的灵活性时，会丧失统计显著性。注意某些年份的 p 值有多大。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Calculate means for educ==9 and educ==17</span>
+<span class="k">sum</span> hwage<span class="k"> if</span> educ <span class="o">==</span> <span class="m">9</span>
+<span class="k">scalar</span> t0_mean = <span class="nf">r</span>(mean)
+<span class="k">display</span> <span class="s">&quot;E[Y|T=9]: &quot;</span> <span class="nx">%5.2f</span> t0_mean
+
+<span class="k">sum</span> hwage<span class="k"> if</span> educ <span class="o">==</span> <span class="m">17</span>
+<span class="k">scalar</span> t1_mean = <span class="nf">r</span>(mean)
+<span class="k">scalar</span> diff = t1_mean <span class="o">-</span> t0_mean
+<span class="k">display</span> <span class="s">&quot;E[Y|T=17]-E[Y|T=9]: &quot;</span> <span class="nx">%5.2f</span> diff
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t1</span> <span class="o">=</span> <span class="n">wage</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;educ==17&quot;</span><span class="p">)[</span><span class="s2">&quot;hwage&quot;</span><span class="p">]</span>
 <span class="n">t0</span> <span class="o">=</span> <span class="n">wage</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;educ==9&quot;</span><span class="p">)[</span><span class="s2">&quot;hwage&quot;</span><span class="p">]</span>
@@ -1112,7 +1442,22 @@ E[Y|T=17]-E[Y|T=9]: 9.590472362353516
 E\{ \ (E[Y_i|T=1, Group_i] - E[Y_i|T=0, Group_i])w(Group_i) \ \}
 \)</span></p>
 <p><span class="math notranslate nohighlight">\(w(Group_i)\)</span> 并不完全等同于组 <span class="math notranslate nohighlight">\(Var(T_i|Group_i)\)</span> 中处理变量的方差，而是与之成比例。由此自然产生的一个问题是：为什么不使用完全非参数估计量，其中组的权重就是样本量？这确实是一个有效的估计量，但回归分析并不采用这种方法。通过利用处理变量的方差，回归分析赋予处理变量变化较大的组更多权重。这在直觉上是有道理的。如果处理变量几乎恒定（例如只有一人接受处理而其他人都未处理），那么无论样本量多大，该组提供的信息对于处理效应的了解都极为有限。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Run regression with both sets of dummies</span>
+<span class="k">regress</span> hwage i<span class="m">.</span>educ i<span class="m">.</span>iq_bins
+
+<span class="c1">* Store results and display formatted table</span>
+eststo model_dummy2
+esttab model_dummy2, cells(<span class="s">&quot;b(star fmt(3))&quot;</span>) <span class="cs">///</span>
+    stats(N r2_a, labels(<span class="s">&quot;Observations&quot;</span> <span class="s">&quot;Adj. R-squared&quot;</span>)) <span class="cs">///</span>
+    title(<span class="s">&quot;Wage Regression with Education and IQ Dummies&quot;</span>) <span class="cs">///</span>
+    varwidth(<span class="m">25</span>)	   
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_dummy_2</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s1">&#39;hwage ~ C(educ) + C(IQ_bins)&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">wage_ed_bins</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 <span class="n">model_dummy_2</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span><span class="o">.</span><span class="n">tables</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>

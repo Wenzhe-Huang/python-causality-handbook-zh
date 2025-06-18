@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -436,7 +436,35 @@ exam_i = \beta_0 + \kappa \ Online_i + u_i
 \)</span></p>
 <p>这意味着我们将考试成绩建模为基线 <span class="math notranslate nohighlight">\(\beta_0\)</span> 加上在线课程时的 <span class="math notranslate nohighlight">\(\kappa\)</span>。当然，考试成绩还受其他变量影响（如考试当天学生情绪、学习时长等）。但我们并不真正关心这些关系的解析。因此，我们用 <span class="math notranslate nohighlight">\(u_i\)</span> 项代表所有我们不关心的其他因素，这被称为模型误差。</p>
 <p>注意 <span class="math notranslate nohighlight">\(Online\)</span> 是我们的处理指示变量，因此是一个虚拟变量。当面授课时其值为 0，在线课程时为 1。基于此，我们可以看到线性回归将恢复 <span class="math notranslate nohighlight">\(E[Y|T=0] = \beta_0\)</span> 和 <span class="math notranslate nohighlight">\(E[Y|T=1] = \beta_0 + \kappa \)</span>。<span class="math notranslate nohighlight">\(\kappa\)</span> 将成为我们的平均处理效应（ATE）。</p>
-<div class="cell tag_hide-input docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Load data (assuming CSV is in current directory)</span>
+import delimited <span class="s">&quot;./data/online_classroom.csv&quot;</span>,<span class="k"> clear</span>
+
+<span class="c1">* Filter to exclude blended format</span>
+<span class="k">keep if</span> format_blended <span class="o">==</span> <span class="m">0</span>
+
+<span class="c1">* Run OLS regression</span>
+<span class="k">regress</span> falsexam format_ol
+eststo online_model
+<span class="c1">* Display in results window</span>
+esttab online_model, cells(<span class="s">&quot;b(fmt(3) star)&quot;</span>) <span class="cs">///</span>
+    star(<span class="o">*</span> <span class="m">0.05</span> <span class="o">**</span> <span class="m">0.01</span> <span class="o">***</span> <span class="m">0.001</span>) <span class="cs">///</span>
+    stats(N r2_a, labels(<span class="s">&quot;Observations&quot;</span> <span class="s">&quot;Adj. R-squared&quot;</span>))  <span class="cs">///</span>
+    mtitle(<span class="s">&quot;Online vs Face-to-Face&quot;</span>) <span class="cs">///</span>
+    nobaselevels <span class="cs">///</span>
+    interaction(<span class="s">&quot; × &quot;</span>)
+<span class="c1">	</span>
+<span class="c1">* Calculate mean falsexam by format_ol</span>
+<span class="k">collapse</span> (mean) falsexam,<span class="k"> by</span>(format_ol)
+
+<span class="c1">* Display results with labels</span>
+<span class="k">list</span> format_ol falsexam, noobs clean
+</pre></div>
+</div>
+</div>
+</details><div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
 <span class="collapsed">Show code cell source</span>
@@ -479,7 +507,33 @@ exam_i = \beta_0 + \kappa \ Online_i + u_i
 </table></div></div>
 </div>
 <p>这真是太棒了！我们不仅能估计 ATE，还能顺带获得置信区间和 P 值！不仅如此，我们还能看到回归分析正在精确执行其应有的功能：比较 <span class="math notranslate nohighlight">\(E[Y|T=0]\)</span> 和 <span class="math notranslate nohighlight">\(E[Y|T=1]\)</span>。截距项恰好对应 <span class="math notranslate nohighlight">\(T=0\)</span> 时的样本均值 <span class="math notranslate nohighlight">\(E[Y|T=0]\)</span>，而线上形式的系数则正好是均值差异的样本估计 <span class="math notranslate nohighlight">\(E[Y|T=1] - E[Y|T=0]\)</span>。不相信我？没关系，你可以自己验证：</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Load data and keep needed variables</span>
+import delimited <span class="s">&quot;./data/online_classroom.csv&quot;</span>,<span class="k"> clear</span>
+
+<span class="c1">* keep falsexam format_ol</span>
+<span class="k">keep if</span> format_blended <span class="o">==</span> <span class="m">0</span>
+
+<span class="c1">* Create intercept column</span>
+<span class="k">gen</span> intercept = <span class="m">1</span>
+
+<span class="c1">* Prepare matrices</span>
+<span class="k">mkmat</span> falsexam,<span class="k"> matrix</span>(y)
+<span class="k">mkmat</span> format_ol intercept,<span class="k"> matrix</span>(X)
+
+<span class="c1">* Calculate regression coefficients using matrix algebra</span>
+<span class="k">matrix</span> XpX = X&#39;<span class="o">*</span>X
+<span class="k">matrix</span> Xpy = X&#39;<span class="o">*</span>y
+<span class="k">matrix</span> beta = <span class="nf">invsym</span>(XpX)<span class="o">*</span>Xpy
+
+<span class="c1">* Display results</span>
+<span class="k">matrix list</span> beta
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">data</span>
  <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;format_ol&quot;</span><span class="p">)</span>
@@ -515,7 +569,20 @@ Name: falsexam, dtype: float64
 \hat{\beta} = (X'X)^{-1}X' Y
 \)</span></p>
 <p>但别只听我的一面之词。如果你属于那种更懂代码而非公式的人，不妨亲自尝试：</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Calculate covariance and variance</span>
+<span class="k">correlate</span> falsexam format_ol, covariance
+<span class="k">matrix</span> C = <span class="nf">r</span>(C)
+<span class="k">scalar</span> cov_falsexam_format = C[<span class="m">2</span>,<span class="m">1</span>]
+
+<span class="k">summarize</span> format_ol
+<span class="k">scalar</span> var_format = <span class="nf">r</span>(Var)
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="s2">&quot;format_ol&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">intercep</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;falsexam&quot;</span><span class="p">]</span>
@@ -540,7 +607,18 @@ Name: falsexam, dtype: float64
 \beta_1 = \dfrac{Cov(Y_i, T_i)}{Var(T_i)} 
 \)</span></p>
 <p>若 <span class="math notranslate nohighlight">\(T\)</span> 被随机分配，则 <span class="math notranslate nohighlight">\(\beta_1\)</span> 即为平均处理效应（ATE）。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Compute kappa (regression coefficient)</span>
+<span class="k">scalar kappa</span> = cov_falsexam_format <span class="o">/</span> var_format
+
+<span class="c1">* Display result</span>
+<span class="k">display</span> <span class="s">&quot;Kappa (regression coefficient) = &quot;</span> <span class="nx">%5.3f</span><span class="k"> kappa</span>
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kapa</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;falsexam&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;format_ol&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;format_ol&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">var</span><span class="p">()</span>
 <span class="n">kapa</span>
@@ -564,7 +642,32 @@ y_i = \beta_0 + \kappa T_i + \beta_1 X_{1i} + ... +\beta_k X_{ki} + u_i
 <p>其中 <span class="math notranslate nohighlight">\(\tilde{T_i}\)</span> 为其他所有协变量 <span class="math notranslate nohighlight">\(X_{1i} + ... + X_{ki}\)</span> 对 <span class="math notranslate nohighlight">\(T_i\)</span> 回归后的残差。现在，让我们体会这一方法的精妙之处：这意味着多元回归中的系数，是在控制模型中其他变量影响后，同一回归变量的双变量系数。用因果推断术语表述，<span class="math notranslate nohighlight">\(\kappa\)</span> 是在利用所有其他变量预测 <span class="math notranslate nohighlight">\(T\)</span> 后，<span class="math notranslate nohighlight">\(T\)</span> 的双变量系数。</p>
 <p>这背后有一个直观的解释。如果我们能通过其他变量预测 <span class="math notranslate nohighlight">\(T\)</span> ，意味着它并非随机。然而，我们可以通过控制其他可用变量，使 <span class="math notranslate nohighlight">\(T\)</span> 表现得如同随机。为此，我们使用线性回归基于其他变量进行预测，并取其回归残差 <span class="math notranslate nohighlight">\(\tilde{T}\)</span>。根据定义，<span class="math notranslate nohighlight">\(\tilde{T}\)</span> 无法被已用于预测 <span class="math notranslate nohighlight">\(T\)</span> 的其他变量 <span class="math notranslate nohighlight">\(X\)</span> 所预测。巧妙之处在于，<span class="math notranslate nohighlight">\(\tilde{T}\)</span> 是处理后的版本，与 <span class="math notranslate nohighlight">\(X\)</span> 中的任何其他变量均无关联。</p>
 <p>顺便一提，这也是线性回归的一个特性。残差总是与生成它的模型中任何变量正交或不相关：</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* 1. Calculate residuals</span>
+<span class="k">predict e</span>, resid
+
+<span class="c1">* 2. Verify orthogonality (dot product should be zero)</span>
+<span class="k">matrix</span> accum Xe = format_ol intercept<span class="k"> e</span>, noconstant
+<span class="k">matrix list</span> Xe
+
+<span class="c1">* 3. Display orthogonality check results</span>
+<span class="k">display</span> <span class="s">&quot;Orthogonality check - dot product of residuals and:&quot;</span>
+<span class="k">display</span> <span class="s">&quot; format_ol: &quot;</span> <span class="nx">%9.6f</span> Xe[<span class="m">1</span>,<span class="m">3</span>]
+<span class="k">display</span> <span class="s">&quot; intercept: &quot;</span> <span class="nx">%9.6f</span> Xe[<span class="m">2</span>,<span class="m">3</span>]
+
+<span class="c1">* 4. Calculate correlation between residuals and format_ol</span>
+<span class="k">correlate</span> format_ol<span class="k"> e</span>
+<span class="k">matrix list</span> <span class="nf">r</span>(C)
+
+<span class="c1">* 5. Alternative table format (similar to pandas .corr())</span>
+estpost<span class="k"> correlate</span> format_ol<span class="k"> e</span>,<span class="k"> matrix</span>
+esttab, unstack not noobs<span class="k"> compress</span>
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">e</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">X</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">beta</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Orthogonality imply that the dot product is zero:&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">X</span><span class="p">))</span>
@@ -623,7 +726,31 @@ y_i = \beta_0 + \kappa T_i + \beta_1 X_{1i} + ... +\beta_k X_{ki} + u_i
 <p><span class="math notranslate nohighlight">\(
 log(hwage)_i = \beta_0 + \beta_1 educ_i + u_i
 \)</span></p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Load data and keep needed variables</span>
+import delimited <span class="s">&quot;./data/wage.csv&quot;</span>,<span class="k"> clear</span>
+
+<span class="c1">* Remove observations with missing values</span>
+<span class="k">drop if</span> <span class="nf">missing</span>(wage, hours, educ)
+
+<span class="c1">* Create hourly wage variable (annual wage divided by hours worked)</span>
+<span class="k">gen</span> hwage = wage<span class="o">/</span>hours
+
+<span class="c1">* Create natural log of hourly wage for regression</span>
+<span class="k">gen</span> lnhwage = <span class="nf">ln</span>(hwage)
+
+<span class="cm">/*</span>
+<span class="cm">Run OLS regression:</span>
+<span class="cm">Dependent variable: log hourly wage</span>
+<span class="cm">Independent variable: years of education</span>
+<span class="cm">*/</span>
+<span class="k">regress</span> lnhwage educ
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wage</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./data/wage.csv&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
 <span class="n">model_1</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s1">&#39;np.log(hwage) ~ educ&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">wage</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">hwage</span><span class="o">=</span><span class="n">wage</span><span class="p">[</span><span class="s2">&quot;wage&quot;</span><span class="p">]</span><span class="o">/</span><span class="n">wage</span><span class="p">[</span><span class="s2">&quot;hours&quot;</span><span class="p">]))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
@@ -645,7 +772,30 @@ log(hwage)_i = \beta_0 + \beta_1 educ_i + u_i
 </table></div></div>
 </div>
 <p><span class="math notranslate nohighlight">\(\beta_1\)</span> 的估计值为 0.0536，其 95%置信区间为(0.039, 0.068)。这意味着该模型预测，每增加一年教育年限，工资将增长约 5.3%。这一百分比增幅符合教育以指数方式影响工资的普遍认知：我们预期从 11 年教育（高中毕业平均水平）增加到 12 年教育的回报，会低于从 14 年（大学毕业平均水平）增加到 16 年教育的回报。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Generate education years range (5-19)</span>
+<span class="k">range</span> educ_vals <span class="m">5</span> <span class="m">19</span> <span class="m">15</span>
+
+<span class="c1">* Calculate predicted log hourly wage using regression coefficients</span>
+<span class="k">predict</span> yhat
+<span class="k">gen</span> pred_wage = <span class="nf">exp</span>(yhat)<span class="k"> if</span> educ <span class="o">==</span> <span class="m">5</span>  <span class="c1">// Initialize with first value</span>
+
+<span class="c1">* Calculate predicted wages for all education levels</span>
+<span class="k">forvalues</span> i = <span class="m">6</span><span class="o">/</span><span class="m">19</span> {
+<span class="k">    replace</span> pred_wage = <span class="nf">exp</span>(_b[_cons] <span class="o">+</span> _b[educ]<span class="o">*</span><span class="nv">`i&#39;</span>)<span class="k"> if</span> educ_vals <span class="o">==</span> <span class="nv">`i&#39;</span>
+}
+
+<span class="c1">* Create the plot</span>
+<span class="k">twoway</span> (line pred_wage educ_vals), <span class="cs">///</span>
+       title(<span class="s">&quot;Impact of Education on Hourly Wage&quot;</span>) <span class="cs">///</span>
+       xtitle(<span class="s">&quot;Years of Education&quot;</span>) <span class="cs">///</span>
+       ytitle(<span class="s">&quot;Hourly Wage&quot;</span>)
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">style</span>
@@ -666,7 +816,14 @@ log(hwage)_i = \beta_0 + \beta_1 educ_i + u_i
 </div>
 <p>当然，并非因为我们能估计这个简单模型就意味着它是正确的。请注意我措辞谨慎，说的是它根据教育程度<strong>预测</strong>工资。我从未说过这种预测具有因果性。事实上，此刻你很可能有充分理由认为该模型存在偏误。由于我们的数据并非来自随机实验，我们无法判断受教育年限较长者与较短者是否具有可比性。更进一步说，基于我们对现实世界的认知，可以非常确定二者并不具备可比性。具体而言，我们可以论证受教育年限更长的人可能拥有更富裕的父母，而我们所观察到的教育年限增加伴随工资上升的现象，只是反映了家庭财富与受教育年限之间的关联。用数学术语表达，我们认为 <span class="math notranslate nohighlight">\(E[Y_0|T=0] &lt; E[Y_0|T=1]\)</span>，即无论如何，那些受教育更多的人即便没有接受这么多年的教育，收入也会更高。若对教育持极端悲观态度，你甚至可以认为教育会因使人脱离劳动力市场并降低工作经验而减少工资。</p>
 <p>幸运的是，在我们的数据中，我们可以获取许多其他变量。我们可以看到父母的教育程度 <code class="docutils literal notranslate"><span class="pre">meduc</span></code> 、 <code class="docutils literal notranslate"><span class="pre">feduc</span></code> ，个人的 <code class="docutils literal notranslate"><span class="pre">IQ</span></code> 分数，工作经验年限 <code class="docutils literal notranslate"><span class="pre">exper</span></code> 以及该人员当前公司的在职时间 <code class="docutils literal notranslate"><span class="pre">tenure</span></code> 。我们甚至还有一些关于婚姻状况和黑人种族的虚拟变量。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="k">list in</span> <span class="m">1</span><span class="o">/</span><span class="m">5</span>
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wage</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
@@ -818,7 +975,38 @@ log(hwage)_i = \beta_0 + \kappa \ educ_i + \pmb{\beta}X_i + u_i
 \kappa = \dfrac{Cov(Y_i, \tilde{T_i})}{Var(\tilde{T_i})} 
 \)</span></p>
 <p>该公式表明，我们可以通过父母的教育程度、智商、经验等因素来预测 <code class="docutils literal notranslate"><span class="pre">educ</span></code> 。完成这一步后，我们将得到一个与之前包含的所有变量均不相关的 <code class="docutils literal notranslate"><span class="pre">educ</span></code> 版本，即 <span class="math notranslate nohighlight">\(\tilde{educ}\)</span>。这将瓦解诸如“受教育年限更长的人之所以如此，是因为他们拥有更高的智商。教育并不会带来更高的工资，只是与智商相关，而智商才是驱动工资的因素”之类的论点。那么，如果我们在模型中纳入智商变量，那么 <span class="math notranslate nohighlight">\(\kappa\)</span> 就代表在保持智商不变的情况下，每多接受一年教育所带来的回报。稍作停顿，思考一下这意味着什么。即便我们无法通过随机对照试验使处理组和对照组的其他因素保持一致，回归分析也能通过将这些相同因素纳入模型来实现这一点，即使数据并非随机！</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">// Define control variables</span>
+<span class="k">global</span> controls iq exper tenure age married black south urban sibs brthord meduc feduc
+
+<span class="c1">// Create constant term (intercept)</span>
+<span class="k">gen</span> intercep = <span class="m">1</span>
+
+<span class="c1">// Step 1: Auxiliary regression of education (endogenous treatment) on controls</span>
+<span class="k">reg</span> educ <span class="vg">$controls</span> intercep
+
+<span class="c1">// Step 2: Compute residuals from auxiliary regression</span>
+<span class="k">predict</span> t_tilde, residuals
+
+<span class="c1">// Step 3: Calculate covariance between residuals and outcome variable (lhwage)</span>
+<span class="k">corr</span> t_tilde lhwage, covariance
+<span class="k">scalar</span> cov_ty = <span class="nf">r</span>(cov_12)  <span class="c1">// Stores covariance in scalar</span>
+
+<span class="c1">// Step 4: Calculate variance of residuals</span>
+<span class="k">sum</span> t_tilde
+<span class="k">scalar</span> var_t = <span class="nf">r</span>(Var)  <span class="c1">// Stores residual variance in scalar</span>
+
+<span class="c1">// Step 5: Compute kappa estimator (local treatment effect)</span>
+<span class="k">scalar kappa</span> = cov_ty<span class="o">/</span>var_t
+
+<span class="c1">// Display the final result</span>
+<span class="k">display</span> <span class="s">&quot;Local average treatment effect (kappa) = &quot;</span><span class="k"> kappa</span>
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">controls</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;IQ&#39;</span><span class="p">,</span> <span class="s1">&#39;exper&#39;</span><span class="p">,</span> <span class="s1">&#39;tenure&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;married&#39;</span><span class="p">,</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span>
             <span class="s1">&#39;south&#39;</span><span class="p">,</span> <span class="s1">&#39;urban&#39;</span><span class="p">,</span> <span class="s1">&#39;sibs&#39;</span><span class="p">,</span> <span class="s1">&#39;brthord&#39;</span><span class="p">,</span> <span class="s1">&#39;meduc&#39;</span><span class="p">,</span> <span class="s1">&#39;feduc&#39;</span><span class="p">]</span>
@@ -843,7 +1031,24 @@ log(hwage)_i = \beta_0 + \kappa \ educ_i + \pmb{\beta}X_i + u_i
 </div>
 <p>我们刚刚估算的这个系数表明，对于智商、经验、任期、年龄等条件相同的人群，每多接受一年教育，预计每小时工资将增加 4.11%。这证实了我们最初的怀疑：仅包含 <code class="docutils literal notranslate"><span class="pre">educ</span></code> 的简单初始模型存在偏误。同时，该结果也验证了这种偏误高估了教育的影响——在控制其他变量后，教育对工资的估计效应有所下降。</p>
 <p>如果我们更明智地利用他人编写的软件而非事必躬亲地编码，甚至可以为这一估计值设置一个置信区间。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">// Run OLS regression with estout output</span>
+<span class="k">reg</span> lhwage educ <span class="vg">$controls</span>
+eststo ols_model
+
+<span class="c1">// Display results using esttab</span>
+<span class="c1">* ssc install estout, replace</span>
+esttab ols_model, <span class="cs">///</span>
+    cells(b(star fmt(<span class="m">3</span>))<span class="k"> se</span>(par fmt(<span class="m">2</span>))) <span class="cs">///</span>
+    stats(N r2, fmt(<span class="m">0</span> <span class="m">3</span>)) <span class="cs">///</span>
+    title(<span class="s">&quot;OLS Estimation Results&quot;</span>) <span class="cs">///</span>
+<span class="k">    label</span>
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_2</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s1">&#39;lhwage ~ educ +&#39;</span> <span class="o">+</span> <span class="s1">&#39;+&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">controls</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="n">wage</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 <span class="n">model_2</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span><span class="o">.</span><span class="n">tables</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
