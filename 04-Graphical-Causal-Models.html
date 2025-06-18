@@ -1,0 +1,976 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>04 - 图形因果模型 &#8212; 因果推断：献给求真敢为者</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '04-Graphical-Causal-Models';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="05 - 线性回归的惊人有效性" href="05-The-Unreasonable-Effectiveness-of-Linear-Regression.html" />
+    <link rel="prev" title="03 - 统计回顾：最危险的方程" href="03-Stats-Review-The-Most-Dangerous-Equation.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">因果推断：献给求真敢为者</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    因果推断：献给求真敢为者
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">第一部分 - 阳</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01-Introduction-To-Causality.html">01 - 因果性导论</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-Randomised-Experiments.html">02 - 随机实验</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03-Stats-Review-The-Most-Dangerous-Equation.html">03 - 统计回顾：最危险的方程</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">04 - 图形因果模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05-The-Unreasonable-Effectiveness-of-Linear-Regression.html">05 - 线性回归的惊人有效性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06-Grouped-and-Dummy-Regression.html">06 - 分组与虚拟变量回归</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07-Beyond-Confounders.html">07 - 超越混杂因素</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-Instrumental-Variables.html">08 - 工具变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-Non-Compliance-and-LATE.html">09 - 不依从性与局部平均处理效应</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10-Matching.html">10 - 匹配法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11-Propensity-Score.html">11 - 倾向得分</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12-Doubly-Robust-Estimation.html">12 - 双重稳健估计</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13-Difference-in-Differences.html">13 - 双重差分法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="14-Panel-Data-and-Fixed-Effects.html">14 - 面板数据与固定效应</a></li>
+<li class="toctree-l1"><a class="reference internal" href="15-Synthetic-Control.html">15 - 合成控制法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="16-Regression-Discontinuity-Design.html">16 - 断点回归设计</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">第二部分 - 阴</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="17-Predictive-Models-101.html">17 - 预测模型入门</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2F04-Graphical-Causal-Models.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/04-Graphical-Causal-Models.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>04 - 图形因果模型</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">思考因果关系</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">因果图模型速成</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">混杂偏误</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">选择偏误</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">核心要点</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">参考文献</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">参与贡献</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1>04 - 图形因果模型<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<section id="id2">
+<h2>思考因果关系<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>你是否注意到 YouTube 视频中的厨师们多么擅长描述食物？“将酱汁收至丝绒般浓稠”。如果你是刚开始学做饭的菜鸟，根本不知道这是什么意思，只想问一句：到底要在锅里煮几分钟？因果推断也是一样的。假设你走进一家酒吧，刚好旁边是经济系，你听到一群人正在讨论因果性。他们可能在说：“因为收入的混杂因素，很难识别移民对这个社区的影响，所以我们用了工具变量。”到这时候，你可能根本听不懂他们在讲什么。但至少从现在开始，我会帮你把这些事情讲清楚一点。</p>
+<p>图形模型是因果关系的语言。它们不仅是你与其他因果关系爱好者交流的工具，更能让你的思考过程更加清晰透明。</p>
+<p>作为起点，我们以潜在结果的条件独立性为例。这是进行因果推断时需要满足的主要假设之一：</p>
+<p><span class="math notranslate nohighlight">\(
+(Y_0, Y_1) \perp T | X
+\)</span></p>
+<p>条件独立性使我们能够仅衡量处理对结果的影响，而不受其他潜在变量的干扰。经典的例子是药物对患病患者的效果。如果只有病情严重的患者接受药物治疗，甚至可能看起来服药反而降低了患者的健康水平。这是因为疾病严重程度的影响与药物效果混杂在一起。若我们将患者按病情严重与否分组，并在每个亚组中分析药物的影响，就能更清晰地了解实际效果。这种根据特征对人群进行分组的方法称为控制或条件化于 X。通过对重症病例进行条件化处理，治疗机制变得如同随机分配。在重症组内，患者是否接受药物仅由偶然性决定，而不再取决于病情严重程度，因为所有患者在这一维度上是相同的。而只要处理在组内是随机的，那我们就可以说：处理与潜在结果是条件独立的（conditionally independent）。</p>
+<p>独立性和条件独立性是因果推断中的核心概念，但要真正理解它们的含义，其实并不容易。不过，如果我们用一种恰当的语言来描述这个问题，情况就会有所不同。这正是 <strong>因果图模型（causal graphical models）</strong> 发挥作用的地方。因果图模型提供了一种方式，用以表示“谁导致了谁”的因果结构，从而帮助我们更清晰地理解因果机制是如何运作的。</p>
+<p>一个图模型看起来像这样</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">graphviz</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">style</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;fivethirtyeight&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Digraph</span><span class="p">()</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;U&quot;</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;U&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">)</span>
+
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;medicine&quot;</span><span class="p">,</span> <span class="s2">&quot;survived&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;severeness&quot;</span><span class="p">,</span> <span class="s2">&quot;survived&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;severeness&quot;</span><span class="p">,</span> <span class="s2">&quot;medicine&quot;</span><span class="p">)</span>
+
+<span class="n">g</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/c95ee3dfb727f2feeca7e3c9f3afb3e7a2d1d018cd366cf8154f576b12800c01.svg" src="_images/c95ee3dfb727f2feeca7e3c9f3afb3e7a2d1d018cd366cf8154f576b12800c01.svg" /></div>
+</div>
+<p>每个节点代表一个随机变量。我们用箭头或边来表示一个变量是否导致另一个变量。在上面的第一个图模型中，我们表示 Z 导致 X，而 U 同时导致 X 和 Y。举一个更具体的例子，我们可以将关于药物对患者生存影响的思考转化为上述第二个图。病情严重程度同时影响药物使用和生存率，而药物使用也直接影响生存率。正如我们将看到的，这些因果图模型的语言将有助于使我们对因果关系的思考更加清晰，因为它阐明了我们对世界运作方式的信念。</p>
+</section>
+<section id="id3">
+<h2>因果图模型速成<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>关于图形模型，有<a class="reference external" href="https://www.coursera.org/specializations/probabilistic-graphical-models">整整一学期的课程</a>专门讲解。但就我们目前的目的而言，最重要的是：我们必须清楚图形模型中所隐含的“独立性”和“条件独立性”假设。正如我们即将看到的，独立性在图形模型中的传播，就像水在溪流中流动一样。我们可以通过对变量的处理，阻断或开启这种“因果信息的流动”。为了理解这一点，我们将考察一些常见的图形结构和例子。它们看起来会非常直观，但足以作为构建理解的基石，让我们掌握图形模型中关于独立性与条件独立性的所有核心概念。</p>
+<p>首先，看这个非常简单的图。A 导致 B，B 导致 C。或者说 X 导致 Y，Y 导致 Z。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Digraph</span><span class="p">()</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">)</span>
+
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+
+
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;causal knowledge&quot;</span><span class="p">,</span> <span class="s2">&quot;solve problems&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;solve problems&quot;</span><span class="p">,</span> <span class="s2">&quot;job promotion&quot;</span><span class="p">)</span>
+
+<span class="n">g</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/c70921f96db75301ceb8dd4d78d4dd006a53f36e64558fffdf3b6b0f9fe4bca2.svg" src="_images/c70921f96db75301ceb8dd4d78d4dd006a53f36e64558fffdf3b6b0f9fe4bca2.svg" /></div>
+</div>
+<p>在第一幅图中，依赖关系沿箭头方向流动。需注意的是，依赖关系是对称的，尽管这一点稍显反直觉。举个更具体的例子，假设了解因果推断是解决商业问题的唯一途径，而解决这些问题又是获得职位晋升的唯一方式。因此，因果知识意味着能解决导致晋升的问题。这里我们可以说，职位晋升依赖于因果知识。因果专业知识越丰富，获得晋升的机会就越大。同样，晋升机会越大，拥有因果知识的可能性也越高。否则，晋升将变得困难。</p>
+<p>现在，假设我对中介变量进行条件化处理。在这种情况下，依赖关系被阻断。因此，给定 Y 时，X 与 Z 相互独立。在上图中，红色表示 Y 是一个被条件化的变量。同理，在我们的例子中，如果我知道你擅长解决问题，那么了解你掌握因果推断的知识并不会为你获得职位晋升的机会提供更多信息。用数学术语表达就是 <span class="math notranslate nohighlight">\(E[Promotion|Solve \ problems, Causal \ knowledge]=E[Promotion|Solve \ problems]\)</span>。反之亦然；一旦我知道你解决问题的能力如何，了解你的晋升状况并不能让我进一步获知你掌握因果推断的可能性。</p>
+<p>一般而言，当我们对中介变量 B 进行条件化时，从 A 到 C 的直接路径中的依赖流会被阻断。或者说，</p>
+<p><span class="math notranslate nohighlight">\(A \not \perp C\)</span></p>
+<p>以及</p>
+<p><span class="math notranslate nohighlight">\(
+A \perp C | B
+\)</span></p>
+<p>现在，让我们考虑一个分叉结构。同一个变量在图的下游引起另外两个变量。这种情况下，依赖关系会沿着箭头反向流动，形成一条<strong>后门路径</strong>。我们可以通过对共同原因进行条件化来关闭后门路径，从而切断依赖关系。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Digraph</span><span class="p">()</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">)</span>
+
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;statistics&quot;</span><span class="p">,</span> <span class="s2">&quot;causal inference&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;statistics&quot;</span><span class="p">,</span> <span class="s2">&quot;machine learning&quot;</span><span class="p">)</span>
+
+<span class="n">g</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/c8b0709038dcc0e9ec8a100f04891c79cff69d3d9d4dbc685d26404441b739a2.svg" src="_images/c8b0709038dcc0e9ec8a100f04891c79cff69d3d9d4dbc685d26404441b739a2.svg" /></div>
+</div>
+<p>举例来说，假设你对统计学的了解使你在因果推断和机器学习方面更为精通。若我不清楚你的统计学水平，那么得知你擅长因果推断会提高我认为你也擅长机器学习的概率。这是因为即便我不了解你的统计学知识程度，也能从你的因果推断能力中推断出来。如果你精于因果推断，很可能统计学也相当扎实，从而更有可能在机器学习领域表现优异。</p>
+<p>现在，若以你的统计学知识水平为条件，那么你对机器学习的了解程度就与对因果推断的掌握相互独立。知晓你的统计学水平已为我提供了推断你机器学习技能所需的全部信息。可见，在这种情况下，了解你的因果推断能力不会带来额外信息。</p>
+<p>一般而言，具有共同原因的两个变量是相互依赖的，但当我们以该共同原因为条件时，它们便相互独立。或者说</p>
+<p><span class="math notranslate nohighlight">\(A \not \perp  B\)</span></p>
+<p>和</p>
+<p><span class="math notranslate nohighlight">\(
+A \perp B | C
+\)</span></p>
+<p>唯一缺失的结构是对撞节点。对撞节点指的是两个箭头交汇于同一个变量的情况。可以说，在这种情况下，这两个变量共享一个共同的影响结果。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Digraph</span><span class="p">()</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">)</span>
+
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;statistics&quot;</span><span class="p">,</span> <span class="s2">&quot;job promotion&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;flatter&quot;</span><span class="p">,</span> <span class="s2">&quot;job promotion&quot;</span><span class="p">)</span>
+
+<span class="n">g</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/6c34ad506cffb6ff45d60441f6012a805667ac231ff82a321961001aa167b2b2.svg" src="_images/6c34ad506cffb6ff45d60441f6012a805667ac231ff82a321961001aa167b2b2.svg" /></div>
+</div>
+<p>举例来说，假设有两种方式可以获得职位晋升：要么擅长统计学，要么善于奉承上司。如果我不以你是否获得晋升为条件，即我对你是否会晋升一无所知，那么你的统计学水平和奉承能力是相互独立的。换句话说，了解你在统计学上的造诣并不能告诉我你奉承上司的水平如何。然而，一旦你确实获得了晋升，情况就截然不同——知道你的统计学水平就能推断出你的奉承能力。如果你统计学能力欠佳却仍获得晋升，那么你很可能是精通奉承之道；反之则难以晋升。同样地，若你不善奉承，则必然在统计学方面表现优异。这种现象有时被称为 <strong>“解释消除”</strong> ，因为一个原因已经充分解释了结果，使得另一个原因的可能性降低。</p>
+<p>一般而言，对撞子条件化会打开依赖路径，不对其条件化则保持路径关闭。或者</p>
+<p><span class="math notranslate nohighlight">\(A \perp B\)</span></p>
+<p>并且</p>
+<p><span class="math notranslate nohighlight">\(
+A \not \perp B | C
+\)</span></p>
+<p>了解这三种结构后，我们可以推导出一条更为普遍的规则：路径被阻断当且仅当：</p>
+<ol class="arabic simple">
+<li><p>路径中包含一个已被条件化的非对撞子</p></li>
+<li><p>它包含一个未被条件化且其后代也未被条件化的对撞变量。</p></li>
+</ol>
+<p>这里有一份关于图中依赖流向的速查表，我摘自 Mark Paskin 在<a class="reference external" href="http://ai.stanford.edu/~paskin/gm-short-course/lec2.pdf">斯坦福大学的演讲</a>。箭头末端带横线表示独立关系，不带横线的箭头则表示依赖关系。</p>
+<p><img alt="img" src="_images/graph-flow.png" /></p>
+<p>作为最后一个示例，尝试分析以下因果图中的一些独立与依赖关系。</p>
+<ol class="arabic simple">
+<li><p>Is <span class="math notranslate nohighlight">\(D \perp C\)</span>?</p></li>
+<li><p>Is <span class="math notranslate nohighlight">\(D \perp C| A \)</span> ?</p></li>
+<li><p>Is <span class="math notranslate nohighlight">\(D \perp C| G \)</span> ?</p></li>
+<li><p>Is <span class="math notranslate nohighlight">\(A \perp F \)</span> ?</p></li>
+<li><p>Is <span class="math notranslate nohighlight">\(A \perp F|E \)</span> ?</p></li>
+<li><p>Is <span class="math notranslate nohighlight">\(A \perp F|E,C \)</span> ?</p></li>
+</ol>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Digraph</span><span class="p">()</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;F&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">)</span>
+
+<span class="n">g</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/8012a7f8286d659630b55f25a8b770847b60aa78508f56787bb6f56e4b1d45cf.svg" src="_images/8012a7f8286d659630b55f25a8b770847b60aa78508f56787bb6f56e4b1d45cf.svg" /></div>
+</div>
+<p><strong>答案</strong>:</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(D \perp C\)</span>。它包含了一个未被控制的对撞变量。</p></li>
+<li><p><span class="math notranslate nohighlight">\(D \not\perp C| A \)</span> 。它包含了一个已被控制的对撞变量。</p></li>
+<li><p><span class="math notranslate nohighlight">\(D \not\perp C| G \)</span>。它包含了一个已被条件化的对撞因子（collider）的后代。此处可将 G 视为 A 的某种代理变量。</p></li>
+<li><p><span class="math notranslate nohighlight">\(A \perp F \)</span>。它包含了一个未被条件化的对撞因子 B-&gt;E&lt;-F。</p></li>
+<li><p><span class="math notranslate nohighlight">\(A \not\perp F|E \)</span>。它包含了一个已被条件化的对撞因子 B-&gt;E&lt;-F。</p></li>
+<li><p><span class="math notranslate nohighlight">\(A \perp F|E, C \)</span> 。它包含了一个已被条件化的对撞因子 B-&gt;E&lt;-F，但同时存在一个被条件化的非对撞因子。对 E 进行条件化会打开路径，而对 C 进行条件化则会再次关闭该路径。</p></li>
+</ol>
+<p>了解因果图模型能让我们认识到因果推断中出现的问题。正如所见，这些问题归根结底都源于偏误。</p>
+<p><span class="math notranslate nohighlight">\(
+E[Y|T=1] - E[Y|T=0] = \underbrace{E[Y_1 - Y_0|T=1]}_{ATET} + \underbrace{\{ E[Y_0|T=1] - E[Y_0|T=0] \}}_{BIAS}
+\)</span></p>
+<p>图形模型帮助我们诊断所面临的偏误类型，并确定纠正这些偏误所需的工具。</p>
+</section>
+<section id="id4">
+<h2>混杂偏误<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<p><img alt="img" src="_images/both_crap.png" /></p>
+<p>偏误的首要重要原因是混杂因素。当处理因素与结果存在共同原因时，就会发生这种情况。例如，假设处理因素是教育程度，结果是收入水平。由于两者共享一个共同原因——智力水平，我们很难确定教育对工资的因果效应。因此可以认为，受教育程度更高的人收入更高仅是因为他们更聪明，而非接受了更多教育。要识别真正的因果效应，必须阻断处理因素与结果之间的所有后门路径。这样处理后，唯一剩下的效应就是直接效应 T→Y。在上述例子中，若我们控制智力变量（即比较智力水平相同但教育程度不同的群体），结果的差异将仅源于教育程度的差别，因为所有人的智力水平都相同。纠正混杂偏误需要控制处理因素与结果的所有共同原因。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Digraph</span><span class="p">()</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">)</span>
+
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;Intelligence&quot;</span><span class="p">,</span> <span class="s2">&quot;Educ&quot;</span><span class="p">),</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;Intelligence&quot;</span><span class="p">,</span> <span class="s2">&quot;Wage&quot;</span><span class="p">),</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;Educ&quot;</span><span class="p">,</span> <span class="s2">&quot;Wage&quot;</span><span class="p">)</span>
+<span class="n">g</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/142d3fa6b255303839c86d76b1e2e89e49bff98f534db5fa60a8ae3e11338bb6.svg" src="_images/142d3fa6b255303839c86d76b1e2e89e49bff98f534db5fa60a8ae3e11338bb6.svg" /></div>
+</div>
+<p>遗憾的是，并非总能控制所有常见因素。有时存在未知因素或我们无法衡量的已知因素，智力便是后者之一。尽管科学家们付出诸多努力，至今仍未找到准确衡量智力的方法。此处我将用 U 表示未测量的变量。现在假设智力无法直接影响教育程度——它虽影响 SAT 成绩，但决定教育水平的是 SAT 分数，因为高分能打开优质大学的大门。即便我们无法控制不可测量的智力因素，通过控制 SAT 分数仍可阻断这条后门路径。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Digraph</span><span class="p">()</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;X1&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;X2&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;X1&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;U&quot;</span><span class="p">,</span> <span class="s2">&quot;X2&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;U&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">)</span>
+
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;Family Income&quot;</span><span class="p">,</span> <span class="s2">&quot;Educ&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;Educ&quot;</span><span class="p">,</span> <span class="s2">&quot;Wage&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;SAT&quot;</span><span class="p">,</span> <span class="s2">&quot;Educ&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;Family Income&quot;</span><span class="p">,</span> <span class="s2">&quot;Wage&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;Intelligence&quot;</span><span class="p">,</span> <span class="s2">&quot;SAT&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;Intelligence&quot;</span><span class="p">,</span> <span class="s2">&quot;Wage&quot;</span><span class="p">)</span>
+<span class="n">g</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/95ee992ddb3fb48c2fbbff7f488b84e322e5de167bb36d3e447ca462be7d2612.svg" src="_images/95ee992ddb3fb48c2fbbff7f488b84e322e5de167bb36d3e447ca462be7d2612.svg" /></div>
+</div>
+<p>在下述图表中，以 X1 和 X2（即 SAT 分数与家庭收入）为条件，足以阻断处理变量与结果之间所有后门路径。换言之，<span class="math notranslate nohighlight">\((Y_0, Y_1) \perp T | X1, X2\)</span>。因此，即便无法测量所有共同原因，只要控制那些可观测变量——它们能中介未测量变量对处理的影响——仍可实现条件独立性。需注意，此处还存在 <span class="math notranslate nohighlight">\((Y_0, Y_1) \perp T | X1, U\)</span>，但由于 U 不可观测，我们无法以其为条件。</p>
+<p>但若非如此呢？倘若未测量变量直接同时影响处理变量与结果会怎样？在接下来的示例中，智力因素同时影响教育程度与收入水平，导致教育（处理变量）与工资（结果变量）间存在混杂。这种情况下，由于混杂因子不可测量，我们无法直接控制它。然而，其他可测变量可作为混杂因子的代理变量——这些变量虽不在后门路径上，但控制它们有助于降低偏误（尽管不能完全消除）。这类变量有时被称为替代混杂因子。</p>
+<p>在我们的示例中，虽然无法直接测量智力水平，但可以测量其部分成因（如父母的教育程度）及部分表现（如智商或 SAT 分数）。控制这些替代变量虽不足以完全消除偏误，却有所助益。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Digraph</span><span class="p">()</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;U&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;U&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;U&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">)</span>
+
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;Intelligence&quot;</span><span class="p">,</span> <span class="s2">&quot;IQ&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;Intelligence&quot;</span><span class="p">,</span> <span class="s2">&quot;SAT&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;Father&#39;s Educ&quot;</span><span class="p">,</span> <span class="s2">&quot;Intelligence&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;Mother&#39;s Educ&quot;</span><span class="p">,</span> <span class="s2">&quot;Intelligence&quot;</span><span class="p">)</span>
+
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;Intelligence&quot;</span><span class="p">,</span> <span class="s2">&quot;Educ&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;Educ&quot;</span><span class="p">,</span> <span class="s2">&quot;Wage&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;Intelligence&quot;</span><span class="p">,</span> <span class="s2">&quot;Wage&quot;</span><span class="p">)</span>
+
+<span class="n">g</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/68b71521e332f0e974e50b73250dfe9a218ca2f3ac8e26b01b5b851b31480dbe.svg" src="_images/68b71521e332f0e974e50b73250dfe9a218ca2f3ac8e26b01b5b851b31480dbe.svg" /></div>
+</div>
+</section>
+<section id="id5">
+<h2>选择偏误<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<p>或许您认为将所有可测量的变量纳入模型是避免混淆偏误的好方法。然而，请三思而行。</p>
+<p><img alt="image.png" src="_images/selection_bias.png" /></p>
+<p>第二个重要的偏误来源是我们所称的选择偏误。在此，我认为区分它与混淆偏误是有建设性的，因此我将坚持这一区分。如果说混淆偏误发生在我们未能控制一个共同原因时，那么选择偏误更多与效应相关。这里需要提醒的是，经济学家倾向于将所有类型的偏误都称为选择偏误。</p>
+<p>通常情况下，选择偏误发生在我们控制了过多变量时。可能出现的情况是，处理与潜在结果在边际上独立，但一旦我们以对撞机为条件，它们就变得相互依赖。</p>
+<p>设想一下，借助某种奇迹，你终于能够随机分配教育以衡量其对工资的影响。但为了确保没有混淆因素，你控制了许多变量，其中包括投资。然而，投资并非教育与工资的共同原因，而是两者的结果。受教育程度更高的人不仅收入更多，投资也更多；同样，收入更高的人投资也更多。由于投资是一个碰撞变量，通过对其加以控制，你实际上在治疗与结果之间开辟了第二条路径，这将使得直接效应的测量变得更加困难。一种理解方式是，通过控制投资，你观察的是投资相同的小群体，然后在这些群体中寻找教育的影响。但这样做时，你也在无意间间接限制了工资的应有变化。结果，你将无法看清教育如何改变工资，因为你阻止了工资按照其自然规律变动。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Digraph</span><span class="p">()</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;Educ&quot;</span><span class="p">,</span> <span class="s2">&quot;Investments&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;Educ&quot;</span><span class="p">,</span> <span class="s2">&quot;Wage&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;Wage&quot;</span><span class="p">,</span> <span class="s2">&quot;Investments&quot;</span><span class="p">)</span>
+
+<span class="n">g</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/ea99dde2313da563c0cc9b24964ae1f43604270e959fa9adee25ad2532aa5395.svg" src="_images/ea99dde2313da563c0cc9b24964ae1f43604270e959fa9adee25ad2532aa5395.svg" /></div>
+</div>
+<p>假设投资与教育仅取两个值以说明此情形：人们要么投资，要么不投资；他们要么受过教育，要么没有。最初，当我们不控制投资变量时，由于教育是随机分配的，偏误项为零（<span class="math notranslate nohighlight">\(E[Y_0|T=1] - E[Y_0|T=0] = 0\)</span> ）。这意味着无论是否接受教育干预，人们未受教育时的工资（<span class="math notranslate nohighlight">\(Wage_0\)</span>）是相同的。但若我们以投资为条件进行观察，会发生什么？</p>
+<p>观察那些进行投资的人群，很可能存在 <span class="math notranslate nohighlight">\(E[Y_0|T=0, I=1] &gt; E[Y_0|T=1, I=1]\)</span>的情况。换言之，在投资者中，那些无需教育也能成功投资的人更可能获得高收入，无论其教育水平如何。因此，这些人的工资 <span class="math notranslate nohighlight">\(Wage_0|T=0\)</span> 很可能高于受过教育群体若未受教育时的工资 <span class="math notranslate nohighlight">\(Wage_0|T=1\)</span>。类似逻辑适用于不投资者群体，我们很可能同样发现 <span class="math notranslate nohighlight">\(E[Y_0|T=0, I=0] &gt; E[Y_0|T=1, I=0]\)</span>。那些即使受过教育也不投资的人，若未获得教育，其工资可能低于未受教育也未投资的群体。</p>
+<p>从纯图形论证的角度来看，若某人决定投资，且已知其受教育程度较高，这便排除了第二个影响因素——工资。在投资条件下，更高的教育水平与较低的工资相关联，从而产生负向偏误 <span class="math notranslate nohighlight">\(E[Y_0|T=0, I=i] &gt; E[Y_0|T=1, I=i]\)</span>。</p>
+<p>附带说明的是，如果我们以共同效应的任一后裔为条件，所讨论的这些内容均成立。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Digraph</span><span class="p">()</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;S&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="s2">&quot;S&quot;</span><span class="p">,</span> <span class="s2">&quot;S&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+<span class="n">g</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/a71081c88c83c56e9ee96715adfcd1ad4716b4155a8eff55cc120aa359c4adf9.svg" src="_images/a71081c88c83c56e9ee96715adfcd1ad4716b4155a8eff55cc120aa359c4adf9.svg" /></div>
+</div>
+<p>类似的情况也发生在我们以处理的中介变量为条件时。中介变量是介于处理与结果之间的变量，它实际上起着调节因果效应的作用。例如，再次假设你可以随机分配教育程度，但为了确保效果，你决定控制个体是否拥有白领工作。这样一来，这种条件设置再次导致了因果效应估计的偏误。这次偏误的产生并非因为它开启了带有碰撞器的前门路径，而是因为它关闭了处理作用的一个渠道。在我们的例子中，获得白领工作是更多教育带来更高收入的途径之一。通过控制这一变量，我们关闭了这一渠道，仅保留了教育对工资的直接影响。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Digraph</span><span class="p">()</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;educ&quot;</span><span class="p">,</span> <span class="s2">&quot;white collar&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;educ&quot;</span><span class="p">,</span> <span class="s2">&quot;wage&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;white collar&quot;</span><span class="p">,</span> <span class="s2">&quot;wage&quot;</span><span class="p">)</span>
+
+<span class="n">g</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/0fa150a5cd6101186b098dba99d7efe672584916a57ac8137726dbb61174c64d.svg" src="_images/0fa150a5cd6101186b098dba99d7efe672584916a57ac8137726dbb61174c64d.svg" /></div>
+</div>
+<p>从潜在结果的角度论证，我们知道由于随机化处理，偏误为零 <span class="math notranslate nohighlight">\(E[Y_0|T=0] - E[Y_0|T=1] = 0\)</span>。然而，若以白领个体为条件，则存在 <span class="math notranslate nohighlight">\(E[Y_0|T=0, WC=1] &gt; E[Y_0|T=1, WC=1]\)</span> 的情况。这是因为那些即便未受教育也能获得白领职位的人，可能比需要教育辅助才能获得相同职位者更为勤奋。同理，<span class="math notranslate nohighlight">\(E[Y_0|T=0, WC=0] &gt; E[Y_0|T=1, WC=0]\)</span> 因为那些即便受过教育仍未能获得白领职位的人，可能比未受教育也未获此职位者更不勤奋。</p>
+<p>在本研究中，以中介变量为条件会引入负向偏误。这会使教育的影响显得低于实际水平。之所以如此，是因为因果效应本身为正。若效应为负，则对中介变量进行条件化处理将产生正向偏误。无论何种情况，此类条件化操作都会弱化实际效应。</p>
+<p>用更通俗的话来说，假设你需要在两位求职者中为公司挑选一位。两人专业成就同样出色，但其中一位没有高等教育学历。你该选谁？当然应该选择那位没有高学历的候选人，因为他在条件不利的情况下仍取得了与另一位同等的成就。</p>
+<p><img alt="image.png" src="_images/three_bias.png" /></p>
+</section>
+<section id="id6">
+<h2>核心要点<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<p>我们研究了图形模型作为一种语言，以更好地理解和表达因果关系概念。我们快速总结了图上条件独立性的规则，这帮助我们随后探讨了可能导致偏误的三种结构。</p>
+<p>首先是混杂因素，当处理与结果存在未被考虑或控制的共同原因时发生。其次是由于对共同效应进行条件化而导致的选取偏误。第三种结构同样是选取偏误的一种形式，这次源于对中介变量的过度控制。即使处理是随机分配的，这种过度控制也可能导致偏误。选取偏误往往可以通过不作为来纠正，这正是其危险之处。由于我们倾向于采取行动，常将控制变量的方法视为巧妙之举，实则可能弊大于利。</p>
+</section>
+<section id="id7">
+<h2>参考文献<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
+<p>我愿将这一系列作品视为对 Joshua Angrist、Alberto Abadie 和 Christopher Walters 杰出计量经济学课程的致敬。第一部分的大部分思想源自他们在美国经济学会授课的内容。在艰难的 2020 年，正是观看他们的课程视频让我保持了理智。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.aeaweb.org/conference/cont-ed/2017-webcasts">Cross-Section Econometrics</a></p></li>
+<li><p><a class="reference external" href="https://www.aeaweb.org/conference/cont-ed/2020-webcasts">Mastering Mostly Harmless Econometrics</a></p></li>
+</ul>
+<p>我还想引用 Angrist 的精彩著作。它们向我展示了计量经济学（他们称之为“Metrics”）不仅极为实用，而且充满乐趣。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mostlyharmlesseconometrics.com">Mostly Harmless Econometrics</a></p></li>
+<li><p><a class="reference external" href="https://www.masteringmetrics.com">Mastering ‘Metrics</a></p></li>
+</ul>
+<p>最后还要感谢 Miguel Hernán 和 Jamie Robins 的<a class="reference external" href="https://hsph.harvard.edu/profile/miguel-hernan/">《Causal Inference》</a>一书。它是我在面对最棘手的因果问题时的可靠伙伴。</p>
+<p><img alt="img" src="_images/poetry.png" /></p>
+</section>
+<section id="id8">
+<h2>参与贡献<a class="headerlink" href="#id8" title="Link to this heading">#</a></h2>
+<p><strong>《Causal Inference for the Brave and True》</strong> 是一本关于因果推断的开源教材，致力于以经济上可负担、认知上可理解的方式，普及这门“科学的统计基础”。全书基于 Python，仅使用自由开源软件编写，原始英文版本由 <a class="reference external" href="https://github.com/matheusfacure">Matheus Facure</a> 编写与维护。</p>
+<p>本书的中文版由黄文喆与许文立教授合作翻译，并托管在 <a class="reference external" href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh">GitHub 中文主页</a>。希望本地化的内容能帮助更多中文读者学习和掌握因果推断方法。</p>
+<p>如果你觉得这本书对你有帮助，并希望支持该项目，可以前往 <a class="reference external" href="https://www.patreon.com/causal_inference_for_the_brave_and_true">Patreon</a> 支持原作者。</p>
+<p>如果你暂时不方便进行经济支持，也可以通过以下方式参与贡献：</p>
+<ul class="simple">
+<li><p>修正错别字</p></li>
+<li><p>提出翻译或表达建议</p></li>
+<li><p>反馈你未能理解的部分内容</p></li>
+</ul>
+<p>欢迎前往英文版或中文版仓库点击 <a class="reference external" href="https://github.com/matheusfacure/python-causality-handbook/issues">issues 区</a> 或 <a class="reference external" href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh/issues">中文版 issues 区</a> 提出反馈。</p>
+<p>最后，如果你喜欢这本书的内容，也请将其分享给可能感兴趣的朋友，并为项目在 GitHub 上点亮一颗星：<a class="reference external" href="https://github.com/matheusfacure/python-causality-handbook">英文版仓库</a> / <a class="reference external" href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh">中文版仓库</a>。</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="03-Stats-Review-The-Most-Dangerous-Equation.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">03 - 统计回顾：最危险的方程</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="05-The-Unreasonable-Effectiveness-of-Linear-Regression.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">05 - 线性回归的惊人有效性</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">思考因果关系</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">因果图模型速成</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">混杂偏误</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">选择偏误</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">核心要点</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">参考文献</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">参与贡献</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Matheus Facure
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
