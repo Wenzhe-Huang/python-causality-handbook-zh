@@ -1,0 +1,1290 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>11 - 倾向得分 &#8212; 因果推断：献给求真敢为者</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '11-Propensity-Score';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="12 - 双重稳健估计" href="12-Doubly-Robust-Estimation.html" />
+    <link rel="prev" title="10 - 匹配法" href="10-Matching.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">因果推断：献给求真敢为者</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    因果推断：献给求真敢为者
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">第一部分 - 阳</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01-Introduction-To-Causality.html">01 - 因果性导论</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-Randomised-Experiments.html">02 - 随机实验</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03-Stats-Review-The-Most-Dangerous-Equation.html">03 - 统计回顾：最危险的方程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04-Graphical-Causal-Models.html">04 - 图形因果模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05-The-Unreasonable-Effectiveness-of-Linear-Regression.html">05 - 线性回归的惊人有效性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06-Grouped-and-Dummy-Regression.html">06 - 分组与虚拟变量回归</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07-Beyond-Confounders.html">07 - 超越混杂因素</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-Instrumental-Variables.html">08 - 工具变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-Non-Compliance-and-LATE.html">09 - 不依从性与局部平均处理效应</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10-Matching.html">10 - 匹配法</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">11 - 倾向得分</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12-Doubly-Robust-Estimation.html">12 - 双重稳健估计</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13-Difference-in-Differences.html">13 - 双重差分法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="14-Panel-Data-and-Fixed-Effects.html">14 - 面板数据与固定效应</a></li>
+<li class="toctree-l1"><a class="reference internal" href="15-Synthetic-Control.html">15 - 合成控制法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="16-Regression-Discontinuity-Design.html">16 - 断点回归设计</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">第二部分 - 阴</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="17-Predictive-Models-101.html">17 - 预测模型入门</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2F11-Propensity-Score.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/11-Propensity-Score.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>11 - 倾向得分</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">成长心理学</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">倾向得分</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">倾向性加权</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">倾向得分估计</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">标准误差</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">倾向得分法的常见问题</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">倾向得分匹配</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">核心要点</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">参考文献</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">参与贡献</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1>11 - 倾向得分<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<section id="id2">
+<h2>成长心理学<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>积极心理学这一领域研究哪些人类行为能引导我们过上更好的人生。你可以把它理解为“自助书籍”和“统计学严谨性”的交叉点。积极心理学中一个著名的发现是“成长型心态”。这个概念认为，人们可以拥有固定型心态或成长型心态。</p>
+<ul class="simple">
+<li><p>如果你拥有固定型心态，你会认为能力是在出生或早期童年就被决定的。因此，智力是固定的，终生无法改变。如果你现在没有某项能力，那你将永远无法获得它。这种想法的推论是：你不应该在自己不擅长的领域浪费时间，因为你永远也学不会。</p></li>
+<li><p>而如果你拥有成长型心态，你会相信智力是可以被培养的。其直接的结果是：你不会将失败视为缺乏毅力，而是将其视为学习过程中的一部分。</p></li>
+</ul>
+<p>我并不想争论这两种心态中哪一种才是正确的（尽管答案或许介于两者之间）。就我们的目的而言，这并不重要。真正重要的是，心理学家发现拥有成长型心态的人往往在生活中表现更佳。他们更有可能实现自己设定的目标。</p>
+<p>尽管我们精通因果推断，但已学会以怀疑态度看待这些论断。究竟是成长型心态促使人们取得更多成就？还是仅仅因为取得更多成就的人容易因其成功而发展出成长型心态？孰因孰果，如同鸡与蛋的悖论？用潜在结果模型表述，我们有理由相信这些陈述存在偏误。<span class="math notranslate nohighlight">\(Y_0|T=1\)</span> 很可能大于 <span class="math notranslate nohighlight">\(Y_0|T=0\)</span>，这意味着即使持有固定型心态，那些具备成长型心态的人原本也能取得更高成就。</p>
+<p>为解决这一问题，研究人员设计了“<a class="reference external" href="https://mindsetscholarsnetwork.org/about-the-network/current-initatives/national-mindset-study/#">全国学习心态研究</a>”。这是一项在美国公立高中开展的随机对照试验，旨在探究成长型心态的影响效果。其运作方式为：学校向学生提供旨在培养成长型心态的研讨会，随后追踪学生大学期间的学业表现以评估成效。这些测量结果被整合成标准化成就分数。出于保护学生隐私的考虑，该研究的真实数据未公开。但我们将使用 <a class="reference external" href="https://arxiv.org/pdf/1902.07409.pdf">Athey 和 Wager</a> 提供的具有相同统计特性的模拟数据集作为替代。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">style</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.formula.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">smf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">causalinference</span><span class="w"> </span><span class="kn">import</span> <span class="n">CausalModel</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">graphviz</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gr</span>
+
+<span class="o">%</span><span class="k">matplotlib</span> inline
+
+<span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;fivethirtyeight&quot;</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">&quot;display.max_columns&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>除处理变量与结果变量外，该研究还记录了以下特征：</p>
+<ul class="simple">
+<li><p>schoolid：学生所在学校的标识符；</p></li>
+<li><p>success_expect：自我报告的未来成功预期（作为学业基础能力的代理变量，在随机分配前测得）；</p></li>
+<li><p>ethnicity：学生种族/族群的分类变量；</p></li>
+<li><p>gender：学生自我认同性别的分类变量；</p></li>
+<li><p>frst_in_family：学生是否为家庭第一代大学生的分类变量，即家庭中首个上大学者；</p></li>
+<li><p>school_urbanicity：学校层面的城乡属性分类变量，如农村、郊区等；</p></li>
+<li><p>school_mindset：随机分配前报告的学生固定型思维模式的校级平均值，标准化处理；</p></li>
+<li><p>school_achievement：基于前四届学生测试成绩及大学预备情况的衡量指标，标准化处理；</p></li>
+<li><p>school_ethnic_minority：学校种族/族裔少数群体比例，即黑人、拉丁裔或美洲原住民学生占比，标准化处理；</p></li>
+<li><p>school_poverty：家庭收入低于联邦贫困线标准的学生百分比，标准化处理；</p></li>
+<li><p>school_size：该校四个年级学生总数的标准化值。</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./data/learning_mindset.csv&quot;</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>schoolid</th>
+      <th>intervention</th>
+      <th>achievement_score</th>
+      <th>...</th>
+      <th>school_ethnic_minority</th>
+      <th>school_poverty</th>
+      <th>school_size</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>259</th>
+      <td>73</td>
+      <td>1</td>
+      <td>1.480828</td>
+      <td>...</td>
+      <td>-0.515202</td>
+      <td>-0.169849</td>
+      <td>0.173954</td>
+    </tr>
+    <tr>
+      <th>3435</th>
+      <td>76</td>
+      <td>0</td>
+      <td>-0.987277</td>
+      <td>...</td>
+      <td>-1.310927</td>
+      <td>0.224077</td>
+      <td>-0.426757</td>
+    </tr>
+    <tr>
+      <th>9963</th>
+      <td>4</td>
+      <td>0</td>
+      <td>-0.152340</td>
+      <td>...</td>
+      <td>0.875012</td>
+      <td>-0.724801</td>
+      <td>0.761781</td>
+    </tr>
+    <tr>
+      <th>4488</th>
+      <td>67</td>
+      <td>0</td>
+      <td>0.358336</td>
+      <td>...</td>
+      <td>0.315755</td>
+      <td>0.054586</td>
+      <td>1.862187</td>
+    </tr>
+    <tr>
+      <th>2637</th>
+      <td>16</td>
+      <td>1</td>
+      <td>1.360920</td>
+      <td>...</td>
+      <td>-0.033161</td>
+      <td>-0.982274</td>
+      <td>1.591641</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 13 columns</p>
+</div></div></div>
+</div>
+<p>尽管该研究采用了随机化设计，但数据似乎仍存在混杂因素。若审视额外特征，我们会发现它们在处理组与对照组之间存在系统性差异。一个可能的原因是处理变量以学生是否参与研讨会来衡量。因此，虽然参与机会是随机的，但实际参与行为并非如此。此处我们面临的是不依从性问题。一个证据是学生的成功预期与研讨会参与度呈相关性——自我报告成功预期较高的学生更可能参加了成长心态研讨会。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;success_expect&quot;</span><span class="p">)[</span><span class="s2">&quot;intervention&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>success_expect
+1    0.271739
+2    0.265957
+3    0.294118
+4    0.271617
+5    0.311070
+6    0.354287
+7    0.362319
+Name: intervention, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<p>不过，我们仍可观察均值差异 <span class="math notranslate nohighlight">\(E[Y|T=1] - E[Y|T=0]\)</span> 的情况，这将作为后续比较的有用基准。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;achievement_score ~ intervention&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span><span class="o">.</span><span class="n">tables</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><table class="simpletable">
+<tr>
+        <td></td>          <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th>    <td>   -0.1538</td> <td>    0.012</td> <td>  -13.201</td> <td> 0.000</td> <td>   -0.177</td> <td>   -0.131</td>
+</tr>
+<tr>
+  <th>intervention</th> <td>    0.4723</td> <td>    0.020</td> <td>   23.133</td> <td> 0.000</td> <td>    0.432</td> <td>    0.512</td>
+</tr>
+</table></div></div>
+</div>
+<p>仅通过比较接受干预与未接受干预的群体，我们可以发现，接受干预者的成绩分数平均比标准化平均分（即零分）高出 0.3185（0.4723 减去 0.1538）。但这个差异是大是小？我明白解读标准化结果可能颇具挑战，但请稍安勿躁。我认为值得深入探讨，因为标准化分数的出现绝非仅此一次。</p>
+<p>被标准化的结果变量意味着它是以标准差为单位来衡量的。因此，处理组比未处理组高出 0.3185 个标准差。这就是此处的含义。至于这个差异是大是小，让我们回顾一下正态分布的一些特性。我们知道其 95%的质量落在两个标准差之间，两端各剩 2.5%。这也意味着，若某人高于均值两个标准差，那么 97.5%（95%加上左侧 2.5%的尾部）的个体都位于此人之下。通过查看正态累积分布函数，我们还知道约 85%的质量低于一个标准差，70%低于 0.5 个标准差。由于处理组的平均标准化得分约为 0.5，这意味着他们在个人成就方面超过了 70%的个体。换言之，他们属于成就更高的前 30%人群。下图直观展示了这一情况。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;achievement_score&quot;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;All&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;intervention==0&quot;</span><span class="p">)[</span><span class="s2">&quot;achievement_score&quot;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C2&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;intervention==1&quot;</span><span class="p">)[</span><span class="s2">&quot;achievement_score&quot;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C3&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="o">-</span><span class="mf">0.1538</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Untreated&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C2&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="o">-</span><span class="mf">0.1538</span><span class="o">+</span><span class="mf">0.4723</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Treated&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C3&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span> <span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/7397325f789c8cdfc80d199d260bb592d0e80a60d86497d7f44b84fadb14ed26.png" src="_images/7397325f789c8cdfc80d199d260bb592d0e80a60d86497d7f44b84fadb14ed26.png" />
+</div>
+</div>
+<p>当然，我们仍认为这一结果存在偏误。处理组与未处理组之间的差异可能比这小，因为我们推测偏误为正。我们已经看到，更有抱负的人更愿意参加研讨会，因此即便未参与，他们可能也会取得更高成就。为控制这一偏误，可采用回归或匹配方法，但现在该学习一项新技术了。</p>
+</section>
+<section id="id3">
+<h2>倾向得分<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>倾向得分源于一个认识：无需直接控制混杂变量 X 即可实现条件独立性 <span class="math notranslate nohighlight">\((Y_1, Y_0) \perp T | X\)</span>。实际上，控制一个平衡得分 <span class="math notranslate nohighlight">\(E[T|X]\)</span> 就足够了。该平衡得分通常是治疗的条件概率 <span class="math notranslate nohighlight">\(P(T|X)\)</span>，亦称倾向得分 <span class="math notranslate nohighlight">\(e(x)\)</span>。倾向得分使得不必对 X 整体进行条件限制就能实现潜在结果对治疗的独立性，仅需对这一单一变量（即倾向得分）进行条件控制即可：</p>
+<p><span class="math notranslate nohighlight">\(
+(Y_1, Y_0) \perp T | e(x)
+\)</span></p>
+<p>关于这一点有一个正式的证明，但我们现在可以暂时忽略它，以更直观的方式来探讨这个问题。倾向得分是接受处理的条件概率，对吧？因此，我们可以将其视为某种将 X 转化为处理 T 的函数。倾向得分在变量 X 和处理 T 之间起到了桥梁的作用。如果我们在因果图中展示这一点，它看起来会是这样的。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Digraph</span><span class="p">()</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;e(x)&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;e(x)&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">)</span>
+<span class="n">g</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/ae689f180c38afe1536d5a7460fafe45fd882b78c8ea20056c152bbb4c0d7878.svg" src="_images/ae689f180c38afe1536d5a7460fafe45fd882b78c8ea20056c152bbb4c0d7878.svg" /></div>
+</div>
+<p>若已知 e(x)的值，仅凭 X 本身无法提供更多有助于预测 T 的信息。这意味着控制 e(x)的效果等同于直接控制 X。以我们的心态项目为例，处理组与对照组最初不具备可比性，因为更具雄心的人既更可能接受处理，也更容易在生活中取得更大成就。然而，若从处理组和对照组中各取一人，且这两人具有相同的处理接收概率时，他们便具有可比性。试想：若两人接受处理的概率完全相同，那么其中一人接受处理而另一人未接受的唯一原因纯属偶然。保持倾向得分不变的作用，就在于使数据看起来如同随机分配一般。</p>
+<p>既然直观理解已建立，现在让我们审视数学证明。我们需要证明 <span class="math notranslate nohighlight">\((Y_1, Y_0) \perp T | e(x)\)</span> 等价于以下表述：</p>
+<p><span class="math notranslate nohighlight">\(
+E[T|e(x), X] = E[T|e(x)] 
+\)</span></p>
+<p>这实质上表明，在给定 <span class="math notranslate nohighlight">\(e(x)\)</span> 的条件下，X 无法为 <span class="math notranslate nohighlight">\(T\)</span> 提供任何额外信息。该证明过程颇为奇特：我们将通过将上述等式转化为一个不言自明的陈述来完成证明。首先观察等式左侧的 <span class="math notranslate nohighlight">\(E[T|e(x), X]\)</span>。</p>
+<p><span class="math notranslate nohighlight">\(
+E[T|e(x), X] = E[T|X] = e(x)
+\)</span></p>
+<p>我们利用 <span class="math notranslate nohighlight">\(e(x)\)</span> 仅是 X 的函数这一事实，因此在已对 X 本身进行条件化后，再对其条件化不会提供额外信息。接着，我们运用倾向得分的定义 <span class="math notranslate nohighlight">\(E[T|X]\)</span>。</p>
+<p>对于右侧，我们将使用迭代期望定律 <span class="math notranslate nohighlight">\(E[A] = E[E[A|B]]\)</span>。该定律表明，可以通过分解 B 后 A 的值来计算 A 的期望值，然后取其平均值。</p>
+<p><span class="math notranslate nohighlight">\(
+E[T|e(x)] = E[E[T|e(x),X]|e(x)] = E[e(x)|e(x)] = e(x)
+\)</span></p>
+<p>第一个等式源于迭代期望定律。第二个等式则来自我们在处理左侧时得出的结论。由于等式左右两边均等于 <span class="math notranslate nohighlight">\(e(x)\)</span>，故此等式显然成立。</p>
+</section>
+<section id="id4">
+<h2>倾向性加权<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<p><img alt="img" src="_images/balance.png" /></p>
+<p>好的，我们得到了倾向得分。接下来呢？就像我说的，我们只需要以它为条件进行分析。例如，我们可以运行一个仅以倾向得分为条件的线性回归，而不是所有的 X 变量。现在，让我们看看一种仅使用倾向得分的技术。其核心思想是利用倾向得分来表达条件均值差异。</p>
+<p><span class="math notranslate nohighlight">\(
+E[Y|X,T=1]-E[Y|X,T=0] = E\bigg[\dfrac{Y}{e(x)}|X,T=1\bigg]P(T) - E\bigg[\dfrac{Y}{(1-e(x))}|X,T=0\bigg](1-P(T))
+\)</span></p>
+<p>我们还可以进一步简化这个表达式，但先以这种方式来看，它能帮助我们直观理解“倾向得分”到底在做什么。第一个项是在估计 <span class="math notranslate nohighlight">\(Y_1\)</span>，它是将所有接受处理的个体按其接受处理的概率的倒数进行加权。这个操作的效果是：那些接受处理但原本不太可能接受处理的个体被赋予更高的权重。</p>
+<p>这很合理，对吧？如果一个人接受处理的概率很低，说明他更像是未接受处理的个体；然而他实际上却接受了处理——这就很有价值。<strong>我们得到了一个“看起来像未处理人群”的受处理个体，因此要赋予他更高的权重</strong>。通过这种方式，我们构造出一个“每个人都接受了处理”的人群，且这个人群的分布和原始人群相同。</p>
+<p>同样地，第二个项处理的是未接受处理的个体，并且对那些“看起来像处理组”的个体赋予更高的权重。</p>
+<p>这种估计方法被称为 <strong>倾向得分逆概率加权法（IPTW, Inverse Probability of Treatment Weighting）</strong>，因为它根据个体<strong>实际接受的处理的概率的倒数</strong>对每一个样本单位进行加权。</p>
+<p>用图像展示，这就是加权所实现的效果。</p>
+<p><img alt="img" src="_images/iptw.png" /></p>
+<p>左上角的图表展示了原始数据。蓝点代表未经处理的样本，红点代表经过处理的样本。底部图表显示了倾向得分 <span class="math notranslate nohighlight">\(e(x)\)</span>。注意其值介于 0 到 1 之间，并随着 X 的增加而增长。最后，右上角的图表是加权后的数据。可以看到，位于左侧（倾向得分较低）的红点（处理组）具有更高的权重；同样，位于右侧的蓝点（对照组）也拥有更高的权重。</p>
+<p>现在我们已经理解了直观概念，可以将上述表达式简化为</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+E[Y|X,T=1]-E[Y|X,T=0] &amp;= E\bigg[\dfrac{Y}{e(x)}|X,T=1\bigg]P(T) - E\bigg[\dfrac{Y}{(1-e(x))}|X,T=0\bigg](1-P(T)) \\
+&amp;=E\bigg[\dfrac{YT}{e(x)}\bigg|X\bigg] - E\bigg[\dfrac{Y(1-T)}{(1-e(x))}\bigg|X\bigg] \\
+&amp;=E\bigg[\dfrac{YT}{e(x)} - \dfrac{Y(1-T)}{(1-e(x))}\bigg|X\bigg] \\
+&amp;=E\bigg[Y\dfrac{T(1-e(x)) - e(x)(1-T)}{e(x)(1-e(x))}\bigg|X\bigg] \\
+&amp;=E\bigg[Y \dfrac{T-e(x)}{e(x)(1-e(x))}\bigg|X\bigg]
+\end{align}
+\end{split}\]</div>
+<p>若对 X 进行积分，该式即成为我们的倾向得分加权估计量。</p>
+<p><span class="math notranslate nohighlight">\(
+E\bigg[Y \dfrac{T-e(x)}{e(x)(1-e(x))}\bigg]
+\)</span></p>
+<p>注意，此估计量要求 <span class="math notranslate nohighlight">\(e(x)\)</span> 和 <span class="math notranslate nohighlight">\(1-e(x)\)</span> 必须大于零。换言之，这意味着每个人都需有一定概率接受处理和不接受处理。另一种表述是处理组与未处理组的分布需存在重叠，这正是因果推断中的<strong>正值性假设</strong>。这一假设在直观上也合乎逻辑——若处理组与未处理组无重叠，则表明两者差异极大，此时无法将一组的效应外推至另一组。虽然这种外推并非不可能（回归分析即采用此法），但其风险极高。这如同仅在男性群体中试验新药后，便假定女性群体会有同等疗效。</p>
+</section>
+<section id="id5">
+<h2>倾向得分估计<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<p>理想情况下，我们应掌握真实的倾向得分 <span class="math notranslate nohighlight">\(e(x)\)</span>。但实际上，处理分配机制未知，需用其估计值 <span class="math notranslate nohighlight">\(\hat{e}(x)\)</span> 替代。常用方法是逻辑回归，但也可采用梯度提升等机器学习方法（尽管需额外步骤防止过拟合）。</p>
+<p>在此，我将坚持使用逻辑回归。这意味着我需要将数据集中的分类特征转换为虚拟变量。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">categ</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ethnicity&quot;</span><span class="p">,</span> <span class="s2">&quot;gender&quot;</span><span class="p">,</span> <span class="s2">&quot;school_urbanicity&quot;</span><span class="p">]</span>
+<span class="n">cont</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;school_mindset&quot;</span><span class="p">,</span> <span class="s2">&quot;school_achievement&quot;</span><span class="p">,</span> <span class="s2">&quot;school_ethnic_minority&quot;</span><span class="p">,</span> <span class="s2">&quot;school_poverty&quot;</span><span class="p">,</span> <span class="s2">&quot;school_size&quot;</span><span class="p">]</span>
+
+<span class="n">data_with_categ</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">categ</span><span class="p">),</span> <span class="c1"># dataset without the categorical features</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">categ</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">categ</span><span class="p">,</span> <span class="n">drop_first</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="c1"># categorical features converted to dummies</span>
+<span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">data_with_categ</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(10391, 32)
+</pre></div>
+</div>
+</div>
+</div>
+<p>现在，让我们使用逻辑回归来估计倾向得分。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogisticRegression</span>
+
+<span class="n">T</span> <span class="o">=</span> <span class="s1">&#39;intervention&#39;</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="s1">&#39;achievement_score&#39;</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">data_with_categ</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;schoolid&#39;</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">Y</span><span class="p">])</span>
+
+<span class="n">ps_model</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="mf">1e6</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data_with_categ</span><span class="p">[</span><span class="n">X</span><span class="p">],</span> <span class="n">data_with_categ</span><span class="p">[</span><span class="n">T</span><span class="p">])</span>
+
+<span class="n">data_ps</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">propensity_score</span><span class="o">=</span><span class="n">ps_model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">data_with_categ</span><span class="p">[</span><span class="n">X</span><span class="p">])[:,</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="n">data_ps</span><span class="p">[[</span><span class="s2">&quot;intervention&quot;</span><span class="p">,</span> <span class="s2">&quot;achievement_score&quot;</span><span class="p">,</span> <span class="s2">&quot;propensity_score&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>intervention</th>
+      <th>achievement_score</th>
+      <th>propensity_score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>0.277359</td>
+      <td>0.315271</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>-0.449646</td>
+      <td>0.263482</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>0.769703</td>
+      <td>0.343781</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1</td>
+      <td>-0.121763</td>
+      <td>0.343781</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1</td>
+      <td>1.526147</td>
+      <td>0.367474</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>首先，我们可以确保倾向得分权重确实重构了一个所有人都接受治疗的人群。通过生成权重 <span class="math notranslate nohighlight">\(1/e(x)\)</span>，它创建了一个所有人都接受治疗的群体；而提供权重 <span class="math notranslate nohighlight">\(1/(1-e(x))\)</span> 则创建了一个所有人都未接受治疗的群体。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">weight_t</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">data_ps</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;intervention==1&quot;</span><span class="p">)[</span><span class="s2">&quot;propensity_score&quot;</span><span class="p">]</span>
+<span class="n">weight_nt</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">data_ps</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;intervention==0&quot;</span><span class="p">)[</span><span class="s2">&quot;propensity_score&quot;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Original Sample Size&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Treated Population Sample Size&quot;</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">weight_t</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Untreated Population Sample Size&quot;</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">weight_nt</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Original Sample Size 10391
+Treated Population Sample Size 10387.611441322644
+Untreated Population Sample Size 10391.5061043366
+</pre></div>
+</div>
+</div>
+</div>
+<p>我们还可以利用倾向得分来寻找混杂因素的证据。如果某一人群分段的倾向得分高于另一分段，这意味着存在非随机因素导致处理分配。若该因素同时影响结果变量，则存在混杂。在本例中，我们发现自报更具雄心的学生参加成长心态研讨会的概率也更高。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;success_expect&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;propensity_score&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data_ps</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Confounding Evidence&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/8600a85b12b818f86181a6b28f2e2728703d1c246181d411b879e873c07e8328.png" src="_images/8600a85b12b818f86181a6b28f2e2728703d1c246181d411b879e873c07e8328.png" />
+</div>
+</div>
+<p>我们还需检查处理组与未处理组之间是否存在重叠。为此，可以观察未处理组和处理组的倾向得分经验分布。从下图可见，无人具有零倾向得分，即使在倾向得分较低的区域也能同时找到处理与未处理的个体。这正是我们所说的处理组与未处理组良好平衡的状态。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">data_ps</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;intervention==0&quot;</span><span class="p">)[</span><span class="s2">&quot;propensity_score&quot;</span><span class="p">],</span> <span class="n">kde</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Non Treated&quot;</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">data_ps</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;intervention==1&quot;</span><span class="p">)[</span><span class="s2">&quot;propensity_score&quot;</span><span class="p">],</span> <span class="n">kde</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Treated&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Positivity Check&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span> <span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/2c09b2fa4a7380c4175939b28635f66e5eea1ae68e6d181049406bd06ac5438d.png" src="_images/2c09b2fa4a7380c4175939b28635f66e5eea1ae68e6d181049406bd06ac5438d.png" />
+</div>
+</div>
+<p>最终，我们可以利用倾向得分加权估计量来评估平均处理效应。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">weight</span> <span class="o">=</span> <span class="p">((</span><span class="n">data_ps</span><span class="p">[</span><span class="s2">&quot;intervention&quot;</span><span class="p">]</span><span class="o">-</span><span class="n">data_ps</span><span class="p">[</span><span class="s2">&quot;propensity_score&quot;</span><span class="p">])</span> <span class="o">/</span>
+          <span class="p">(</span><span class="n">data_ps</span><span class="p">[</span><span class="s2">&quot;propensity_score&quot;</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">data_ps</span><span class="p">[</span><span class="s2">&quot;propensity_score&quot;</span><span class="p">])))</span>
+
+<span class="n">y1</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">data_ps</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;intervention==1&quot;</span><span class="p">)[</span><span class="s2">&quot;achievement_score&quot;</span><span class="p">]</span><span class="o">*</span><span class="n">weight_t</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">y0</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">data_ps</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;intervention==0&quot;</span><span class="p">)[</span><span class="s2">&quot;achievement_score&quot;</span><span class="p">]</span><span class="o">*</span><span class="n">weight_nt</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="n">ate</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">weight</span> <span class="o">*</span> <span class="n">data_ps</span><span class="p">[</span><span class="s2">&quot;achievement_score&quot;</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Y1:&quot;</span><span class="p">,</span> <span class="n">y1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Y0:&quot;</span><span class="p">,</span> <span class="n">y0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ATE&quot;</span><span class="p">,</span> <span class="n">ate</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Y1: 0.2598102832312275
+Y0: -0.12903052834734596
+ATE 0.38884081157857353
+</pre></div>
+</div>
+</div>
+</div>
+<p>倾向得分加权法表明，就成就而言，我们应预期接受处理的个体比未接受处理的同伴高出 0.38 个标准差。同时可见，若无人接受处理，整体成就水平预计将比现状低 0.12 个标准差。同理，若让所有人参与研讨会，预期整体成就水平将提升 0.25 个标准差。这与简单对比处理组和未处理组得出的 0.47 平均处理效应估计值形成对比，证明存在的偏误确实为正，且通过控制变量 X 后，对成长心态影响的估计更为保守。</p>
+</section>
+<section id="id6">
+<h2>标准误差<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<p><img alt="img" src="_images/bootstrap.png" /></p>
+<p>为计算逆概率加权估计量的标准误，可采用加权平均方差公式。</p>
+<p><span class="math notranslate nohighlight">\(
+\sigma^2_w = \dfrac{\sum_{i=1}^{n}w_i(y_i-\hat{\mu})^2}{\sum_{i=1}^{n}w_i}
+\)</span></p>
+<p>然而，仅当我们拥有真实的倾向得分时才能使用此方法。若采用其估计版本 <span class="math notranslate nohighlight">\(\hat{P}(x)\)</span>，则需考虑这一估计过程中的误差。最简便的做法是对整个流程进行自助法（bootstrap）处理，即通过有放回地从原始数据中抽样，并如上所述计算平均处理效应（ATE）。随后多次重复此过程，以获取 ATE 估计值的分布。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">joblib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span> <span class="c1"># for parallel processing</span>
+
+<span class="c1"># define function that computes the IPTW estimator</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">run_ps</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="c1"># estimate the propensity score</span>
+    <span class="n">ps</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="mf">1e6</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">X</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="n">T</span><span class="p">])</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">X</span><span class="p">])[:,</span> <span class="mi">1</span><span class="p">]</span>
+    
+    <span class="n">weight</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">T</span><span class="p">]</span><span class="o">-</span><span class="n">ps</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">ps</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">ps</span><span class="p">))</span> <span class="c1"># define the weights</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">weight</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="n">y</span><span class="p">])</span> <span class="c1"># compute the ATE</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">88</span><span class="p">)</span>
+<span class="c1"># run 1000 bootstrap samples</span>
+<span class="n">bootstrap_sample</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">ates</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="mi">4</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="n">run_ps</span><span class="p">)(</span><span class="n">data_with_categ</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">frac</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">X</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+                          <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">bootstrap_sample</span><span class="p">))</span>
+<span class="n">ates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ates</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>ATE 即为自助样本的均值。要获得置信区间，可考察自助分布的百分位数：对于 95%置信区间，采用 2.5%和 97.5%分位数。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ATE: </span><span class="si">{</span><span class="n">ates</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;95% C.I.: </span><span class="si">{</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">ates</span><span class="p">,</span><span class="w"> </span><span class="mf">2.5</span><span class="p">),</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">ates</span><span class="p">,</span><span class="w"> </span><span class="mf">97.5</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ATE: 0.3877390990017618
+95% C.I.: (0.3544138347564195, 0.4197524732114395)
+</pre></div>
+</div>
+</div>
+</div>
+<p>我们还可以直观展示自助样本的分布形态及其置信区间。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">ates</span><span class="p">,</span> <span class="n">kde</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">ates</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="n">linestyles</span><span class="o">=</span><span class="s2">&quot;dotted&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">ates</span><span class="p">,</span> <span class="mf">97.5</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="n">linestyles</span><span class="o">=</span><span class="s2">&quot;dotted&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;95% CI&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;ATE Bootstrap Distribution&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/83d85a21316cc303c736271f3819a27a3dfce5586eeaa2059566d2753934f37c.png" src="_images/83d85a21316cc303c736271f3819a27a3dfce5586eeaa2059566d2753934f37c.png" />
+</div>
+</div>
+</section>
+<section id="id7">
+<h2>倾向得分法的常见问题<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
+<p>作为一名数据科学家，我深知利用机器学习工具包的全部力量来尽可能精确地估计倾向得分是多么诱人。你可能会迅速沉迷于 AUC 优化、交叉验证和贝叶斯超参数调优之中。我并不是说你不该这么做。事实上，关于倾向得分与机器学习的所有理论都非常新近，我们仍有许多未知领域。但首先理解一些基本概念是值得的。</p>
+<p>首要一点是，倾向得分的预测质量并不等同于其平衡特性。来自机器学习领域的学者在熟悉因果推断时，最富挑战性的方面之一便是放弃将一切视为预测问题的习惯。实际上，最大化倾向得分的预测能力甚至可能损害因果推断的目标。 <strong>倾向得分无需非常精确地预测处理分配，它只需涵盖所有混杂变量。</strong> 若纳入那些虽能有效预测处理分配但与结果无关的变量，反而会增加倾向得分估计量的方差。这与线性回归中纳入与处理相关但与结果无关变量时所面临的问题类似。</p>
+<p><img alt="img" src="_images/ml-trap.png" /></p>
+<p>为了理解这一点，请考虑以下示例（改编自 Hernán 的著作）。假设有两所学校，其中一所对 99%的学生实施了成长心态研讨会，另一所仅对 1%的学生实施。进一步假设学校本身对处理效应无直接影响（除非通过处理本身），因此无需对其进行控制。若将学校变量加入倾向得分模型，该变量将具有极高的预测力。然而，偶然情况下，我们可能获得一个样本，其中学校 A 的所有学生均接受了处理，导致该校倾向得分为 1，进而引发方差无限大的问题。此虽为极端案例，但我们将通过模拟数据展示其运作机制。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">school_a</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">T</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">binomial</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">.99</span><span class="p">,</span> <span class="mi">400</span><span class="p">),</span> <span class="n">school</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">intercept</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">school_b</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">T</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">binomial</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">.01</span><span class="p">,</span> <span class="mi">400</span><span class="p">),</span> <span class="n">school</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">intercept</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">ex_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">school_a</span><span class="p">,</span> <span class="n">school_b</span><span class="p">])</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">y</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;T&quot;</span><span class="p">]))</span>
+<span class="n">ex_data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>T</th>
+      <th>school</th>
+      <th>intercept</th>
+      <th>y</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.309526</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1.571468</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>2.982024</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>2.445420</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>2.693187</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>完成数据模拟后，我们使用倾向得分算法进行了两次自助法（bootstrap）分析。第一次将学校作为特征纳入倾向得分模型，第二次则未将学校变量纳入模型。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ate_w_f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">run_ps</span><span class="p">(</span><span class="n">ex_data</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">frac</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="p">[</span><span class="s2">&quot;school&quot;</span><span class="p">],</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">500</span><span class="p">)])</span>
+<span class="n">ate_wo_f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">run_ps</span><span class="p">(</span><span class="n">ex_data</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">frac</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="p">[</span><span class="s2">&quot;intercept&quot;</span><span class="p">],</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">500</span><span class="p">)])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">ate_w_f</span><span class="p">,</span> <span class="n">kde</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;PS W School&quot;</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">ate_wo_f</span><span class="p">,</span> <span class="n">kde</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;PS W/O School&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span> <span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/a2720cb6f2b402c4d810f78e3072976cac7354052a4cbb96d8824359336df886.png" src="_images/a2720cb6f2b402c4d810f78e3072976cac7354052a4cbb96d8824359336df886.png" />
+</div>
+</div>
+<p>如你所见，加入学校特征的倾向得分估计器方差极大，而未加入该特征的模型则表现更为稳定。此外，由于学校并非混淆变量，未包含它的模型也不存在偏误。正如我所说，这并非单纯预测处理效应的问题，关键在于构建预测模型时必须控制混杂因素，而非仅着眼于预测处理本身。</p>
+<p>这引出了倾向得分方法中常见的另一个问题。在我们的案例中，数据最终呈现高度平衡状态，但情况并非总是如此。某些情况下，接受处理者的处理概率远高于未处理者，且倾向得分分布的重叠区域非常有限。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">beta</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">500</span><span class="p">),</span> <span class="n">kde</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Non Treated&quot;</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">beta</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">500</span><span class="p">),</span> <span class="n">kde</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Treated&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Positivity Check&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span> <span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/4de306c17a02b7d3ed72f282f9c6163df1f0849b9dc9668fac5b00374523bf15.png" src="_images/4de306c17a02b7d3ed72f282f9c6163df1f0849b9dc9668fac5b00374523bf15.png" />
+</div>
+</div>
+<p>若出现这种情况，意味着正向效应并不十分显著。假设某处理个体的倾向得分为 0.9，而未处理个体的最大倾向得分为 0.7，我们将无法找到任何未处理个体与这位 0.9 分的个体进行对比。这种匹配失衡可能引发偏误，因为我们必须将处理效应外推至未知区域。不仅如此，具有极高或极低倾向得分的实体权重过大，这会增加方差。根据经验法则，当任何权重超过 20 时（例如未处理个体倾向得分达 0.95 或处理个体倾向得分低至 0.05 时），就会面临问题。</p>
+<p>另一种方法是将权重限制在最大值为 20。这样做会降低方差，但实际上会增加偏误。坦白说，尽管这是减少方差的常见做法，我并不十分赞同。你无法确定通过截断引入的偏误是否过大。此外，若分布间无重叠，数据可能本就不足以得出因果结论。为了更深入理解这一点，我们可以考察一种结合倾向得分与匹配的技术。</p>
+</section>
+<section id="id8">
+<h2>倾向得分匹配<a class="headerlink" href="#id8" title="Link to this heading">#</a></h2>
+<p>如前所述，在拥有倾向得分的情况下，无需直接控制变量 X，仅控制倾向得分即可。因此，可将倾向得分视为对特征空间的一种降维操作——它将 X 中的所有特征压缩至单一的处理分配维度。基于此，我们可将倾向得分作为其他模型（例如回归模型）的输入特征。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;achievement_score ~ intervention + propensity_score&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data_ps</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span><span class="o">.</span><span class="n">tables</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><table class="simpletable">
+<tr>
+          <td></td>            <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th>        <td>   -3.0819</td> <td>    0.066</td> <td>  -46.988</td> <td> 0.000</td> <td>   -3.211</td> <td>   -2.953</td>
+</tr>
+<tr>
+  <th>intervention</th>     <td>    0.3931</td> <td>    0.019</td> <td>   20.975</td> <td> 0.000</td> <td>    0.356</td> <td>    0.430</td>
+</tr>
+<tr>
+  <th>propensity_score</th> <td>    9.0700</td> <td>    0.200</td> <td>   45.244</td> <td> 0.000</td> <td>    8.677</td> <td>    9.463</td>
+</tr>
+</table></div></div>
+</div>
+<p>若我们控制了倾向得分，现估计出的平均处理效应（ATE）为 0.39，低于此前未控制倾向得分的回归模型所得结果 0.47。此外，我们还可基于倾向得分进行匹配。此次，无需寻找所有 X 特征均相似的匹配对象，仅需确保其倾向得分相同即可。</p>
+<p>这是对匹配估计量的重大改进，因其解决了维度灾难问题。再者，若某特征对处理分配影响甚微，倾向得分模型会识别这一点，并在拟合处理机制时降低其权重。相比之下，基于特征的匹配仍会试图在个体间这一无关紧要的特征上寻找相似性。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cm</span> <span class="o">=</span> <span class="n">CausalModel</span><span class="p">(</span>
+    <span class="n">Y</span><span class="o">=</span><span class="n">data_ps</span><span class="p">[</span><span class="s2">&quot;achievement_score&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> 
+    <span class="n">D</span><span class="o">=</span><span class="n">data_ps</span><span class="p">[</span><span class="s2">&quot;intervention&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> 
+    <span class="n">X</span><span class="o">=</span><span class="n">data_ps</span><span class="p">[[</span><span class="s2">&quot;propensity_score&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
+<span class="p">)</span>
+
+<span class="n">cm</span><span class="o">.</span><span class="n">est_via_matching</span><span class="p">(</span><span class="n">matches</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bias_adj</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">cm</span><span class="o">.</span><span class="n">estimates</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Treatment Effect Estimates: Matching
+
+                     Est.       S.e.          z      P&gt;|z|      [95% Conf. int.]
+--------------------------------------------------------------------------------
+           ATE      0.383      0.025     15.252      0.000      0.334      0.432
+           ATC      0.371      0.028     13.434      0.000      0.317      0.425
+           ATT      0.407      0.027     15.341      0.000      0.355      0.459
+</pre></div>
+</div>
+</div>
+</div>
+<p>如我们所见，此处亦获得 0.38 的平均处理效应（ATE），这与先前采用倾向得分加权法所得结果更为吻合。通过倾向得分匹配，我们还能直观理解为何处理组与对照组间倾向得分重叠区域过小会带来风险。一旦出现这种情况，倾向得分差异导致的匹配偏误将显著增大，正如我们在匹配章节中已探讨的那样，这会引入估计偏误。</p>
+<p>最后需要特别提醒的是，上述标准误计算存在错误，因其未考虑倾向得分估计过程中的不确定性。遗憾的是，<a class="reference external" href="https://economics.mit.edu/sites/default/files/publications/ON%20THE%20FAILURE%20OF%20THE%20BOOTSTRAP%20FOR.pdf">自助法（bootstrap）并不适用于匹配场景</a>。此外，相关理论提出时间较近，目前尚无 Python 库能提供含正确标准误的倾向得分方法实现。正因如此，Python 生态中鲜见倾向得分匹配的应用案例。</p>
+</section>
+<section id="id9">
+<h2>核心要点<a class="headerlink" href="#id9" title="Link to this heading">#</a></h2>
+<p>在本节中，我们学到了“接受处理的概率”被称为倾向得分（propensity score），并且它可以作为一种平衡得分（balancing score）来使用。
+这意味着，如果我们已经得到了倾向得分，就不需要再直接控制所有混杂变量了——只需控制倾向得分本身，就足以识别因果效应。我们还看到，倾向得分在某种程度上起到了对混杂变量空间进行降维**的作用。</p>
+<p>正是由于这些性质，我们推导出了一个基于加权的因果推断估计量（如 IPTW）。不仅如此，我们还看到倾向得分可以与其他方法结合使用，以控制混杂偏误。</p>
+<p>接着，我们讨论了一些倾向得分和因果推断中常见的问题。第一个问题是：当我们过于关注拟合处理机制时，可能会出错。我们发现，有一个非常违反直觉（因此也容易出错）的现象是：提升处理机制的预测性能，并不意味着更好的因果效应估计，反而可能会增加估计的方差。</p>
+<p>最后，我们还探讨了当处理组与对照组之间的倾向得分分布没有良好重叠时，可能会出现的外推问题。</p>
+</section>
+<section id="id10">
+<h2>参考文献<a class="headerlink" href="#id10" title="Link to this heading">#</a></h2>
+<p>我愿将这一系列作品视为对 Joshua Angrist、Alberto Abadie 和 Christopher Walters 杰出计量经济学课程的致敬。第一部分的大部分思想源自他们在美国经济学会授课的内容。在艰难的 2020 年，正是观看他们的课程视频让我保持了理智。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.aeaweb.org/conference/cont-ed/2017-webcasts">Cross-Section Econometrics</a></p></li>
+<li><p><a class="reference external" href="https://www.aeaweb.org/conference/cont-ed/2020-webcasts">Mastering Mostly Harmless Econometrics</a></p></li>
+</ul>
+<p>我还想引用 Angrist 的精彩著作。它们向我展示了计量经济学（他们称之为“Metrics”）不仅极为实用，而且充满乐趣。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mostlyharmlesseconometrics.com">Mostly Harmless Econometrics</a></p></li>
+<li><p><a class="reference external" href="https://www.masteringmetrics.com">Mastering ‘Metrics</a></p></li>
+</ul>
+<p>最后还要感谢 Miguel Hernán 和 Jamie Robins 的<a class="reference external" href="https://hsph.harvard.edu/profile/miguel-hernan/">《Causal Inference》</a>一书。它是我在面对最棘手的因果问题时的可靠伙伴。</p>
+<p><img alt="img" src="_images/poetry.png" /></p>
+</section>
+<section id="id11">
+<h2>参与贡献<a class="headerlink" href="#id11" title="Link to this heading">#</a></h2>
+<p><strong>《Causal Inference for the Brave and True》</strong> 是一本关于因果推断的开源教材，致力于以经济上可负担、认知上可理解的方式，普及这门“科学的统计基础”。全书基于 Python，仅使用自由开源软件编写，原始英文版本由 <a class="reference external" href="https://github.com/matheusfacure">Matheus Facure</a> 编写与维护。</p>
+<p>本书的中文版由黄文喆与许文立教授合作翻译，并托管在 <a class="reference external" href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh">GitHub 中文主页</a>。希望本地化的内容能帮助更多中文读者学习和掌握因果推断方法。</p>
+<p>如果你觉得这本书对你有帮助，并希望支持该项目，可以前往 <a class="reference external" href="https://www.patreon.com/causal_inference_for_the_brave_and_true">Patreon</a> 支持原作者。</p>
+<p>如果你暂时不方便进行经济支持，也可以通过以下方式参与贡献：</p>
+<ul class="simple">
+<li><p>修正错别字</p></li>
+<li><p>提出翻译或表达建议</p></li>
+<li><p>反馈你未能理解的部分内容</p></li>
+</ul>
+<p>欢迎前往英文版或中文版仓库点击 <a class="reference external" href="https://github.com/matheusfacure/python-causality-handbook/issues">issues 区</a> 或 <a class="reference external" href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh/issues">中文版 issues 区</a> 提出反馈。</p>
+<p>最后，如果你喜欢这本书的内容，也请将其分享给可能感兴趣的朋友，并为项目在 GitHub 上点亮一颗星：<a class="reference external" href="https://github.com/matheusfacure/python-causality-handbook">英文版仓库</a> / <a class="reference external" href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh">中文版仓库</a>。</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="10-Matching.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">10 - 匹配法</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="12-Doubly-Robust-Estimation.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">12 - 双重稳健估计</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">成长心理学</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">倾向得分</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">倾向性加权</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">倾向得分估计</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">标准误差</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">倾向得分法的常见问题</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">倾向得分匹配</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">核心要点</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">参考文献</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">参与贡献</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Matheus Facure
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,1153 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>03 - 统计回顾：最危险的方程 &#8212; 因果推断：献给求真敢为者</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '03-Stats-Review-The-Most-Dangerous-Equation';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="04 - 图形因果模型" href="04-Graphical-Causal-Models.html" />
+    <link rel="prev" title="02 - 随机实验" href="02-Randomised-Experiments.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">因果推断：献给求真敢为者</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    因果推断：献给求真敢为者
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">第一部分 - 阳</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01-Introduction-To-Causality.html">01 - 因果性导论</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-Randomised-Experiments.html">02 - 随机实验</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">03 - 统计回顾：最危险的方程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04-Graphical-Causal-Models.html">04 - 图形因果模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05-The-Unreasonable-Effectiveness-of-Linear-Regression.html">05 - 线性回归的惊人有效性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06-Grouped-and-Dummy-Regression.html">06 - 分组与虚拟变量回归</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07-Beyond-Confounders.html">07 - 超越混杂因素</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-Instrumental-Variables.html">08 - 工具变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-Non-Compliance-and-LATE.html">09 - 不依从性与局部平均处理效应</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10-Matching.html">10 - 匹配法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11-Propensity-Score.html">11 - 倾向得分</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12-Doubly-Robust-Estimation.html">12 - 双重稳健估计</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13-Difference-in-Differences.html">13 - 双重差分法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="14-Panel-Data-and-Fixed-Effects.html">14 - 面板数据与固定效应</a></li>
+<li class="toctree-l1"><a class="reference internal" href="15-Synthetic-Control.html">15 - 合成控制法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="16-Regression-Discontinuity-Design.html">16 - 断点回归设计</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">第二部分 - 阴</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="17-Predictive-Models-101.html">17 - 预测模型入门</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2F03-Stats-Review-The-Most-Dangerous-Equation.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/03-Stats-Review-The-Most-Dangerous-Equation.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>03 - 统计回顾：最危险的方程</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">估计值的标准误差</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">置信区间</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">假设检验</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#p-values">P-values</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">核心要点</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">参考文献</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">参与贡献</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1>03 - 统计回顾：最危险的方程<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<p>霍华德·韦纳（Howard Wainer）在其 2007 年的著名文章中论述了一些极其危险的方程：</p>
+<p>“有些方程的危险在于你知晓它们，而另一些的危险则在于你对其一无所知。前者之所以构成威胁，是因为其内涵的秘密会打开通往隐藏巨大灾难的大门。其中显而易见的代表是爱因斯坦的标志性方程 <span class="math notranslate nohighlight">\(E = mc^2\)</span>，它揭示了潜藏于寻常物质中的巨大能量。相反，我关注的是那些当我们不了解时才释放其危险性的方程。这些方程若常备于心，能助我们洞悉事理；但若缺失，则会使我们陷入危险的无知境地。”</p>
+<p>他所指的方程是棣莫弗方程：</p>
+<p><span class="math notranslate nohighlight">\(
+SE = \dfrac{\sigma}{\sqrt{n}} 
+\)</span></p>
+<p>其中 <span class="math notranslate nohighlight">\(SE\)</span> 代表均值的标准误差，<span class="math notranslate nohighlight">\(\sigma\)</span> 为标准差，<span class="math notranslate nohighlight">\(n\)</span> 为样本容量。这听起来像是求真敢为者应当掌握的数学知识，让我们开始学习吧。</p>
+<p>为了说明不了解这个公式为何极其危险，我们来看一些教育数据。我整理了三年间不同学校的 ENEM 成绩（巴西标准化高中考试分数，类似 SAT），并清理数据仅保留相关部分。原始数据可在 <a class="reference external" href="http://portal.inep.gov.br/web/guest/microdados#">Inep 官网</a>下载。</p>
+<p>观察表现最优的学校时，有一点引人注目：这些学校的学生数量相对较少。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">style</span>
+<span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;fivethirtyeight&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/enem_scores.csv&quot;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;avg_score&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>year</th>
+      <th>school_id</th>
+      <th>number_of_students</th>
+      <th>avg_score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>16670</th>
+      <td>2007</td>
+      <td>33062633</td>
+      <td>68</td>
+      <td>82.97</td>
+    </tr>
+    <tr>
+      <th>16796</th>
+      <td>2007</td>
+      <td>33065403</td>
+      <td>172</td>
+      <td>82.04</td>
+    </tr>
+    <tr>
+      <th>16668</th>
+      <td>2005</td>
+      <td>33062633</td>
+      <td>59</td>
+      <td>81.89</td>
+    </tr>
+    <tr>
+      <th>16794</th>
+      <td>2005</td>
+      <td>33065403</td>
+      <td>177</td>
+      <td>81.66</td>
+    </tr>
+    <tr>
+      <th>10043</th>
+      <td>2007</td>
+      <td>29342880</td>
+      <td>43</td>
+      <td>80.32</td>
+    </tr>
+    <tr>
+      <th>18121</th>
+      <td>2007</td>
+      <td>33152314</td>
+      <td>14</td>
+      <td>79.82</td>
+    </tr>
+    <tr>
+      <th>16781</th>
+      <td>2007</td>
+      <td>33065250</td>
+      <td>80</td>
+      <td>79.67</td>
+    </tr>
+    <tr>
+      <th>3026</th>
+      <td>2007</td>
+      <td>22025740</td>
+      <td>144</td>
+      <td>79.52</td>
+    </tr>
+    <tr>
+      <th>14636</th>
+      <td>2007</td>
+      <td>31311723</td>
+      <td>222</td>
+      <td>79.41</td>
+    </tr>
+    <tr>
+      <th>17318</th>
+      <td>2007</td>
+      <td>33087679</td>
+      <td>210</td>
+      <td>79.38</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>换一个角度来看，我们可以仅分离出前 1%的顶尖学校进行研究。它们有何特点？或许我们能从这些佼佼者身上学到些什么，并在其他地方复制其成功经验。果然，当我们观察这前 1%的学校时，发现它们平均而言学生数量较少。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_data</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span>
+             <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">top_school</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;avg_score&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;avg_score&quot;</span><span class="p">],</span> <span class="mf">.99</span><span class="p">))</span>
+             <span class="p">[[</span><span class="s2">&quot;top_school&quot;</span><span class="p">,</span> <span class="s2">&quot;number_of_students&quot;</span><span class="p">]]</span>
+             <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;number_of_students&lt;</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;number_of_students&#39;</span><span class="p">],</span><span class="w"> </span><span class="mf">.98</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span> <span class="c1"># remove outliers</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;top_school&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;number_of_students&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">plot_data</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Number of Students of 1% Top Schools (Right)&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/12af14c6291fca288c0badc7d5be785eddf22060436d4da10388d23c073bf96d.png" src="_images/12af14c6291fca288c0badc7d5be785eddf22060436d4da10388d23c073bf96d.png" />
+</div>
+</div>
+<p>一个自然而然的结论是，小规模学校能带来更高的学业表现。这在直觉上说得通，因为我们相信每位教师对应的学生越少，教师就能给予每个学生更多关注。但这与棣莫弗方程有何关联？又为何说这种做法存在风险？</p>
+<p>然而，一旦人们开始依据这些信息做出重要且代价高昂的决策，情况就变得危险了。霍华德在文章中继续写道：</p>
+<p>“20 世纪 90 年代，提倡缩小学校规模的做法盛行一时。众多慈善组织和政府机构资助拆分大型学校，因为小规模学校的学生在考试成绩优异群体中占比过高。”</p>
+<p>人们却忽视了去关注成绩最差的 1%学校。当我们这样做时，瞧！这些学校的学生人数同样寥寥无几！</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">q_99</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;avg_score&quot;</span><span class="p">],</span> <span class="mf">.99</span><span class="p">)</span>
+<span class="n">q_01</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;avg_score&quot;</span><span class="p">],</span> <span class="mf">.01</span><span class="p">)</span>
+
+<span class="n">plot_data</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span>
+             <span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+             <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">Group</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;avg_score&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">q_99</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;avg_score&quot;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">q_01</span><span class="p">],</span>
+                                                 <span class="p">[</span><span class="s2">&quot;Top&quot;</span><span class="p">,</span> <span class="s2">&quot;Bottom&quot;</span><span class="p">],</span> <span class="s2">&quot;Middle&quot;</span><span class="p">)))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s2">&quot;avg_score&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;number_of_students&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;Group&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">plot_data</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;ENEM Score by Number of Students in the School&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/da480e71ac088cfd63161da3a5e7478aea671ef0124a5a1d67c1bf7580cbf0d9.png" src="_images/da480e71ac088cfd63161da3a5e7478aea671ef0124a5a1d67c1bf7580cbf0d9.png" />
+</div>
+</div>
+<p>上述现象正是莫瓦方程（Moivre’s equation）所预期的现象：随着学生人数的增加，平均成绩变得越来越精确。学校如果样本量很小，就可能因为纯粹的随机性而出现极高或极低的分数，这种情况在大规模学校中就不太可能发生。莫瓦方程揭示了一个关于现实中信息与数据记录的基本事实：数据永远是不精确的。那么问题就变成：它到底有多不精确？</p>
+<p>统计学是一门处理这些不精确性的科学，以确保我们不会措手不及。正如塔勒布在其著作《被随机性欺骗》中所言：</p>
+<blockquote>
+<div><p>概率不仅仅是对骰子或更复杂变体胜率的计算；它是对我们知识中确定性缺失的接纳，以及发展出应对无知的方法。</p>
+</div></blockquote>
+<p>量化我们不确定性的一种方式是通过<strong>估计值的方差</strong>。方差告诉我们观测值与其中心及最可能值之间的偏离程度。正如莫瓦方程所示，这种不确定性随着我们观察数据量的增加而减小。这很合理，对吧？如果我们看到一所学校有许多学生表现优异，我们就能更有信心认为这确实是一所好学校。然而，如果我们看到一所学校仅有 10 名学生，其中 8 名表现良好，我们就需要更加怀疑。可能只是偶然，这所学校招到了一些高于平均水平的学生。</p>
+<p>上方那幅美丽的三角形图正好讲述了这个故事。它展示出，当样本量很小时，我们对学校表现的估计具有极大的方差；而随着样本量的增加，这种方差逐渐缩小。这种现象不仅适用于学校的平均成绩，同样也适用于我们手中拥有的任何汇总统计量，包括我们常常希望估计的平均处理效应（ATE）。</p>
+<section id="id2">
+<h2>估计值的标准误差<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>由于这仅是对统计学的回顾，我将适当加快讲解节奏。若您对分布、方差及标准误等概念尚不熟悉，请继续阅读，但需注意可能需要额外参考资料。建议您搜索麻省理工学院（MIT）的任何统计学入门课程，这些课程通常都讲得非常不错。</p>
+<p>在前一节中，我们通过比较处理组与未处理组的均值差异（<span class="math notranslate nohighlight">\(E[Y|T=1]-E[Y|T=0]\)</span>），估计了平均处理效应 <span class="math notranslate nohighlight">\(E[Y_1-Y_0]\)</span>  。以在线课程为例，我们计算出了 <span class="math notranslate nohighlight">\(ATE\)</span>，并观察到负面影响：在线课程使学生成绩比面授课程学生低约 5 分。现在，我们将检验这一影响是否具有统计学显著性。</p>
+<p>为此，我们需要估计 <span class="math notranslate nohighlight">\(SE\)</span>。已知样本量 <span class="math notranslate nohighlight">\(n\)</span>，为计算标准差的估计值，可采用如下方法：</p>
+<div class="math notranslate nohighlight">
+\[
+\hat{\sigma}=\sqrt{\frac{1}{N-1}\sum_{i=1}^N (x_i-\bar{x})^2}
+\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(\bar{x}\)</span> 是 <span class="math notranslate nohighlight">\(x\)</span> 的平均值。幸运的是，大多数编程软件已经实现了这一点。在 Pandas 中，我们可以使用 <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.std.html">std</a> 方法。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./data/online_classroom.csv&quot;</span><span class="p">)</span>
+<span class="n">online</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;format_ol==1&quot;</span><span class="p">)[</span><span class="s2">&quot;falsexam&quot;</span><span class="p">]</span>
+<span class="n">face_to_face</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;format_ol==0 &amp; format_blended==0&quot;</span><span class="p">)[</span><span class="s2">&quot;falsexam&quot;</span><span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">se</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">y</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SE for Online:&quot;</span><span class="p">,</span> <span class="n">se</span><span class="p">(</span><span class="n">online</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SE for Face to Face:&quot;</span><span class="p">,</span> <span class="n">se</span><span class="p">(</span><span class="n">face_to_face</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SE for Online: 1.5371593973041635
+SE for Face to Face: 0.8723511456319104
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id3">
+<h2>置信区间<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>我们估计的标准误差是衡量置信度的一个指标。为了准确理解其含义，我们需要深入探讨充满争议且复杂的统计学领域。从统计学的一种观点——频率学派的视角来看，我们会认为数据不过是精确数据生成过程的表现形式。这个过程抽象而理想，由真实且恒定的参数所支配，但这些参数对我们而言却是未知的。以学生测试为例，如果我们能进行多次实验并收集多个数据集，所有这些数据集都会近似于真实的数据生成过程，但不会与之完全相同。这与柏拉图关于“理念”（Forms）的论述极为相似：</p>
+<blockquote>
+<div><p>每一个本质的理念（essential form），都在与行为、与物质事物、以及彼此之间的各种组合中呈现出来，每一个理念看起来仿佛是多样的、纷繁的。</p>
+</div></blockquote>
+<p>为了更好地理解这个概念，假设我们有一个学生考试成绩的真实抽象分布。这个分布是一个均值为 74、标准差为 2 的正态分布。基于这个分布，我们可以进行 10,000 次实验，每次从中抽取 500 个样本。如果我们将这些实验中每次的样本均值绘制成直方图，就会发现它们围绕着真实均值呈现分布。有些实验的样本均值会低于真实均值，而有些则会高于真实均值。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">true_std</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">true_mean</span> <span class="o">=</span> <span class="mi">74</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">run_experiment</span><span class="p">():</span> 
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">true_mean</span><span class="p">,</span><span class="n">true_std</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">freq</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">([</span><span class="n">run_experiment</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10000</span><span class="p">)],</span> <span class="n">bins</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Experiment Means&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">true_mean</span><span class="p">,</span> <span class="n">ymin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="n">freq</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">linestyles</span><span class="o">=</span><span class="s2">&quot;dashed&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;True Mean&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;orange&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/b383bf5ca40ee290bbfb71148f3f2d53da3b49a1c74907a67849cd256db0b594.png" src="_images/b383bf5ca40ee290bbfb71148f3f2d53da3b49a1c74907a67849cd256db0b594.png" />
+</div>
+</div>
+<p>要注意，我们这里讨论的是“均值的均值”。也就是说，由于随机性，我们可能会遇到某次实验的样本均值略低于或略高于真实的均值。换句话说，我们永远无法确定某次实验得到的样本均值就恰好等于那个柏拉图式、理想化的真实均值。不过，<strong>借助标准误（standard error），我们可以构造一个置信区间，这个区间在 95% 的情况下会包含真实均值</strong>。</p>
+<p>现实中，我们无法奢侈地用多个数据集重复模拟同一实验，通常仅有一个数据集可用。但我们可以借鉴上述思路来构建所谓的<strong>置信区间</strong>。置信区间附带有概率指标，最常见的是 95%置信度。这一概率表明，在不同研究中构建的假设性置信区间有多少能包含真实均值。例如，基于类似研究计算的 95%置信区间，将有 95%的几率涵盖真实均值。</p>
+<p>为计算置信区间，我们采用<strong>中心极限定理</strong>。该定理指出，实验<strong>均值的分布服从正态分布</strong>。根据统计学理论，我们已知正态分布 95%的质量集中于均值上下两个标准差范围内。严格而言应为 1.96 倍标准差，但近似取 2 已足够精确。</p>
+<p><img alt="normal_density" src="_images/normal_dist.jpeg" /></p>
+<p>均值标准误可作为实验均值分布的估计量。因此，若将其乘以 2 后与单次实验均值相加减，即可构建出真实均值 95%置信区间。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">321</span><span class="p">)</span>
+<span class="n">exp_data</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">()</span>
+<span class="n">exp_se</span> <span class="o">=</span> <span class="n">exp_data</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">exp_data</span><span class="p">))</span>
+<span class="n">exp_mu</span> <span class="o">=</span> <span class="n">exp_data</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">ci</span> <span class="o">=</span> <span class="p">(</span><span class="n">exp_mu</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">exp_se</span><span class="p">,</span> <span class="n">exp_mu</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">exp_se</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ci</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(73.82718114045632, 74.17341543460314)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">exp_mu</span> <span class="o">-</span> <span class="mi">4</span><span class="o">*</span><span class="n">exp_se</span><span class="p">,</span> <span class="n">exp_mu</span> <span class="o">+</span> <span class="mi">4</span><span class="o">*</span><span class="n">exp_se</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">exp_mu</span><span class="p">,</span> <span class="n">exp_se</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">ci</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ymin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">ci</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ymin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;95% CI&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/42638d12e9a9ccdfbbe11040ed24d1a1a96342eb2335c1b61506e878e6a614b1.png" src="_images/42638d12e9a9ccdfbbe11040ed24d1a1a96342eb2335c1b61506e878e6a614b1.png" />
+</div>
+</div>
+<p>当然，我们不必局限于 95%的置信区间。通过确定需要将标准差乘以多少才能使区间包含正态分布 99%的质量，我们可以生成 99%的区间。</p>
+<p>Python 中的函数 <code class="docutils literal notranslate"><span class="pre">ppf</span></code> 提供了累积分布函数（CDF）的逆运算。不同于我们为求 95%置信区间（CI）时将标准误差乘以 2 的做法，此处我们将乘以 <code class="docutils literal notranslate"><span class="pre">z</span></code> ，从而得到 99%的置信区间。因此， <code class="docutils literal notranslate"><span class="pre">ppf(0.5)</span></code> 将返回 0.0，表明标准正态分布（均值为 0，标准差为 1）中有 50%的质量位于 0.0 以下。同理，若输入 99.5%，我们将得到值 <code class="docutils literal notranslate"><span class="pre">z</span></code> ，这意味着 99.5%的分布质量低于此值。换言之，仅有 0.5%的质量高于该值。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">.995</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="n">ci</span> <span class="o">=</span> <span class="p">(</span><span class="n">exp_mu</span> <span class="o">-</span> <span class="n">z</span> <span class="o">*</span> <span class="n">exp_se</span><span class="p">,</span> <span class="n">exp_mu</span> <span class="o">+</span> <span class="n">z</span> <span class="o">*</span> <span class="n">exp_se</span><span class="p">)</span>
+<span class="n">ci</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.5758293035489004
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(73.7773381773405, 74.22325839771896)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">exp_mu</span> <span class="o">-</span> <span class="mi">4</span><span class="o">*</span><span class="n">exp_se</span><span class="p">,</span> <span class="n">exp_mu</span> <span class="o">+</span> <span class="mi">4</span><span class="o">*</span><span class="n">exp_se</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">exp_mu</span><span class="p">,</span> <span class="n">exp_se</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">ci</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ymin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">ci</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ymin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;99% CI&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/c08c8c0d676c8f5e63e8e1c27865c7f3c5a77ccad17a3795b43c80fe55093cf0.png" src="_images/c08c8c0d676c8f5e63e8e1c27865c7f3c5a77ccad17a3795b43c80fe55093cf0.png" />
+</div>
+</div>
+<p>回到我们的课堂实验，我们可以为在线和面对面学生群体的平均考试成绩构建置信区间</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">ci</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">se</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">y</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">se</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;95% CI for Online:&quot;</span><span class="p">,</span> <span class="n">ci</span><span class="p">(</span><span class="n">online</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;95</span><span class="si">% f</span><span class="s2">or Face to Face:&quot;</span><span class="p">,</span> <span class="n">ci</span><span class="p">(</span><span class="n">face_to_face</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>95% CI for Online: (70.56094429049804, 76.7095818797147)
+95% for Face to Face: (76.80278229206951, 80.29218687459715)
+</pre></div>
+</div>
+</div>
+</div>
+<p>我们可以观察到，各组的 95%置信区间（CI）并未重叠。面对面授课班级 CI 的下限高于在线课程 CI 的上限。这一结果表明，我们的发现并非偶然，且面对面课堂学生的真实均值确实高于在线课程学生。换言之，从面对面教学转向在线课程会导致学业成绩出现显著的因果性下降。</p>
+<p>概括而言，置信区间是为我们的估计值提供不确定性范围的一种方法。样本量越小，标准误差越大，置信区间也越宽。由于置信区间计算极为简便，未提供置信区间可能意味着存在不良意图或仅仅是知识匮乏，这两者同样令人担忧。最后，对于没有任何不确定性度量的测量结果，你应始终保持怀疑态度。</p>
+<p><img alt="img" src="_images/ci_xkcd.png" /></p>
+<p>最后要提醒一点，置信区间的解读比初看起来更为复杂。例如，我<code class="docutils literal notranslate"><span class="pre">不能</span></code>说这个特定的 95%置信区间有 95%的概率包含真实的总体均值。在使用置信区间的频率统计中，总体均值被视为一个固定的真实总体参数。因此，它要么在我们特定的置信区间内，要么不在。换句话说，我们具体的置信区间要么包含真实均值，要么不包含。如果包含，那么包含的概率就是 100%，而非 95%；如果不包含，概率则为 0%。实际上，置信区间中的 95%指的是在多次研究中计算出的此类置信区间包含真实均值的频率。95%是我们对用于计算 95%置信区间的算法的信心，而非针对某个特定区间本身。</p>
+<p>话虽如此，作为一名经济学家（统计学家们现在可以回避了），我认为这种纯粹主义并无太大实际意义。在实践中，你会听到人们说特定置信区间在 95%的情况下包含真实均值。尽管这种表述并不准确，但它并无大碍，因为它依然为我们的估计设定了一个明确的不确定性程度。此外，如果我们转向贝叶斯统计并使用概率区间而非置信区间，我们就能说该区间在 95%的情况下包含分布均值。而且根据我的实际观察，在样本量足够的情况下，贝叶斯概率区间与置信区间的相似度，比贝叶斯学派和频率学派愿意承认的要高得多。因此，如果我的意见有任何分量，你大可以随心所欲地描述你的置信区间。即便你说它们在 95%的情况下包含真实均值，我也不介意。但请永远记得将区间估计值标注出来，否则你会显得很可笑。</p>
+</section>
+<section id="id4">
+<h2>假设检验<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<p>另一种纳入不确定性的方法是陈述一个假设检验：均值差异在统计上是否显著不同于零（或任何其他值）？我们将回顾，两个独立正态分布的和或差也是正态分布。所得均值将是两个分布的和或差，而方差始终是两者方差之和：</p>
+<p><span class="math notranslate nohighlight">\(
+N(\mu_1, \sigma_1^2) - N(\mu_2, \sigma_2^2) = N(\mu_1 - \mu_2, \sigma_1^2 + \sigma_2^2)
+\)</span></p>
+<p><span class="math notranslate nohighlight">\(
+N(\mu_1, \sigma_1^2) + N(\mu_2, \sigma_2^2) = N(\mu_1 + \mu_2, \sigma_1^2 + \sigma_2^2)
+\)</span></p>
+<p>如果你不记得了也没关系。我们总可以用代码和模拟数据来验证：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="n">n1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">30000</span><span class="p">)</span>
+<span class="n">n2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">30000</span><span class="p">)</span>
+<span class="n">n_diff</span> <span class="o">=</span> <span class="n">n2</span> <span class="o">-</span> <span class="n">n1</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">hist</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;$N(4,3^2)$&quot;</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">n2</span><span class="p">,</span> <span class="n">hist</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;$N(1,4^2)$&quot;</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">n_diff</span><span class="p">,</span> <span class="n">hist</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;$N(1,4^2) - (4,3^2) = N(-3, 5^2)$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/b9f273c622de8fe69091ee170119cbeda52c0f7a01c939963d4736b3ef076043.png" src="_images/b9f273c622de8fe69091ee170119cbeda52c0f7a01c939963d4736b3ef076043.png" />
+</div>
+</div>
+<p>如果我们取两组均值的分布并将一个减去另一个，将得到第三个分布。这个最终分布的均值将是两组均值的差异，而其标准差则是各标准差之和的平方根。</p>
+<p><span class="math notranslate nohighlight">\(
+\mu_{diff} = \mu_1 - \mu_2
+\)</span></p>
+<p><span class="math notranslate nohighlight">\(
+SE_{diff} = \sqrt{SE^2_1 + SE^2_2} = \sqrt{\sigma_1^2/n_1 + \sigma_2^2/n_2}
+\)</span></p>
+<p>让我们回到课堂的例子。我们将构建这个差异的分布。当然，一旦有了这个分布，构建 95%的置信区间就变得简单直接了。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">diff_mu</span> <span class="o">=</span> <span class="n">online</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="n">face_to_face</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">diff_se</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">face_to_face</span><span class="o">.</span><span class="n">var</span><span class="p">()</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">face_to_face</span><span class="p">)</span> <span class="o">+</span> <span class="n">online</span><span class="o">.</span><span class="n">var</span><span class="p">()</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">online</span><span class="p">))</span>
+<span class="n">ci</span> <span class="o">=</span> <span class="p">(</span><span class="n">diff_mu</span> <span class="o">-</span> <span class="mf">1.96</span><span class="o">*</span><span class="n">diff_se</span><span class="p">,</span> <span class="n">diff_mu</span> <span class="o">+</span> <span class="mf">1.96</span><span class="o">*</span><span class="n">diff_se</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ci</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(-8.376410208363385, -1.4480327880905248)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">diff_mu</span> <span class="o">-</span> <span class="mi">4</span><span class="o">*</span><span class="n">diff_se</span><span class="p">,</span> <span class="n">diff_mu</span> <span class="o">+</span> <span class="mi">4</span><span class="o">*</span><span class="n">diff_se</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">diff_mu</span><span class="p">,</span> <span class="n">diff_se</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">ci</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ymin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="mf">.05</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">ci</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ymin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="mf">.05</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;95% CI&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/b009f64c37ab9250a043c50bb9905c5988ca7517b2fe9a3cf7d31bf7bf2bc8ec.png" src="_images/b009f64c37ab9250a043c50bb9905c5988ca7517b2fe9a3cf7d31bf7bf2bc8ec.png" />
+</div>
+</div>
+<p>有了这个数据，我们可以有 95%的把握认为在线组与面对面组之间的真实差异落在-8.37 到-1.44 之间。此外，我们还可以通过将均值差除以差异的 <span class="math notranslate nohighlight">\(SE\)</span> 来构建一个 <strong>z 统计量</strong>。</p>
+<p><span class="math notranslate nohighlight">\(
+z = \dfrac{\mu_{diff} - H_{0}}{SE_{diff}} = \dfrac{(\mu_1 - \mu_2) - H_{0}}{\sqrt{\sigma_1^2/n_1 + \sigma_2^2/n_2}}
+\)</span></p>
+<p>其中 <span class="math notranslate nohighlight">\(H_0\)</span> 是我们想要测试差异的基准值。</p>
+<p>z 统计量是衡量观察到的差异极端程度的指标。我们将采用反证法来检验均值差异在统计上是否显著不为零的假设。首先，我们假设相反的情况成立，即差异为零，这被称为零假设或 <span class="math notranslate nohighlight">\(H_0\)</span>。接着，我们自问：“如果真实差异为零，观察到如此大差异的可能性有多大？”用统计学术语来说，这个问题可转化为检验我们的 z 统计量距离零有多远。</p>
+<p>在 <span class="math notranslate nohighlight">\(H_0\)</span>条件下，z 统计量服从标准正态分布。因此，若差异确实为零，我们有 95%的概率观察到 z 统计量位于均值两侧 2 个标准差范围内。其直接推论是，若 z 值超出 ±2 个标准差范围，我们就能以 95%的置信度拒绝零假设。</p>
+<p>让我们看看这在我们课堂示例中是什么样子。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">z</span> <span class="o">=</span> <span class="n">diff_mu</span> <span class="o">/</span> <span class="n">diff_se</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-2.7792810791031224
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Standard Normal&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">ymin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="mf">.05</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Z statistic&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C1&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/5c02ed15660f26b8b146502b5126f805a0351ae207a8e46d312a99c0c668ca30.png" src="_images/5c02ed15660f26b8b146502b5126f805a0351ae207a8e46d312a99c0c668ca30.png" />
+</div>
+</div>
+<p>这个数值看起来相当极端。实际上，它超过了 2，这意味着如果两组之间没有差异，我们观察到如此极端值的概率将低于 5%。这再次引导我们得出结论：从面对面授课转为在线课程会导致学术成绩在统计上显著下降。</p>
+<p>关于假设检验最后一件有趣的事情是，它比检查处理组和未处理组的 95%置信区间是否重叠更为宽松。换言之，即便两组间的置信区间存在重叠，结果仍可能在统计学上显著。例如，假设面对面组的平均得分为 80，标准误差为 4，而在线组的平均得分为 71，标准误差为 2。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cont_mu</span><span class="p">,</span> <span class="n">cont_se</span> <span class="o">=</span>  <span class="p">(</span><span class="mi">71</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">test_mu</span><span class="p">,</span> <span class="n">test_se</span> <span class="o">=</span> <span class="p">(</span><span class="mi">80</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+
+<span class="n">diff_mu</span> <span class="o">=</span> <span class="n">test_mu</span> <span class="o">-</span> <span class="n">cont_mu</span>
+<span class="n">diff_se</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">cont_se</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">test_se</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Control 95% CI:&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">cont_mu</span><span class="o">-</span><span class="mf">1.96</span><span class="o">*</span><span class="n">cont_se</span><span class="p">,</span> <span class="n">cont_mu</span><span class="o">+</span><span class="mf">1.96</span><span class="o">*</span><span class="n">cont_se</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test 95% CI:&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">test_mu</span><span class="o">-</span><span class="mf">1.96</span><span class="o">*</span><span class="n">test_se</span><span class="p">,</span> <span class="n">test_mu</span><span class="o">+</span><span class="mf">1.96</span><span class="o">*</span><span class="n">test_se</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Diff 95% CI:&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">diff_mu</span><span class="o">-</span><span class="mf">1.96</span><span class="o">*</span><span class="n">diff_se</span><span class="p">,</span> <span class="n">diff_mu</span><span class="o">+</span><span class="mf">1.96</span><span class="o">*</span><span class="n">diff_se</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Control 95% CI: (67.08, 74.92)
+Test 95% CI: (72.16, 87.84)
+Diff 95% CI: (0.23461352820082482, 17.765386471799175)
+</pre></div>
+</div>
+</div>
+</div>
+<p>如果我们为这些组构建置信区间，它们会相互重叠。在线组的 95%置信区间上限为 74.92，而面对面组的下限为 72.16。然而，一旦我们计算两组间差异的 95%置信区间，就会发现该区间不包含零。尽管各自的置信区间有重叠，差异仍可能在统计上显著不为零。</p>
+</section>
+<section id="p-values">
+<h2>P-values<a class="headerlink" href="#p-values" title="Link to this heading">#</a></h2>
+<p>此前我曾提到，如果线上与面对面小组之间的差异实际为零，我们观察到如此极端值的概率不足 5%。但我们能否精确估算这一概率？观察到如此极端值的可能性究竟有多大？这就引入了 p 值！</p>
+<p>与置信区间（事实上，大多数频率统计方法也是如此）一样，p 值的真实定义可能非常令人困惑。因此，为了不冒任何风险，我将引用维基百科上的定义：“p 值是在假设零假设正确的前提下，获得至少与实际观测到的测试结果一样极端的测试结果的概率”。</p>
+<p>简而言之，p 值是在零假设为真的情况下观察到此类数据的概率。它衡量的是在零假设成立时，你所看到的测量结果有多么不可能。很自然地，这常常被误认为是零假设为真的概率。请注意这里的区别：p 值并非 <span class="math notranslate nohighlight">\(P(H_0|data)\)</span>，而是 <span class="math notranslate nohighlight">\(P(data|H_0)\)</span>。</p>
+<p>但别被这种复杂性所迷惑。实际上，它们使用起来相当简单直接。</p>
+<p><img alt="p_value" src="_images/p_value.png" /></p>
+<p>要获得 p 值，我们需要计算标准正态分布在 z 统计量之前或之后的面积。幸运的是，我们可以借助计算机来完成这一计算。只需将 z 统计量代入标准正态分布的累积分布函数(CDF)中即可。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;P-value:&quot;</span><span class="p">,</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">z</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>P-value: 0.0027239680835563383
+</pre></div>
+</div>
+</div>
+</div>
+<p>注意到 p 值的有趣之处在于它使我们无需指定如 95%或 99%这样的置信水平。然而，如果我们希望报告一个置信水平，通过 p 值，我们可以精确知道在哪个置信度下我们的检验会通过或失败。例如，当 p 值为 0.0027 时，我们发现显著性水平可达 0.2%。因此，虽然差异的 95%置信区间和 99%置信区间都不会包含零，但 99.9%的置信区间会包含零。这意味着如果差异为零，观察到如此极端的 z 统计量仅有 0.2%的概率。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">diff_mu</span> <span class="o">=</span> <span class="n">online</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="n">face_to_face</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">diff_se</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">face_to_face</span><span class="o">.</span><span class="n">var</span><span class="p">()</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">face_to_face</span><span class="p">)</span> <span class="o">+</span> <span class="n">online</span><span class="o">.</span><span class="n">var</span><span class="p">()</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">online</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;95% CI:&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">diff_mu</span> <span class="o">-</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">.975</span><span class="p">)</span><span class="o">*</span><span class="n">diff_se</span><span class="p">,</span> <span class="n">diff_mu</span> <span class="o">+</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">.975</span><span class="p">)</span><span class="o">*</span><span class="n">diff_se</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;99% CI:&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">diff_mu</span> <span class="o">-</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">.995</span><span class="p">)</span><span class="o">*</span><span class="n">diff_se</span><span class="p">,</span> <span class="n">diff_mu</span> <span class="o">+</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">.995</span><span class="p">)</span><span class="o">*</span><span class="n">diff_se</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;99.9% CI:&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">diff_mu</span> <span class="o">-</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">.9995</span><span class="p">)</span><span class="o">*</span><span class="n">diff_se</span><span class="p">,</span> <span class="n">diff_mu</span> <span class="o">+</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">.9995</span><span class="p">)</span><span class="o">*</span><span class="n">diff_se</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>95% CI: (-8.376346553082909, -1.4480964433710017)
+99% CI: (-9.46485353526404, -0.3595894611898709)
+99.9% CI: (-10.728040658245558, 0.9035976617916468)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id5">
+<h2>核心要点<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<p>我们已了解掌握棣莫弗方程的重要性，并运用它为我们的估计赋予了一定程度的确定性。具体而言，我们发现与面对面授课相比，在线课程会导致学业成绩下降。同时，这一结果在统计学上具有显著性。我们通过比较两组均值的置信区间、观察差异的置信区间、进行假设检验以及查看 p 值来完成这一分析。现在，让我们将所有步骤整合到一个函数中，以便执行类似上述的 A/B 测试比较。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">AB_test</span><span class="p">(</span><span class="n">test</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">control</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">confidence</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">h0</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="n">mu1</span><span class="p">,</span> <span class="n">mu2</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">control</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">se1</span><span class="p">,</span> <span class="n">se2</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">test</span><span class="p">)),</span> <span class="n">control</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">control</span><span class="p">))</span>
+    
+    <span class="n">diff</span> <span class="o">=</span> <span class="n">mu1</span> <span class="o">-</span> <span class="n">mu2</span>
+    <span class="n">se_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">var</span><span class="p">()</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">test</span><span class="p">)</span> <span class="o">+</span> <span class="n">control</span><span class="o">.</span><span class="n">var</span><span class="p">()</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">control</span><span class="p">))</span>
+    
+    <span class="n">z_stats</span> <span class="o">=</span> <span class="p">(</span><span class="n">diff</span><span class="o">-</span><span class="n">h0</span><span class="p">)</span><span class="o">/</span><span class="n">se_diff</span>
+    <span class="n">p_value</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">z_stats</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">critial</span><span class="p">(</span><span class="n">se</span><span class="p">):</span> <span class="k">return</span> <span class="o">-</span><span class="n">se</span><span class="o">*</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">ppf</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">confidence</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Test </span><span class="si">{</span><span class="n">confidence</span><span class="o">*</span><span class="mi">100</span><span class="si">}</span><span class="s2">% CI: </span><span class="si">{</span><span class="n">mu1</span><span class="si">}</span><span class="s2"> +- </span><span class="si">{</span><span class="n">critial</span><span class="p">(</span><span class="n">se1</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Control </span><span class="si">{</span><span class="n">confidence</span><span class="o">*</span><span class="mi">100</span><span class="si">}</span><span class="s2">% CI: </span><span class="si">{</span><span class="n">mu2</span><span class="si">}</span><span class="s2"> +- </span><span class="si">{</span><span class="n">critial</span><span class="p">(</span><span class="n">se2</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Test-Control </span><span class="si">{</span><span class="n">confidence</span><span class="o">*</span><span class="mi">100</span><span class="si">}</span><span class="s2">% CI: </span><span class="si">{</span><span class="n">diff</span><span class="si">}</span><span class="s2"> +- </span><span class="si">{</span><span class="n">critial</span><span class="p">(</span><span class="n">se_diff</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Z Statistic </span><span class="si">{</span><span class="n">z_stats</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;P-Value </span><span class="si">{</span><span class="n">p_value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+<span class="n">AB_test</span><span class="p">(</span><span class="n">online</span><span class="p">,</span> <span class="n">face_to_face</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Test 95.0% CI: 73.63526308510637 +- 3.0127770572134565
+Control 95.0% CI: 78.54748458333333 +- 1.7097768273108
+Test-Control 95.0% CI: -4.912221498226955 +- 3.4641250548559537
+Z Statistic -2.7792810791031224
+P-Value 0.0027239680835563383
+</pre></div>
+</div>
+</div>
+</div>
+<p>由于我们的函数足够通用，可以测试其他零假设。例如，我们能否尝试否定在线课程与面对面课程表现之间的差异为-1？根据所得结果，我们可以有 95%的把握说差异比-1 更为显著。但我们无法以 99%的置信度断言这一点：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">AB_test</span><span class="p">(</span><span class="n">online</span><span class="p">,</span> <span class="n">face_to_face</span><span class="p">,</span> <span class="n">h0</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Test 95.0% CI: 73.63526308510637 +- 3.0127770572134565
+Control 95.0% CI: 78.54748458333333 +- 1.7097768273108
+Test-Control 95.0% CI: -4.912221498226955 +- 3.4641250548559537
+Z Statistic -2.2134920404560883
+P-Value 0.013431870694630116
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id6">
+<h2>参考文献<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<p>我愿将这一系列作品视为对 Joshua Angrist、Alberto Abadie 和 Christopher Walters 杰出计量经济学课程的致敬。第一部分的大部分思想源自他们在美国经济学会授课的内容。在艰难的 2020 年，正是观看他们的课程视频让我保持了理智。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.aeaweb.org/conference/cont-ed/2017-webcasts">Cross-Section Econometrics</a></p></li>
+<li><p><a class="reference external" href="https://www.aeaweb.org/conference/cont-ed/2020-webcasts">Mastering Mostly Harmless Econometrics</a></p></li>
+</ul>
+<p>我还想引用 Angrist 的精彩著作。它们向我展示了计量经济学（他们称之为“Metrics”）不仅极为实用，而且充满乐趣。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mostlyharmlesseconometrics.com">Mostly Harmless Econometrics</a></p></li>
+<li><p><a class="reference external" href="https://www.masteringmetrics.com">Mastering ‘Metrics</a></p></li>
+</ul>
+<p>最后还要感谢 Miguel Hernán 和 Jamie Robins 的<a class="reference external" href="https://hsph.harvard.edu/profile/miguel-hernan/">《Causal Inference》</a>一书。它是我在面对最棘手的因果问题时的可靠伙伴。</p>
+<p><img alt="img" src="_images/poetry.png" /></p>
+</section>
+<section id="id7">
+<h2>参与贡献<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
+<p><strong>《Causal Inference for the Brave and True》</strong> 是一本关于因果推断的开源教材，致力于以经济上可负担、认知上可理解的方式，普及这门“科学的统计基础”。全书基于 Python，仅使用自由开源软件编写，原始英文版本由 <a class="reference external" href="https://github.com/matheusfacure">Matheus Facure</a> 编写与维护。</p>
+<p>本书的中文版由黄文喆与许文立教授合作翻译，并托管在 <a class="reference external" href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh">GitHub 中文主页</a>。希望本地化的内容能帮助更多中文读者学习和掌握因果推断方法。</p>
+<p>如果你觉得这本书对你有帮助，并希望支持该项目，可以前往 <a class="reference external" href="https://www.patreon.com/causal_inference_for_the_brave_and_true">Patreon</a> 支持原作者。</p>
+<p>如果你暂时不方便进行经济支持，也可以通过以下方式参与贡献：</p>
+<ul class="simple">
+<li><p>修正错别字</p></li>
+<li><p>提出翻译或表达建议</p></li>
+<li><p>反馈你未能理解的部分内容</p></li>
+</ul>
+<p>欢迎前往英文版或中文版仓库点击 <a class="reference external" href="https://github.com/matheusfacure/python-causality-handbook/issues">issues 区</a> 或 <a class="reference external" href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh/issues">中文版 issues 区</a> 提出反馈。</p>
+<p>最后，如果你喜欢这本书的内容，也请将其分享给可能感兴趣的朋友，并为项目在 GitHub 上点亮一颗星：<a class="reference external" href="https://github.com/matheusfacure/python-causality-handbook">英文版仓库</a> / <a class="reference external" href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh">中文版仓库</a>。</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="02-Randomised-Experiments.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">02 - 随机实验</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="04-Graphical-Causal-Models.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">04 - 图形因果模型</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">估计值的标准误差</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">置信区间</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">假设检验</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#p-values">P-values</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">核心要点</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">参考文献</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">参与贡献</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Matheus Facure
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
