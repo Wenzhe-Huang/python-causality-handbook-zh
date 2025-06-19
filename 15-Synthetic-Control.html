@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -467,7 +467,17 @@ document.write(`
 <p>为了弄清楚这个问题，我们将分析一组关于美国香烟消费的历史数据。</p>
 <p>1988 年，加利福尼亚州通过了一项著名的《烟草税与健康保护法案》，也被称为 <a class="reference external" href="https://en.wikipedia.org/wiki/1988_California_Proposition_99">Proposition 99</a>（第 99 号提案）。其主要内容是：对每包香烟征收 25 美分的州消费税，同时对雪茄、嚼烟等其他烟草产品的零售销售也施加了大致相当的税负。此外，法案还规定了多项限制措施，包括：禁止在青少年可进入的公共区域内设置香烟自动售货机；禁止单支香烟的零售销售。该法案所产生的税收专门用于多个环保和医疗项目，并资助反烟草广告活动。</p>
 <p>为评估其效果，我们可以收集多个州多年间的香烟销售数据。在本案例中，我们获取了 1970 年至 2000 年间来自 39 个州的数据。其余那些在同期推行了类似烟草控制政策的州则被排除在分析之外。以下是我们的数据概况：</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Load data (assuming CSV is in current directory)</span>
+import delimited <span class="s">&quot;./data/smoking.csv&quot;</span>,<span class="k"> clear</span>
+
+<span class="k">list in</span> <span class="m">1</span><span class="o">/</span><span class="m">5</span>
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cigar</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/smoking.csv&quot;</span><span class="p">)</span>
          <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;lnincome&quot;</span><span class="p">,</span><span class="s2">&quot;beer&quot;</span><span class="p">,</span> <span class="s2">&quot;age15to24&quot;</span><span class="p">]))</span>
@@ -554,7 +564,36 @@ document.write(`
 </div></div></div>
 </div>
 <p>我们以 <code class="docutils literal notranslate"><span class="pre">state</span></code> 作为州索引，其中加利福尼亚州编号为 3。我们的协变量包括 <code class="docutils literal notranslate"><span class="pre">retprice</span></code> （香烟零售价格）和 <code class="docutils literal notranslate"><span class="pre">cigsale</span></code> （人均香烟销售量，以包计）。我们关注的结果变量是 <code class="docutils literal notranslate"><span class="pre">cigsale</span></code> 。最后，我们还设置了两个布尔变量作为辅助来标识加利福尼亚州及干预后时期。若绘制各州随时间变化的香烟销售情况，将得到如下图表。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Create California/Other States indicator</span>
+<span class="k">gen</span> state_group = <span class="s">&quot;Other States&quot;</span>
+<span class="k">replace</span> state_group = <span class="s">&quot;California&quot;</span><span class="k"> if</span> california <span class="o">==</span> <span class="s">&quot;True&quot;</span>
+
+<span class="k">encode</span> state_group,<span class="k"> gen</span>(state_group1)  <span class="c1">// Creates numeric version with value labels</span>
+
+<span class="c1">* Calculate mean cigsale by year and state group</span>
+<span class="k">collapse</span> (mean) cigsale,<span class="k"> by</span>(year state_group1)
+
+<span class="c1">* Reshape for plotting</span>
+<span class="k">reshape</span> wide cigsale, i(year) j(state_group1)
+
+<span class="k">twoway</span> <span class="cs">///</span>
+    (connected cigsale1 year, lwidth(<span class="m">2</span>) lcolor(blue) mcolor(blue)) <span class="cs">/// </span>
+    (connected cigsale2 year, lwidth(<span class="m">2</span>) lcolor(red) mcolor(red)) <span class="cs">///</span>
+    (function y = <span class="m">0</span>,<span class="k"> range</span>(<span class="m">1988</span> <span class="m">1989</span>) lcolor(black) lpattern(dash) lwidth(<span class="m">2</span>)), <span class="cs">///</span>
+    title(<span class="s">&quot;Gap in per-capita cigarette sales (in packs)&quot;</span>) <span class="cs">///</span>
+    ytitle(<span class="s">&quot;Cigarette Sales Trend&quot;</span>) <span class="cs">///</span>
+    xline(<span class="m">1988.5</span>,lp(dash) lwidth(<span class="m">2</span>)) xtitle(<span class="s">&quot;Year&quot;</span>) <span class="cs">///</span>
+    legend(order(<span class="m">1</span> <span class="s">&quot;California&quot;</span> <span class="m">2</span> <span class="s">&quot;Other States&quot;</span> <span class="m">3</span> <span class="s">&quot;Proposition 99&quot;</span>) position(<span class="m">6</span>) rows(<span class="m">1</span>)) <span class="cs">///</span>
+    graphregion(color(white)) plotregion(color(white)) <span class="cs">///</span>
+    xsize(<span class="m">10</span>) ysize(<span class="m">5</span>) <span class="cs">///</span>
+    ylabel(<span class="m">40</span>(<span class="m">20</span>)<span class="m">140</span>)
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
@@ -608,7 +647,99 @@ document.write(`
 <p>为用合成控制法估计处理效应，我们将尝试构建一个在干预前与处理单元相似的“虚拟单元”，然后观察该“虚拟单元”在干预后的表现。合成控制与其模拟单元之间的差异即为处理效应。</p>
 <p>为此，我们将使用普通最小二乘法（OLS）确定权重，并最小化干预前时期控制组中单元加权平均值与处理单元之间的平方距离。</p>
 <p>为此，首先需要将单元（本案例中指各州）转换为列，时间转换为行。由于我们有两个特征变量 <code class="docutils literal notranslate"><span class="pre">cigsale</span></code> 和 <code class="docutils literal notranslate"><span class="pre">retprice</span></code> ，我们将如上图所示将它们垂直堆叠。我们将构建一个在干预前时期与加利福尼亚州高度相似的合成控制组，观察其在干预后时期的表现。因此，仅选择干预前时期数据至关重要。此处各特征量纲相近，故无需处理。若特征量纲差异显著（如一个为千位数级，另一个为小数级），较大特征在差异最小化过程中将占据主导地位。为避免此问题，需先进行特征缩放。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* ==============================================================================</span>
+<span class="c1">* SYNTHETIC CONTROL METHOD VIA LINEAR REGRESSION</span>
+<span class="c1">* Objective: Find optimal weights for control units to match treated unit (California)</span>
+<span class="c1">*            in the pre-treatment period using cigsale and retprice</span>
+<span class="c1">* ==============================================================================</span>
+
+<span class="c1">* Setup panel data structure</span>
+<span class="k">xtset</span> state year  <span class="c1">// Declare panel structure with state and year</span>
+
+<span class="c1">* ------------------------------------------------------------------------------</span>
+<span class="c1">* STEP 1: DATA PREPARATION</span>
+<span class="c1">* ------------------------------------------------------------------------------</span>
+<span class="c1">* Keep only pre-treatment period (before Proposition 99)</span>
+<span class="k">keep if</span> after_treatment <span class="o">==</span> <span class="s">&quot;False&quot;</span>
+
+<span class="c1">* ------------------------------------------------------------------------------</span>
+<span class="c1">* STEP 2: EXTRACT TREATED UNIT DATA (CALIFORNIA)</span>
+<span class="c1">* ------------------------------------------------------------------------------</span>
+<span class="k">preserve</span>
+<span class="k">keep if</span> state <span class="o">==</span> <span class="m">3</span>  <span class="c1">// California is state=3 (adjust if different)</span>
+<span class="k">mkmat</span> cigsale retprice,<span class="k"> matrix</span>(Y_cal)  <span class="c1">// Store outcomes as matrix</span>
+<span class="k">restore</span>
+
+<span class="c1">* ------------------------------------------------------------------------------</span>
+<span class="c1">* STEP 3: PREPARE CONTROL UNITS DATA (OTHER STATES)</span>
+<span class="c1">* ------------------------------------------------------------------------------</span>
+<span class="c1">* Drop California to create donor pool</span>
+<span class="k">drop if</span> state <span class="o">==</span> <span class="m">3</span>  
+
+<span class="k">keep</span> cigsale retprice year state
+<span class="c1">* Reshape control data to wide format (one column per state)</span>
+<span class="k">reshape</span> wide cigsale retprice, i(year) j(state)
+
+<span class="c1">* ------------------------------------------------------------------------------</span>
+<span class="c1">* STEP 4: LINEAR REGRESSION TO ESTIMATE WEIGHTS</span>
+<span class="c1">* ------------------------------------------------------------------------------</span>
+<span class="cm">/* </span>
+<span class="cm">Regression specification:</span>
+<span class="cm">Y_cal = β1*Control1_cigsale + β2*Control2_cigsale + ... </span>
+<span class="cm">       + γ1*Control1_retprice + γ2*Control2_retprice + ...</span>
+<span class="cm">*/</span>
+<span class="k">matrix</span> Y = Y_cal&#39;  <span class="c1">// Transpose for conformability</span>
+<span class="k">mkmat</span> cigsale<span class="o">*</span> retprice<span class="o">*</span>,<span class="k"> matrix</span>(X_controls)  <span class="c1">// Predictor matrix</span>
+
+<span class="c1">* Unconstrained OLS (may produce negative weights)</span>
+<span class="k">matrix</span> XX = X_controls&#39; <span class="o">*</span> X_controls
+<span class="k">matrix</span> XY = X_controls&#39; <span class="o">*</span> Y&#39;
+<span class="k">matrix</span> beta = <span class="nf">invsym</span>(XX) <span class="o">*</span> XY 
+<span class="k">matrix</span> beta = beta&#39;          
+<span class="k">matrix list</span> beta  <span class="c1">// Display estimated weights</span>
+
+<span class="k">restore</span>
+
+<span class="c1">* ------------------------------------------------------------------------------</span>
+<span class="c1">* STEP 5: CREATE SYNTHETIC CONTROL AND VISUALIZE</span>
+<span class="c1">* ------------------------------------------------------------------------------</span>
+<span class="c1">* ReLoad data (assuming CSV is in current directory)</span>
+import delimited <span class="s">&quot;./data/smoking.csv&quot;</span>,<span class="k"> clear</span>
+
+<span class="k">preserve</span>
+<span class="k">keep if</span> state <span class="o">==</span> <span class="m">3</span>  <span class="c1">// California is state=3 (adjust if different)</span>
+<span class="k">mkmat</span> cigsale retprice,<span class="k"> matrix</span>(Y_cal)  <span class="c1">// Store outcomes as matrix</span>
+<span class="k">restore</span>
+
+<span class="c1">* Drop California to create donor pool</span>
+<span class="k">drop if</span> state <span class="o">==</span> <span class="m">3</span>  
+
+<span class="k">keep</span> cigsale retprice year state
+<span class="c1">* Reshape control data to wide format (one column per state)</span>
+<span class="k">reshape</span> wide cigsale retprice, i(year) j(state)
+
+<span class="k">mkmat</span> cigsale<span class="o">*</span> retprice<span class="o">*</span>,<span class="k"> matrix</span>(X_controls)  <span class="c1">// Predictor matrix</span>
+
+<span class="c1">*Calculate synthetic control using unconstrained weights</span>
+<span class="k">matrix</span> Y_synth = X_controls <span class="o">*</span> beta&#39;
+
+<span class="k">svmat</span> Y_cal, names(cal_)  <span class="c1">// Creates cal_1 (cigsale) and cal_2 (retprice)</span>
+<span class="k">svmat</span> Y_synth, names(synth_)
+
+<span class="c1">* Plot comparison</span>
+<span class="k">twoway</span> <span class="cs">///</span>
+    (line cal_1 year, lcolor(blue) lwidth(<span class="m">2</span>)) <span class="cs">///</span>
+    (line synth_1 year, lcolor(red) lpattern(dash) lwidth(<span class="m">2</span>)), <span class="cs">///</span>
+    legend(order(<span class="m">1</span> <span class="s">&quot;California&quot;</span> <span class="m">2</span> <span class="s">&quot;Synthetic Control&quot;</span>)) <span class="cs">///</span>
+    title(<span class="s">&quot;Cigarette Sales: California vs. Synthetic Control&quot;</span>) <span class="cs">///</span>
+    xtitle(<span class="s">&quot;Year&quot;</span>) ytitle(<span class="s">&quot;Cigarette Sales&quot;</span>)
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">features</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;cigsale&quot;</span><span class="p">,</span> <span class="s2">&quot;retprice&quot;</span><span class="p">]</span>
 
@@ -1293,7 +1424,35 @@ PV=\frac{1}{N}\sum \mathcal{1}\{\hat{\tau}_{Calif} &gt; \hat{\tau}_j\}
 <img alt="_images/e292ac3285c6929001efbd1d527c5332f21b3f4bf59fe56a65bbb4de16f9c3aa.png" src="_images/e292ac3285c6929001efbd1d527c5332f21b3f4bf59fe56a65bbb4de16f9c3aa.png" />
 </div>
 </div>
-</section>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* SC</span>
+<span class="c1">* Load data (assuming CSV is in current directory)</span>
+import delimited <span class="s">&quot;./data/smoking.csv&quot;</span>,<span class="k"> clear</span>
+
+<span class="c1">* Declare the dataset as a panel:</span>
+<span class="k">tsset</span> state year
+
+synth cigsale beer(<span class="m">1984</span>(<span class="m">1</span>)<span class="m">1988</span>) lnincome retprice age15to24 cigsale(<span class="m">1988</span>) cigsale(<span class="m">1980</span>) cigsale(<span class="m">1975</span>), trunit(<span class="m">3</span>) trperiod(<span class="m">1989</span>) fig
+
+
+<span class="c1">* Use allsynth exactly as you would use synth to reconstruct the estimate from the synth help file:</span>
+allsynth cigsale beer(<span class="m">1984</span>(<span class="m">1</span>)<span class="m">1988</span>) lnincome retprice age15to24 cigsale(<span class="m">1988</span>) cigsale(<span class="m">1980</span>) cigsale(<span class="m">1975</span>), trunit(<span class="m">3</span>) trperiod(<span class="m">1989</span>)  fig
+
+<span class="c1">* Use allsynth exactly as you would use synth to reconstruct the estimate from the synth help file:</span>
+allsynth cigsale beer(<span class="m">1984</span>(<span class="m">1</span>)<span class="m">1988</span>) lnincome retprice age15to24 cigsale(<span class="m">1988</span>) cigsale(<span class="m">1980</span>) cigsale(<span class="m">1975</span>), trunit(<span class="m">3</span>) trperiod(<span class="m">1989</span>)  gapfig(classic)
+
+<span class="c1">* Calculate, display, and save the classic RMSPE-ranked p-values from in-space placebo runs, and plot the dynamic paths of classic gaps for the treated unit and for each of the donor pool units (placebo treated units), with the dotted vertical line indicating the period immediately preceding treatment:</span>
+allsynth cigsale beer(<span class="m">1984</span>(<span class="m">1</span>)<span class="m">1988</span>) lnincome retprice age15to24 cigsale(<span class="m">1988</span>) cigsale(<span class="m">1980</span>) cigsale(<span class="m">1975</span>), trunit(<span class="m">3</span>) trperiod(<span class="m">1989</span>) gapfig(classic placebos lineback) pvalues(rmspe)<span class="k"> keep</span>(smokingresults) rep
+<span class="c1">	</span>
+<span class="c1">* bias-corrected</span>
+
+allsynth cigsale beer(<span class="m">1984</span>(<span class="m">1</span>)<span class="m">1988</span>) lnincome retprice age15to24 cigsale(<span class="m">1988</span>) cigsale(<span class="m">1980</span>) cigsale(<span class="m">1975</span>), trunit(<span class="m">3</span>) trperiod(<span class="m">1989</span>) bcor(merge) gapfig(bcorrect placebos lineback) pvalues(rmspe)<span class="k"> keep</span>(smokingresults)<span class="k"> replace</span>
+</pre></div>
+</div>
+</div>
+</details></section>
 <section id="id7">
 <h2>核心要点<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
 <p>我们了解到，如果仅拥有城市或州等实体的聚合层面数据，双重差分法将无法进行推断。此外，该方法还存在其他局限性，因为它需要定义一个对照单元，而单一对照单元可能不足以很好地代表处理单元的反事实情况。</p>

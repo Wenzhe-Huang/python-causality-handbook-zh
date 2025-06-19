@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -465,7 +465,17 @@ D_i = \mathcal{1}\{R_i&gt;c\}
 </details>
 </div>
 <p>为此，我们可以获取按年龄分组的死亡率数据。每行数据代表某年龄段人群的平均年龄，以及全因死亡率（ <code class="docutils literal notranslate"><span class="pre">all</span></code> ）、机动车事故死亡率（ <code class="docutils literal notranslate"><span class="pre">mva</span></code> ）和自杀死亡率（ <code class="docutils literal notranslate"><span class="pre">suicide</span></code> ）的平均值。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Load data (assuming CSV is in current directory)</span>
+import delimited <span class="s">&quot;./data/drinking.csv&quot;</span>,<span class="k"> clear</span>
+
+<span class="k">list in</span> <span class="m">1</span><span class="o">/</span><span class="m">5</span>
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">drinking</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/drinking.csv&quot;</span><span class="p">)</span>
 <span class="n">drinking</span><span class="o">.</span><span class="n">head</span><span class="p">()[[</span><span class="s2">&quot;agecell&quot;</span><span class="p">,</span> <span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="s2">&quot;mva&quot;</span><span class="p">,</span> <span class="s2">&quot;suicide&quot;</span><span class="p">]]</span>
@@ -546,7 +556,24 @@ D_i = \mathcal{1}\{R_i&gt;c\}
 </div>
 </div>
 <p>如果我们在 x 轴上绘制多个结果变量（ <code class="docutils literal notranslate"><span class="pre">all</span></code> 、 <code class="docutils literal notranslate"><span class="pre">mva</span></code> 、 <code class="docutils literal notranslate"><span class="pre">suicide</span></code> ）与运行变量的关系图，可以直观地观察到在跨越法定饮酒年龄时死亡率存在某种跳跃。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">//作散点图，观测跳跃</span>
+<span class="c1">* 所有的死亡率</span>
+<span class="k">twoway scatter</span> all agecell, xline(<span class="m">21</span>,lp(dash)) saving(all)
+
+<span class="c1">* 交通死亡率</span>
+<span class="k">twoway scatter</span> mva agecell, xline(<span class="m">21</span>,lp(dash)) saving(mva)
+
+<span class="c1">* 自杀死亡率</span>
+<span class="k">twoway scatter</span> suicide agecell,xline(<span class="m">21</span>,lp(dash)) saving(suicide)
+
+<span class="k">graph</span> combine all<span class="m">.</span>gph mva<span class="m">.</span>gph suicide<span class="m">.</span>gph,col(<span class="m">1</span>)
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
@@ -597,7 +624,28 @@ y_i = \beta_0 + \beta_1 r_i + \beta_2 \mathcal{1}\{r_i&gt;c\} + \beta_3 \mathcal
 \lim_{r \to c^+} E[Y_{ti}|R_i=r] - \lim_{r \to c^-} E[Y_{ti}|R_i=r]=\beta_2=E[ATE|R=c]
 \)</span></p>
 <p>下面是对应的代码示例，用于估计在21岁时，饮酒对“所有原因导致的死亡”的影响。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">// 回归法</span>
+
+<span class="k">gen d</span>= agecell<span class="o">&gt;=</span><span class="m">21</span>
+
+<span class="k">gen</span> running=agecell<span class="m">-21</span>
+
+<span class="k">reg</span> all running<span class="k"> d</span> i<span class="m">.</span>d#c<span class="m">.</span>running,r
+
+<span class="k">twoway</span> (scatter all agecell) (lfit all agecell<span class="k"> if</span> agecell<span class="o">&lt;=</span><span class="m">21</span>)(lfit all agecell<span class="k"> if</span> agecell<span class="o">&gt;=</span><span class="m">21</span>), xline(<span class="m">21</span>,lp(dash)) saving(all1,replace)
+
+<span class="k">twoway</span> (scatter mva agecell) (lfit mva agecell<span class="k"> if</span> agecell<span class="o">&lt;=</span><span class="m">21</span>)(lfit mva agecell<span class="k"> if</span> agecell<span class="o">&gt;=</span><span class="m">21</span>), xline(<span class="m">21</span>,lp(dash)) saving(mva1)
+
+<span class="k">twoway</span> (scatter suicide agecell) (lfit suicide agecell<span class="k"> if</span> agecell<span class="o">&lt;=</span><span class="m">21</span>)(lfit suicide agecell<span class="k"> if</span> agecell<span class="o">&gt;=</span><span class="m">21</span>), xline(<span class="m">21</span>,lp(dash)) saving(suicide1)
+
+<span class="k">graph</span> combine all1<span class="m">.</span>gph mva1<span class="m">.</span>gph suicide1<span class="m">.</span>gph,col(<span class="m">1</span>)
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rdd_df</span> <span class="o">=</span> <span class="n">drinking</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">threshold</span><span class="o">=</span><span class="p">(</span><span class="n">drinking</span><span class="p">[</span><span class="s2">&quot;agecell&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
 
@@ -627,7 +675,7 @@ y_i = \beta_0 + \beta_1 r_i + \beta_2 \mathcal{1}\{r_i&gt;c\} + \beta_3 \mathcal
 </table></div></div>
 </div>
 <p>该模型向我们揭示，酒精消费导致死亡率上升 7.6627 个百分点。换言之，酒精使全因死亡概率增加了 8%（计算方式：100*((7.6627+93.6184)/93.6184 - 1)）。值得注意的是，该结果同时提供了因果效应估计的标准误差值。在本案例中，由于 p 值小于 0.01，该效应具有统计学显著性。</p>
-<p>If we want to verify this model visually, we can show the predicted values on the data that we have. You can see that it is as though we had 2 regression models: one for those above the threshold and one for below it.</p>
+<p>如果我们想要通过可视化来验证这个模型，可以在已有数据上展示预测值。你会发现，这就好像我们有两个回归模型：一个用于阈值以上的个体，一个用于阈值以下的个体。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">drinking</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;agecell&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C0&quot;</span><span class="p">)</span>
@@ -642,7 +690,30 @@ y_i = \beta_0 + \beta_1 r_i + \beta_2 \mathcal{1}\{r_i&gt;c\} + \beta_3 \mathcal
 </div>
 </div>
 <p>如果我们对其他死亡原因也进行相同的分析，得到的结果如下。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">// 散点拟合方法来观察跳跃</span>
+
+<span class="k">twoway</span> (scatter all agecell, msymbol(<span class="o">+</span>) msize(<span class="o">*</span><span class="m">0.4</span>) mcolor(black<span class="o">*</span><span class="m">0.3</span>)),   title(<span class="s">&quot;散点图&quot;</span>) xline(<span class="m">21</span>,lp(dash)) saving(scatter,<span class="k"> replace</span>)
+
+<span class="k">twoway</span> (scatter all agecell) (lfit all agecell<span class="k"> if</span> agecell<span class="o">&lt;=</span><span class="m">21</span>)(lfit all agecell<span class="k"> if</span> agecell<span class="o">&gt;=</span><span class="m">21</span>), xline(<span class="m">21</span>,lp(dash)) saving(scatter1,<span class="k"> replace</span>)
+
+rdplot all agecell, <span class="nf">c</span>(<span class="m">21</span>) p(<span class="m">1</span>) graph_options(title(线性拟合))
+<span class="k">graph save</span> rd1,replace <span class="c1">// 线性拟合图</span>
+
+rdplot all agecell, <span class="nf">c</span>(<span class="m">21</span>) p(<span class="m">2</span>) graph_options(title(二次型拟合)) 
+<span class="k">graph save</span> rd2,replace <span class="c1">//二次型拟合图</span>
+
+rdplot all agecell, <span class="nf">c</span>(<span class="m">21</span>) p(<span class="m">3</span>) graph_options(title(三次型拟合)) 
+<span class="k">graph save</span> rd3,replace <span class="c1">//三次型拟合图</span>
+
+
+<span class="k">graph</span> combine<span class="k"> scatter</span><span class="m">.</span>gph scatter1<span class="m">.</span>gph rd1<span class="m">.</span>gph rd2<span class="m">.</span>gph rd3<span class="m">.</span>gph
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
 
@@ -985,7 +1056,62 @@ K(R, c, h) = \mathcal{1}\{|R-c| \leq h\} * \bigg(1-\frac{|R-c|}{h}\bigg)
 <img alt="_images/ae69f720fdf36e3d8cbba357458630de382a99b1e8f1b080cca62c9452e1905a.png" src="_images/ae69f720fdf36e3d8cbba357458630de382a99b1e8f1b080cca62c9452e1905a.png" />
 </div>
 </div>
-<p>如你所见，即便我们将效应按第一阶段进行缩放，其与零的统计差异仍不显著。这意味着教育并非通过简单的文凭效应增加收入，而是通过提升个人生产力来实现。</p>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">// 断点回归</span>
+rdplot all agecell,<span class="nf">c</span>(<span class="m">21</span>)
+<span class="c1">* 局部线性回归</span>
+<span class="c1">* ssc install rdrobust,replace</span>
+rdrobust all agecell,<span class="nf">c</span>(<span class="m">21</span>) all
+
+rdbwselect all agecell,<span class="nf">c</span>(<span class="m">21</span>) all
+
+rdplot all agecell,<span class="nf">c</span>(<span class="m">21</span>)<span class="k"> ci</span>(<span class="m">95</span>)
+
+<span class="c1">* 局部多项式回归</span>
+
+rdrobust all agecell,<span class="nf">c</span>(<span class="m">21</span>) all p(<span class="m">1</span>)
+
+rdrobust all agecell,<span class="nf">c</span>(<span class="m">21</span>) all p(<span class="m">2</span>)
+
+rdrobust all agecell,<span class="nf">c</span>(<span class="m">21</span>) all p(<span class="m">3</span>)
+
+<span class="c1">*全局多项式回归</span>
+
+<span class="k">sum</span> agecell
+<span class="k">local</span> hvalueR=<span class="nf">r</span>(max)  
+<span class="k">local</span> hvalueL= <span class="nf">abs</span>(<span class="nf">r</span>(min))
+ 
+rdrobust all agecell, <span class="nf">c</span>(<span class="m">21</span>) <span class="k"> h</span>(<span class="nv">`hvalueL&#39;</span>  <span class="nv">`hvalueR&#39;</span>) all <span class="c1">//自动选择阶数</span>
+rdrobust all agecell, <span class="nf">c</span>(<span class="m">21</span>) <span class="k"> h</span>(<span class="nv">`hvalueL&#39;</span>  <span class="nv">`hvalueR&#39;</span>) all p(<span class="m">2</span>) <span class="c1">//二阶拟合</span>
+rdrobust all agecell, <span class="nf">c</span>(<span class="m">21</span>) <span class="k"> h</span>(<span class="nv">`hvalueL&#39;</span>  <span class="nv">`hvalueR&#39;</span>) all p(<span class="m">3</span>) <span class="c1">//三阶拟合</span>
+
+<span class="c1">* McCrary Test</span>
+rddensity agecell,<span class="nf">c</span>(<span class="m">21</span>)<span class="k"> plot</span> bwselect(each)
+
+
+<span class="c1">// 模糊断点</span>
+
+import delimited <span class="s">&quot;/Users/xuwenli/Library/CloudStorage/OneDrive-个人/DSGE建模及软件编程/教学大纲与讲稿/应用计量经济学讲稿/python-causality-handbook/causal-inference-for-the-brave-and-true/data/sheepskin.csv&quot;</span>,<span class="k"> clear</span>
+
+<span class="k">list in</span> <span class="m">1</span><span class="o">/</span><span class="m">5</span>
+
+<span class="k">twoway scatter</span> receivehsd minscore, xline(<span class="m">0</span>,lp(dash)) saving(all)
+
+<span class="c1">// 断点回归</span>
+
+rdrobust receivehsd minscore, all
+
+rdbwselect receivehsd minscore, all
+
+rdplot receivehsd minscore,<span class="k"> ci</span>(<span class="m">95</span>)
+
+rddensity minscore, all<span class="k"> plot</span>
+</pre></div>
+</div>
+</div>
+</details><p>如你所见，即便我们将效应按第一阶段进行缩放，其与零的统计差异仍不显著。这意味着教育并非通过简单的文凭效应增加收入，而是通过提升个人生产力来实现。</p>
 </section>
 </section>
 <section id="id6">

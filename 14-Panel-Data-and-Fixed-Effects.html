@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -493,7 +493,17 @@ Y_d \perp D | X
 <section id="id4">
 <h2>固定效应<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
 <p>为使表述更规范化，首先审视现有数据结构。延续前例，我们将尝试估算婚姻对收入的影响。数据包含多个个体（ <strong>nr</strong>）在多个年份的这两个变量—— <strong>married</strong>与 <strong>lwage</strong>（工资的对数形式），此外还包括当年工作小时数、受教育年限等其他控制变量。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* 无法获得原书中的wage_panel数据</span>
+<span class="k">webuse</span> nlswork,<span class="k"> clear</span>  <span class="c1">// Similar panel wage data in Stata</span>
+
+<span class="k">list</span> year msp<span class="k"> in</span> <span class="m">1</span><span class="o">/</span><span class="m">5</span>
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">wage_panel</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
 <span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
@@ -609,7 +619,14 @@ y_{it} = \beta X_{it} + \gamma U_i + e_{it}
 </ol>
 <p>最后这一步回归所得到的参数，与使用所有特征一次性进行回归所得到的结果是完全一致的。但这对我们到底有什么帮助呢？实际上，我们可以把包含实体虚拟变量（entity dummies）的模型估计过程拆分为两步：第一步，我们利用虚拟变量分别去预测结果变量和解释变量——这正是上面步骤1和步骤2所做的事情。</p>
 <p>现在回忆一下：在虚拟变量上运行回归，其实就等同于计算该组的平均值，你还记得吗？如果不记得，没关系，我们可以用数据来说明这一点。我们来运行一个模型，用年份的虚拟变量来预测工资，看看它是如何反映每一年的平均工资的。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="k">reg</span> ln_wage i<span class="m">.</span>year
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mod</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;lwage ~ C(year)&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 <span class="n">mod</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span><span class="o">.</span><span class="n">tables</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -648,7 +665,14 @@ y_{it} = \beta X_{it} + \gamma U_i + e_{it}
 </table></div></div>
 </div>
 <p>注意此模型预测1980年的平均收入为1.3935，1981年为1.5129（即1.3935+0.1194），依此类推。若按年度计算平均值，我们将得到完全相同的结果。（需注意基准年1980对应截距项，因此需将截距与其他年份参数相加才能得到该年度的均值<code class="docutils literal notranslate"><span class="pre">lwage</span></code>）。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="k">tabstat</span> ln_wage,<span class="k"> by</span>(year) stat(mean)
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;year&quot;</span><span class="p">)[</span><span class="s2">&quot;lwage&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 </pre></div>
@@ -695,8 +719,16 @@ Y_{it} &amp; = \beta X_{it} + \gamma U_i + e_{it} \\
 \end{split}\]</div>
 <p>通过这个过程，所有在时间上恒定的未观测变量都会被“抵消”掉。实际上，不仅未观测变量会消失，所有随时间不变的变量都会如此。因此，你不能包含任何跨时间恒定的变量，因为它们将成为虚拟变量的线性组合，导致模型无法运行。</p>
 <p><img alt="img" src="_images/demeaned.png" /></p>
-<p>为了检查哪些变量在时间上是恒定的，我们可以按个体对数据进行分组，并计算每个变量的标准差之和。若结果为零，则意味着该变量对所有个体而言均不随时间变化。</p>
-<div class="cell docutils container">
+<p>为了检查哪些变量在时间上是恒定的，我们可以按个体对数据进行分组，并计算每个变量的标准差之和。若结果为零，则意味着该变量对所有个体而言均不随时间变化。、</p>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="k">collapse</span> (sum) sd_lwage=lwage sd_educ=educ sd_exper=exper
+<span class="k">list</span>
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;nr&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
 </pre></div>
