@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -414,7 +414,18 @@ document.write(`
 <h2>别把所有鸡蛋放在同一个篮子里<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
 <p>我们已经学习了如何使用线性回归和倾向得分加权来估计 <span class="math notranslate nohighlight">\(E[Y|T=1] - E[Y|T=0] | X\)</span>。但应该选择哪一种方法，何时使用呢？当不确定时，不妨两者并用！双重稳健估计是一种将倾向得分与线性回归结合的方法，使你不必完全依赖其中任何一种。</p>
 <p>为了理解这一方法如何运作，让我们以思维模式实验为例。这是一项在美国公立高中进行的随机研究，旨在探究成长型思维模式的影响。具体操作是学校为学生提供研讨会，以培养其成长型思维，随后在大学阶段跟踪调查学生的学业表现。这些测量结果被汇总成标准化后的成就分数。出于保护学生隐私的考虑，该研究的真实数据未公开。不过，我们使用了 <a class="reference external" href="https://arxiv.org/pdf/1902.07409.pdf">Athey 和 Wager</a> 提供的具有相同统计特性的模拟数据集作为替代。</p>
-<div class="cell tag_hide-input docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Load data (assuming CSV is in current directory)</span>
+import delimited <span class="s">&quot;./data/learning_mindset.csv&quot;</span>,<span class="k"> clear</span>
+
+
+<span class="k">list in</span> <span class="m">1</span><span class="o">/</span><span class="m">5</span>
+</pre></div>
+</div>
+</div>
+</details><div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
 <span class="collapsed">Show code cell source</span>
@@ -533,7 +544,15 @@ document.write(`
 </div></div></div>
 </div>
 <p>尽管该研究采用了随机化设计，但数据似乎仍无法完全避免混杂因素的影响。一个可能的原因是处理变量由学生是否参加研讨会来衡量。因此，虽然参与机会是随机的，但实际参与行为并非如此。我们在此面临的是一个不依从性问题。其中一个证据是学生的成功预期与参与研讨会之间存在相关性。自我报告有较高期望的学生更有可能参加了成长心态研讨会。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Calculate mean intervention rate by success_expect categories</span>
+<span class="k">table</span> success_expect, stat(mean intervention)
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;success_expect&quot;</span><span class="p">)[</span><span class="s2">&quot;intervention&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 </pre></div>
@@ -554,7 +573,30 @@ Name: intervention, dtype: float64
 </div>
 </div>
 <p>截至目前我们已了解，可以通过线性回归或使用逻辑回归估计倾向得分模型来对此进行调整。但在进行这些操作之前，我们需要将分类变量转换为虚拟变量。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* 1. Create dummy variables for categorical features</span>
+<span class="k">foreach var in</span> ethnicity gender school_urbanicity {
+<span class="k">    tab</span> <span class="nv">`var&#39;</span>,<span class="k"> gen</span>(<span class="nv">`var&#39;</span>_)
+<span class="k">    label var</span> <span class="nv">`var&#39;</span>_1 <span class="s">&quot;</span><span class="nv">`var&#39;</span><span class="s"> category 1&quot;</span>
+<span class="c1">    * Drop reference category if needed (uncomment)</span>
+<span class="c1">    * drop `var&#39;_1</span>
+}
+
+<span class="c1">* 2. Keep only continuous variables and new dummies</span>
+<span class="k">keep</span> achievement_score intervention <span class="cs">///</span>
+     school_mindset school_achievement school_ethnic_minority <span class="cs">///</span>
+     school_poverty school_size ethnicity_<span class="o">*</span> gender_<span class="o">*</span> school_urbanicity_<span class="o">*</span> <span class="cs">///</span>
+	 schoolid frst_in_family schoolid success_expect
+
+<span class="c1">* 3. Display new dataset structure</span>
+<span class="k">describe</span>
+<span class="k">display</span> <span class="s">&quot;New dataset dimensions: &quot;</span> <span class="nf">c</span>(N) <span class="s">&quot; observations, &quot;</span> <span class="nf">c</span>(k) <span class="s">&quot; variables&quot;</span>
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">categ</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ethnicity&quot;</span><span class="p">,</span> <span class="s2">&quot;gender&quot;</span><span class="p">,</span> <span class="s2">&quot;school_urbanicity&quot;</span><span class="p">]</span>
 <span class="n">cont</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;school_mindset&quot;</span><span class="p">,</span> <span class="s2">&quot;school_achievement&quot;</span><span class="p">,</span> <span class="s2">&quot;school_ethnic_minority&quot;</span><span class="p">,</span> <span class="s2">&quot;school_poverty&quot;</span><span class="p">,</span> <span class="s2">&quot;school_size&quot;</span><span class="p">]</span>
@@ -584,8 +626,37 @@ Name: intervention, dtype: float64
 \hat{ATE} = \frac{1}{N}\sum \bigg( \dfrac{T_i(Y_i - \hat{\mu_1}(X_i))}{\hat{P}(X_i)} + \hat{\mu_1}(X_i) \bigg) - \frac{1}{N}\sum \bigg( \dfrac{(1-T_i)(Y_i - \hat{\mu_0}(X_i))}{1-\hat{P}(X_i)} + \hat{\mu_0}(X_i) \bigg)
 \)</span></p>
 <p>其中 <span class="math notranslate nohighlight">\(\hat{P}(x)\)</span> 是倾向得分的估计（例如使用逻辑回归），<span class="math notranslate nohighlight">\(\hat{\mu_1}(x)\)</span> 是 <span class="math notranslate nohighlight">\(E[Y|X, T=1]\)</span> 的估计（例如使用线性回归），而 <span class="math notranslate nohighlight">\(\hat{\mu_0}(x)\)</span> 是 <span class="math notranslate nohighlight">\(E[Y|X, T=0]\)</span> 的估计。正如你可能已经猜到的，双重稳健估计的第一部分估计 <span class="math notranslate nohighlight">\(E[Y_1]\)</span>，第二部分估计 <span class="math notranslate nohighlight">\(E[Y_0]\)</span>。让我们先考察第一部分，因为所有直觉同样可以通过类比应用于第二部分。</p>
-<p>既然我知道这个公式初看之下令人畏惧（但别担心，你会发现它其实非常简单），我将首先展示如何编写这个估计器的代码。我感觉有些人面对代码时的恐惧感比面对公式要少。让我们看看这个估计器在实践中是如何运作的，好吗？</p>
-<div class="cell docutils container">
+<p>既然我知道这个公式初看之下令人畏惧（但别担心，你会发现它其实非常简单），我将首先展示如何编写这个估计量的代码。我感觉有些人面对代码时的恐惧感比面对公式要少。让我们看看这个估计器在实践中是如何运作的，好吗？</p>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="k">global</span> contvar <span class="s">&quot;school_mindset school_achievement school_ethnic_minority school_poverty school_size&quot;</span>
+
+<span class="k">global</span> categvar <span class="s">&quot;ethnicity_* gender_* school_urbanicity_*&quot;</span>
+
+<span class="c1">* Step 1: Estimate propensity scores (treatment model)</span>
+<span class="k">logit</span> intervention <span class="vg">$contvar</span> i.<span class="vg">${categvar}</span>  <span class="c1">// Include all covariates</span>
+<span class="k">predict</span> ps,<span class="k"> pr</span>  <span class="c1">// Generate propensity scores</span>
+
+<span class="c1">* Step 2: Create inverse probability weights</span>
+<span class="k">gen</span> ipw = intervention<span class="o">/</span>ps <span class="o">+</span> (<span class="m">1</span><span class="o">-</span>intervention)<span class="o">/</span>(<span class="m">1</span><span class="o">-</span>ps)
+
+<span class="c1">* Step 3: Estimate weighted outcome model (outcome regression)</span>
+<span class="k">reg</span> achievement_score intervention <span class="vg">$contvar</span> i.<span class="vg">${categvar}</span> [pw=ipw]
+
+<span class="c1">* Step 4: Extract ATE estimate</span>
+<span class="k">lincom</span> intervention  <span class="c1">// Get average treatment effect with confidence intervals</span>
+
+<span class="c1">* Clean up</span>
+<span class="k">drop</span> ps ipw
+
+<span class="c1">* teffects：ipwra - double robust estimator, the result as same as above</span>
+teffects ipwra (achievement_score <span class="vg">$contvar</span> i.<span class="vg">${categvar}</span>) <span class="cs">///</span>
+               (intervention <span class="vg">$contvar</span> i.<span class="vg">${categvar}</span>,<span class="k"> logit</span>)
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">doubly_robust</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
     <span class="n">ps</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="mf">1e6</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">X</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="n">T</span><span class="p">])</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">X</span><span class="p">])[:,</span> <span class="mi">1</span><span class="p">]</span>
@@ -663,7 +734,34 @@ Name: intervention, dtype: float64
 \)</span></p>
 <p>假设 <span class="math notranslate nohighlight">\(\hat{\mu_1}(x)\)</span> 是正确的。如果倾向得分模型有误，我们无需担忧。因为若 <span class="math notranslate nohighlight">\(\hat{\mu_1}(x)\)</span> 正确，那么 <span class="math notranslate nohighlight">\(E[T_i(Y_i - \hat{\mu_1}(X_i))]=0\)</span>。这是由于乘以 <span class="math notranslate nohighlight">\(T_i\)</span> 仅筛选出处理组，而根据定义，<span class="math notranslate nohighlight">\(\hat{\mu_1}\)</span> 在处理组上的残差均值为零。这导致整个表达式简化为 <span class="math notranslate nohighlight">\(\hat{\mu_1}(X_i)\)</span> ，根据假设，<span class="math notranslate nohighlight">\(E[Y_1]\)</span> 的估计是正确的。因此，您看，<span class="math notranslate nohighlight">\(\hat{\mu_1}(X_i)\)</span> 的正确性消除了倾向得分模型的相关性。我们可以运用相同的逻辑来理解 <span class="math notranslate nohighlight">\(E[Y_0]\)</span> 的估计量。</p>
 <p>但别只听我的一面之词。让代码为你指明方向！在接下来的估计器中，我将用于估算倾向得分的逻辑回归替换为一个从 0.1 到 0.9 的随机均匀变量（我不希望极小的权重导致倾向得分方差激增）。由于这一变量是随机的，它绝不可能成为一个优质的倾向得分模型，但我们将会看到，双重稳健估计器仍能生成与使用逻辑回归估算倾向得分时极为接近的估计结果。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* (1) wrong propensity score</span>
+<span class="c1">* Set random seed for reproducibility</span>
+<span class="k">set</span> seed <span class="m">654</span>
+
+<span class="c1">* Generate wrong propensity scores (uniform between 0.1 and 0.9)</span>
+<span class="k">gen</span> ps = <span class="nf">runiform</span>(<span class="m">0.1</span>, <span class="m">0.9</span>)
+
+<span class="c1">* View summary statistics to verify</span>
+<span class="k">summarize</span> ps
+
+<span class="c1">* Step 1: Create inverse probability weights</span>
+<span class="k">gen</span> ipw = intervention<span class="o">/</span>ps <span class="o">+</span> (<span class="m">1</span><span class="o">-</span>intervention)<span class="o">/</span>(<span class="m">1</span><span class="o">-</span>ps)
+
+<span class="c1">* Step 2: Estimate weighted outcome model (outcome regression)</span>
+<span class="k">reg</span> achievement_score intervention <span class="vg">$contvar</span> i.<span class="vg">${categvar}</span> [pw=ipw]
+
+<span class="c1">* Step 3: Extract ATE estimate</span>
+<span class="k">lincom</span> intervention  <span class="c1">// Get average treatment effect with confidence intervals</span>
+
+<span class="c1">* Clean up</span>
+<span class="k">drop</span> ps ipw
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogisticRegression</span><span class="p">,</span> <span class="n">LinearRegression</span>
 
@@ -735,7 +833,29 @@ Wrong PS ATE 95% CI: (0.3371760135667188, 0.43335106915504895)
 \)</span></p>
 <p>现在，假设倾向得分 <span class="math notranslate nohighlight">\(\hat{P}(X_i)\)</span> 被正确设定。在这种情况下，<span class="math notranslate nohighlight">\(E[T_i - \hat{P}(X_i)]=0\)</span> 消除了依赖于 <span class="math notranslate nohighlight">\(\hat{\mu_1}(X_i)\)</span> 的部分。这使得双重稳健估计量简化为倾向得分加权估计量 <span class="math notranslate nohighlight">\(\frac{T_iY_i}{\hat{P}(X_i)}\)</span>，根据假设这是正确的。因此，即使 <span class="math notranslate nohighlight">\(\hat{\mu_1}(X_i)\)</span> 是错误的，只要倾向得分设定正确，估计量仍将保持正确。</p>
 <p>如果你更相信代码而非公式，那么这里提供了实际的验证。在下面的代码中，我将两个回归模型都替换为一个随机正态变量。毫无疑问，<span class="math notranslate nohighlight">\(\hat{\mu}(X_i)\)</span> 并<strong>未正确设定</strong>。尽管如此，我们将看到双重稳健估计仍能恢复之前所见的大约 0.38 的 <span class="math notranslate nohighlight">\(\hat{ATE}\)</span>。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* (2) wrong mu(x) model:wrong linear model</span>
+<span class="c1">* Step 1: Estimate propensity scores (treatment model)</span>
+<span class="k">logit</span> intervention <span class="vg">$contvar</span> i.<span class="vg">${categvar}</span>  <span class="c1">// Include all covariates</span>
+<span class="k">predict</span> ps,<span class="k"> pr</span>  <span class="c1">// Generate propensity scores</span>
+
+<span class="c1">* Step 2: Create inverse probability weights</span>
+<span class="k">gen</span> ipw = intervention<span class="o">/</span>ps <span class="o">+</span> (<span class="m">1</span><span class="o">-</span>intervention)<span class="o">/</span>(<span class="m">1</span><span class="o">-</span>ps)
+
+<span class="c1">* Step 3: Estimate weighted outcome model (outcome regression)</span>
+<span class="k">reg</span> achievement_score intervention [pw=ipw]
+
+<span class="c1">* Step 4: Extract ATE estimate</span>
+<span class="k">lincom</span> intervention  <span class="c1">// Get average treatment effect with confidence intervals</span>
+
+<span class="c1">* Clean up</span>
+<span class="k">drop</span> ps ipw
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogisticRegression</span><span class="p">,</span> <span class="n">LinearRegression</span>
 

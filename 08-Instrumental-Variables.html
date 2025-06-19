@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -557,7 +557,18 @@ v_i = \pmb{\beta}W_i + u_i
 <img alt="_images/1b6c18900a885415012edea3845ac228930a670933fd5d79bd25d80d093f3496.svg" src="_images/1b6c18900a885415012edea3845ac228930a670933fd5d79bd25d80d093f3496.svg" /></div>
 </div>
 <p>为了进行这一分析，我们可以使用来自三次十年一度的人口普查数据，这些数据与<a class="reference external" href="https://economics.mit.edu/faculty/angrist/data1/data/angkru1991">Angrist and Krueger</a>在其关于工具变量的文章中所使用的相同。该数据集包含对数工资（我们的结果变量）和受教育年限（我们的处理变量）的信息。此外，它还提供了出生季度（我们的工具变量）以及其他控制变量，如出生年份和出生州的数据。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Load data (assuming CSV is in current directory)</span>
+import delimited <span class="s">&quot;./data/ak91.csv&quot;</span>,<span class="k"> clear</span>
+
+
+<span class="k">list in</span> <span class="m">1</span><span class="o">/</span><span class="m">5</span>
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./data/ak91.csv&quot;</span><span class="p">)</span>
 <span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
@@ -644,7 +655,49 @@ v_i = \pmb{\beta}W_i + u_i
 <li><p><span class="math notranslate nohighlight">\(Y \perp Z | T \)</span>。这就是排他性约束，表明工具变量 Z 仅通过处理 T 影响结果 Y。</p></li>
 </ol>
 <p>幸运的是，第一个假设是可验证的。从数据中我们可以看出 <span class="math notranslate nohighlight">\(\mathrm{Cov}(Z, T)\)</span> 不为零。在我们的例子中，如果出生季度确实如我们所说的那样是一个工具变量，那么我们应该预期出生在一年最后一季度的人比年初出生的人受教育时间略长。在运行任何统计检验来验证这一点之前，让我们先绘制数据并用肉眼观察。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* 1. Create grouped data</span>
+<span class="k">preserve</span>
+<span class="k">    collapse</span> (mean) log_wage years_of_schooling,<span class="k"> by</span>(year_of_birth quarter_of_birth)
+<span class="k">    gen</span> time_of_birth = year_of_birth <span class="o">+</span> (quarter_of_birth<span class="m">-1</span>)<span class="o">/</span><span class="m">4</span>
+<span class="c1">    </span>
+<span class="c1">* 2. Create the plot</span>
+    #delimit ;
+<span class="k">    twoway</span> (line years_of_schooling time_of_birth, lcolor(gs8) lwidth(medthin))
+           (scatter years_of_schooling time_of_birth<span class="k"> if</span> quarter_of_birth<span class="o">==</span><span class="m">1</span>, 
+               msymbol(S) msize(large) mcolor(blue))
+           (scatter years_of_schooling time_of_birth<span class="k"> if</span> quarter_of_birth<span class="o">==</span><span class="m">2</span>, 
+               msymbol(S) msize(large) mcolor(orange))
+           (scatter years_of_schooling time_of_birth<span class="k"> if</span> quarter_of_birth<span class="o">==</span><span class="m">3</span>, 
+               msymbol(S) msize(large) mcolor(green))
+           (scatter years_of_schooling time_of_birth<span class="k"> if</span> quarter_of_birth<span class="o">==</span><span class="m">4</span>, 
+               msymbol(S) msize(large) mcolor(red))
+           (scatter years_of_schooling time_of_birth, 
+               mlabel(quarter_of_birth) mlabcolor(white) mlabsize(medium) 
+               msymbol(none) msize(zero)),
+           title(<span class="s">&quot;Years of Education by Quarter of Birth (first stage)&quot;</span>)
+           xtitle(<span class="s">&quot;Year of Birth&quot;</span>)
+           ytitle(<span class="s">&quot;Years of Schooling&quot;</span>)
+           legend(off)
+           graphregion(color(white))
+           plotregion(color(white))
+           xsize(<span class="m">15</span>) ysize(<span class="m">6</span>)
+           xlabel(, grid)
+           ylabel(, grid);
+    #delimit cr
+<span class="k">restore</span>
+
+<span class="c1">* Create dummy variables for each quarter</span>
+<span class="k">foreach q in</span> <span class="m">1</span> <span class="m">2</span> <span class="m">3</span> <span class="m">4</span> {
+<span class="k">    gen q</span><span class="nv">`q&#39;</span> = (quarter_of_birth <span class="o">==</span> <span class="nv">`q&#39;</span>)<span class="k"> if</span> <span class="o">!</span><span class="nf">missing</span>(quarter_of_birth)
+<span class="k">    label</span> variable<span class="k"> q</span><span class="nv">`q&#39;</span> <span class="s">&quot;Quarter </span><span class="nv">`q&#39;</span><span class="s"> of birth&quot;</span>
+}
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">group_data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span>
               <span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;year_of_birth&quot;</span><span class="p">,</span> <span class="s2">&quot;quarter_of_birth&quot;</span><span class="p">])</span>
@@ -679,7 +732,15 @@ v_i = \pmb{\beta}W_i + u_i
 </div>
 <p>值得注意的是，受教育年限存在与出生季度相符的季节性模式。从视觉上看，我们可以发现，出生在一年第一季度的人几乎总是比最后一季度出生的人受教育程度低（毕竟，在控制了出生年份后，一般来说，出生年份较晚的人受教育程度更高）。</p>
 <p>为了更加严谨，我们可以将第一阶段作为线性回归来运行。首先，我们将出生季度转换为虚拟变量：</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Display first 5 observations with new dummies</span>
+<span class="k">list</span> year_of_birth quarter_of_birth q1 q2 q3 q4<span class="k"> in</span> <span class="m">1</span><span class="o">/</span><span class="m">5</span>, noobs clean
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">factor_data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="sa">f</span><span class="s2">&quot;q</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;quarter_of_birth&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
                              <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;quarter_of_birth&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()})</span>
@@ -761,7 +822,15 @@ v_i = \pmb{\beta}W_i + u_i
 </div></div></div>
 </div>
 <p>为简化起见，我们暂且仅使用最后一个季度（第四季度）作为工具变量。我们将对受教育年限（处理变量）与出生季度（工具变量）进行回归分析，以验证是否如前述图表所示，出生季度确实对教育时长产生正向影响。在此过程中，还需控制出生年份，并额外加入出生州作为控制变量。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Run first-stage regression</span>
+<span class="k">regress</span> years_of_schooling i<span class="m">.</span>year_of_birth i<span class="m">.</span>state_of_birth q4
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">first_stage</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;years_of_schooling ~ C(year_of_birth) + C(state_of_birth) + q4&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">factor_data</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 
@@ -784,7 +853,44 @@ q4 p-value:,  5.4648294166544506e-15
 <h2>缩减形式<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
 <p>遗憾的是，我们无法验证工具变量（IV）第二个假设条件，只能为其合理性进行讨论。我们可以表达这样一种信念：出生季度不会影响潜在收入。换言之，除教育影响外，人们的出生时间并不能反映其个人能力或其他可能导致收入差异的因素。一个有力的论证方式是说明，当我们考虑出生季度对收入的影响时，其分配效果近乎随机（实际上并非真正随机。有证据表明人们倾向于在夏末或某些节假日前后受孕。但我无法想象这种模式会通过教育以外的任何途径影响收入）。</p>
 <p>在论证了排除限制条件的合理性后，我们可以着手进行缩减形式的分析。缩减形式旨在揭示工具变量如何影响结果变量。根据假设，这种影响完全通过对处理变量的作用实现，从而间接展现处理变量对结果变量的影响机制。让我们再次通过可视化评估这一关系，然后再进行严谨的回归分析。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* 1. Prepare grouped data if not already done</span>
+<span class="k">preserve</span>
+<span class="k">    collapse</span> (mean) log_wage,<span class="k"> by</span>(year_of_birth quarter_of_birth)
+<span class="k">    gen</span> time_of_birth = year_of_birth <span class="o">+</span> (quarter_of_birth<span class="m">-1</span>)<span class="o">/</span><span class="m">4</span>
+<span class="c1">    </span>
+<span class="c1">    * 2. Create the plot</span>
+    #delimit ;
+<span class="k">    twoway</span> (line log_wage time_of_birth, lcolor(gs8) lwidth(medthin))
+           (scatter log_wage time_of_birth<span class="k"> if</span> quarter_of_birth<span class="o">==</span><span class="m">1</span>, 
+               msymbol(S) msize(large) mcolor(blue))
+           (scatter log_wage time_of_birth<span class="k"> if</span> quarter_of_birth<span class="o">==</span><span class="m">2</span>, 
+               msymbol(S) msize(large) mcolor(orange))
+           (scatter log_wage time_of_birth<span class="k"> if</span> quarter_of_birth<span class="o">==</span><span class="m">3</span>, 
+               msymbol(S) msize(large) mcolor(green))
+           (scatter log_wage time_of_birth<span class="k"> if</span> quarter_of_birth<span class="o">==</span><span class="m">4</span>, 
+               msymbol(S) msize(large) mcolor(red))
+           (scatter log_wage time_of_birth, 
+               mlabel(quarter_of_birth) mlabcolor(white) mlabsize(medium) 
+               msymbol(none) msize(zero)),
+           title(<span class="s">&quot;Average Weekly Wage by Quarter of Birth&quot;</span>)
+           subtitle(<span class="s">&quot;Reduced Form&quot;</span>)
+           xtitle(<span class="s">&quot;Year of Birth&quot;</span>)
+           ytitle(<span class="s">&quot;Log Weekly Earnings&quot;</span>)
+           legend(off)
+           graphregion(color(white))
+           plotregion(color(white))
+           xsize(<span class="m">15</span>) ysize(<span class="m">6</span>)
+           xlabel(, grid)
+           ylabel(, grid angle(horizontal));
+    #delimit cr
+<span class="k">restore</span>
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">group_data</span><span class="p">[</span><span class="s2">&quot;time_of_birth&quot;</span><span class="p">],</span> <span class="n">group_data</span><span class="p">[</span><span class="s2">&quot;log_wage&quot;</span><span class="p">],</span> <span class="n">zorder</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
@@ -806,7 +912,15 @@ q4 p-value:,  5.4648294166544506e-15
 </div>
 </div>
 <p>我们再次观察到按出生季度划分的收入呈现季节性模式。年末出生者的收入略高于年初出生者。为验证这一假设，我们将再次对工具变量 q4 与对数工资进行回归分析，并如第一阶段那样加入相同的额外控制变量：</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Run reduced form regression</span>
+<span class="k">regress</span> log_wage i<span class="m">.</span>year_of_birth i<span class="m">.</span>state_of_birth q4
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reduced_form</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;log_wage ~ C(year_of_birth) + C(state_of_birth) + q4&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">factor_data</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 
@@ -854,7 +968,25 @@ q4 p-value:,  0.001494912718345724
 \log(\mathrm{wage})_i = \beta_0 + \beta_1 [\gamma_0 + \gamma_1 \times \mathrm{q4}_i + \gamma_2\times \mathrm{yob}_i + \gamma_3\times \mathrm{sob}_i + v_i ]  + \beta_2\times \mathrm{yob}_i + \beta_3\times \mathrm{sob}_i + u_i
 \)</span></p>
 <p>需要注意的是，<strong>在实施工具变量法时，我们对第二阶段添加的任何额外控制变量也应同样添加到第一阶段</strong>。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Full 2SLS (preferred approach)</span>
+ivregress 2sls log_wage (years_of_schooling = q4) i<span class="m">.</span>year_of_birth i<span class="m">.</span>state_of_birth
+
+<span class="c1">* Run 2SLS with multiple instruments</span>
+ivregress 2sls log_wage i<span class="m">.</span>year_of_birth i<span class="m">.</span>state_of_birth (years_of_schooling = q1 q2 q3)
+
+<span class="c1">* Run OLS with categorical controls</span>
+<span class="k">regress</span> log_wage years_of_schooling i<span class="m">.</span>state_of_birth i<span class="m">.</span>year_of_birth i<span class="m">.</span>quarter_of_birth
+
+<span class="c1">* Show first-stage F-stat for comparison (if needed)</span>
+<span class="k">quietly regress</span> years_of_schooling i<span class="m">.</span>quarter_of_birth i<span class="m">.</span>state_of_birth i<span class="m">.</span>year_of_birth
+<span class="k">display</span> <span class="s">&quot;First-stage F-stat: &quot;</span> <span class="nx">%5.2f</span><span class="k"> e</span>(F)
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">iv_by_hand</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;log_wage ~ C(year_of_birth) + C(state_of_birth) + years_of_schooling_fitted&quot;</span><span class="p">,</span>
                      <span class="n">data</span><span class="o">=</span><span class="n">factor_data</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">years_of_schooling_fitted</span><span class="o">=</span><span class="n">first_stage</span><span class="o">.</span><span class="n">fittedvalues</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
@@ -955,7 +1087,32 @@ Y \sim &amp; N(2+ X - 0.5U + 2T, 5^2)\\
 Z \sim &amp; N(T, \sigma^2) \text{ for }\sigma^2 \text{ in 0.1 to 100}
 \end{align}
 \end{split}\]</div>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="k">clear</span>
+<span class="k">set</span> obs <span class="m">10000</span>
+<span class="k">set</span> seed <span class="m">12</span>
+
+<span class="c1">* Generate base variables</span>
+<span class="k">gen</span> X = <span class="nf">rnormal</span>(<span class="m">0</span>, <span class="m">2</span>)
+<span class="k">gen</span> U = <span class="nf">rnormal</span>(<span class="m">0</span>, <span class="m">2</span>)
+<span class="k">gen</span> T = <span class="nf">rnormal</span>(<span class="m">1</span> <span class="o">+</span> <span class="m">0.5</span><span class="o">*</span>U, <span class="m">5</span>)
+<span class="k">gen</span> Y = <span class="nf">rnormal</span>(<span class="m">2</span> <span class="o">+</span> X <span class="o">-</span> <span class="m">0.5</span><span class="o">*</span>U <span class="o">+</span> <span class="m">2</span><span class="o">*</span>T, <span class="m">5</span>)
+
+<span class="c1">* Create 50 instruments with decreasing strength</span>
+<span class="k">forvalues</span> i = <span class="m">1</span><span class="o">/</span><span class="m">50</span> {
+<span class="k">    local s</span> = <span class="m">0.1</span> <span class="o">+</span> (<span class="m">100-0.1</span>)<span class="o">*</span>(<span class="nv">`i&#39;</span><span class="o">-</span><span class="m">1</span>)<span class="o">/</span><span class="m">49</span>  <span class="c1">// Linear spacing from 0.1 to 100</span>
+<span class="k">    gen</span> Z_<span class="nv">`i&#39;</span> = <span class="nf">rnormal</span>(T, <span class="nv">`s&#39;</span>)
+<span class="k">    label</span> variable Z_<span class="nv">`i&#39;</span> <span class="s">&quot;Instrument (SD=</span><span class="nv">`=round(`s&#39;,0.1)&#39;</span><span class="s">)&quot;</span>
+}
+
+<span class="c1">* Display first 5 observations</span>
+<span class="k">list</span> U T Y Z_1 Z_2<span class="k"> in</span> <span class="m">1</span><span class="o">/</span><span class="m">5</span>, noobs clean
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
 <span class="n">n</span> <span class="o">=</span> <span class="mi">10000</span>
@@ -1046,7 +1203,18 @@ Z \sim &amp; N(T, \sigma^2) \text{ for }\sigma^2 \text{ in 0.1 to 100}
 </div></div></div>
 </div>
 <p>只是为了再次确认，我们可以看到 Z 和 T 之间的相关性确实在下降。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Verify instrument strength pattern</span>
+<span class="k">foreach</span> z<span class="k"> in</span> <span class="m">1</span> <span class="m">10</span> <span class="m">20</span> <span class="m">30</span> <span class="m">40</span> <span class="m">50</span> {
+<span class="k">    corr</span> T Z_<span class="nv">`z&#39;</span>
+<span class="k">    display</span> <span class="s">&quot;Z_</span><span class="nv">`z&#39;</span><span class="s"> Cov(T,Z): &quot;</span> <span class="nx">%5.3f</span> <span class="nf">r</span>(cov_12)
+}
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">corr</span> <span class="o">=</span> <span class="p">(</span><span class="n">sim_data</span><span class="o">.</span><span class="n">corr</span><span class="p">()[</span><span class="s2">&quot;T&quot;</span><span class="p">]</span>
         <span class="p">[</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Z&quot;</span><span class="p">)])</span>
@@ -1067,7 +1235,72 @@ Name: T, dtype: float64
 </div>
 </div>
 <p>现在，我们将为每种工具运行一个 IV 模型，并收集 ATE 估计值和标准误差。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* 1. Clear memory and set random seed</span>
+<span class="k">clear</span> all
+<span class="k">set</span> seed <span class="m">12</span>
+<span class="k">set</span> obs <span class="m">10000</span>
+
+<span class="c1">* 2. Generate base variables (identical to Python code)</span>
+<span class="k">gen</span> X = <span class="nf">rnormal</span>(<span class="m">0</span>, <span class="m">2</span>)  <span class="c1">// Observable covariate</span>
+<span class="k">gen</span> U = <span class="nf">rnormal</span>(<span class="m">0</span>, <span class="m">2</span>)  <span class="c1">// Unobserved confounder</span>
+<span class="k">gen</span> T = <span class="nf">rnormal</span>(<span class="m">1</span> <span class="o">+</span> <span class="m">0.5</span><span class="o">*</span>U, <span class="m">5</span>)  <span class="c1">// Endogenous treatment</span>
+<span class="k">gen</span> Y = <span class="nf">rnormal</span>(<span class="m">2</span> <span class="o">+</span> X <span class="o">-</span> <span class="m">0.5</span><span class="o">*</span>U <span class="o">+</span> <span class="m">2</span><span class="o">*</span>T, <span class="m">5</span>)  <span class="c1">// Outcome</span>
+
+<span class="c1">* 3. Create 50 instruments with decreasing strength</span>
+<span class="k">forvalues</span> i = <span class="m">1</span><span class="o">/</span><span class="m">50</span> {
+<span class="k">    local s</span> = <span class="m">0.1</span> <span class="o">+</span> (<span class="m">100-0.1</span>)<span class="o">*</span>(<span class="nv">`i&#39;</span><span class="o">-</span><span class="m">1</span>)<span class="o">/</span><span class="m">49</span>  <span class="c1">// Linear spacing of SDs from 0.1 to 100</span>
+<span class="k">    gen</span> Z_<span class="nv">`i&#39;</span> = <span class="nf">rnormal</span>(T, <span class="nv">`s&#39;</span>)  <span class="c1">// Instruments with increasing noise</span>
+<span class="k">    label var</span> Z_<span class="nv">`i&#39;</span> <span class="s">&quot;Instrument </span><span class="nv">`i&#39;</span><span class="s"> (SD=</span><span class="nv">`=round(`s&#39;,0.1)&#39;</span><span class="s">)&quot;</span>
+}
+
+<span class="c1">* 4. Initialize postfile for storing results</span>
+<span class="k">capture postclose</span> results
+<span class="k">postfile</span> results z_num b_T se_T<span class="k"> corr</span> using iv_simulation,<span class="k"> replace</span>
+
+<span class="c1">* 5. Run IV regressions and store results</span>
+<span class="k">forvalues</span> z = <span class="m">1</span><span class="o">/</span><span class="m">50</span> {
+<span class="c1">    * Run 2SLS regression</span>
+<span class="k">    quietly</span> ivregress 2sls Y X (T = Z_<span class="nv">`z&#39;</span>)
+<span class="c1">    </span>
+<span class="c1">    * Calculate correlation between T and current Z</span>
+<span class="k">    quietly corr</span> T Z_<span class="nv">`z&#39;</span>
+<span class="k">    local</span> curr_corr = <span class="nf">r</span>(rho)
+<span class="c1">    </span>
+<span class="c1">    * Post results to file</span>
+<span class="k">    post</span> results (<span class="nv">`z&#39;</span>) (_b[T]) (_se[T]) (<span class="nv">`curr_corr&#39;</span>)
+<span class="c1">    </span>
+<span class="c1">    * Display progress</span>
+<span class="k">    display</span> <span class="s">&quot;Processed instrument Z_</span><span class="nv">`z&#39;</span><span class="s"> (Corr = &quot;</span> <span class="nx">%4.2f</span> <span class="nv">`curr_corr&#39;</span> <span class="s">&quot;)&quot;</span>
+}
+
+<span class="c1">* 6. Close postfile and load results</span>
+<span class="k">postclose</span> results
+<span class="k">use</span> iv_simulation,<span class="k"> clear</span>
+
+<span class="c1">* 7. Create diagnostic plot</span>
+<span class="k">twoway</span> (scatter se_T<span class="k"> corr</span>, mcolor(blue%<span class="m">80</span>) msymbol(Oh)), <span class="cs">///</span>
+       title(<span class="s">&quot;IV Standard Errors by Instrument Strength&quot;</span>) <span class="cs">///</span>
+       subtitle(<span class="s">&quot;As Cov(Z,T) decreases, SE increases&quot;</span>) <span class="cs">///</span>
+       xtitle(<span class="s">&quot;Correlation between Z and T&quot;</span>) <span class="cs">///</span>
+       ytitle(<span class="s">&quot;Standard Error of Treatment Effect&quot;</span>) <span class="cs">///</span>
+       graphregion(color(white)) <span class="cs">///</span>
+       plotregion(color(white)) <span class="cs">///</span>
+       xlabel(<span class="m">0</span>(<span class="m">0.2</span>)<span class="m">1</span>, grid) <span class="cs">///</span>
+       ylabel(, grid angle(horizontal))
+
+<span class="c1">* 8. Save plot</span>
+<span class="k">graph</span> export <span class="s">&quot;iv_diagnostic_plot.png&quot;</span>,<span class="k"> replace</span> width(<span class="m">2000</span>)
+
+<span class="c1">* 9. Show strongest instruments</span>
+<span class="k">gsort</span> <span class="o">-</span>corr
+<span class="k">list in</span> <span class="m">1</span><span class="o">/</span><span class="m">10</span>, noobs clean
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">se</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="n">ate</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1096,7 +1329,33 @@ Name: T, dtype: float64
 <img alt="_images/4f160be02acdca507afb64db6cd7b1dc40a8be3272c741c27ef950ae7361b1f7.png" src="_images/4f160be02acdca507afb64db6cd7b1dc40a8be3272c741c27ef950ae7361b1f7.png" />
 </div>
 </div>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Load the simulation results if not already in memory</span>
+<span class="k">use</span> iv_simulation,<span class="k"> clear</span>
+
+<span class="c1">* Generate confidence interval bounds</span>
+<span class="k">gen</span> ci_upper = b_T <span class="o">+</span> <span class="m">1.96</span><span class="o">*</span>se_T
+<span class="k">gen</span> ci_lower = b_T <span class="o">-</span> <span class="m">1.96</span><span class="o">*</span>se_T
+
+<span class="c1">* Create the enhanced scatterplot with CIs</span>
+<span class="k">twoway</span> (rarea ci_upper ci_lower<span class="k"> corr</span>, fcolor(blue%<span class="m">30</span>) lcolo(blue%<span class="m">30</span>)) <span class="cs">///</span>
+       (scatter b_T<span class="k"> corr</span>, mcolor(blue) msymbol(Oh)) <span class="cs">///</span>
+	   (function y = <span class="m">2</span>,<span class="k"> range</span>(<span class="m">0</span> <span class="m">1</span>) lcolor(red) lpattern(dash)), <span class="cs">///</span>
+       title(<span class="s">&quot;IV ATE Estimates by 1st Stage Strength&quot;</span>) <span class="cs">///</span>
+       xtitle(<span class="s">&quot;Correlation between Z and T&quot;</span>) <span class="cs">///</span>
+       ytitle(<span class="s">&quot;ATE Estimate&quot;</span>) <span class="cs">///</span>
+       legend(off) <span class="cs">///</span>
+       graphregion(color(white)) <span class="cs">///</span>
+	   plotregion(color(white)) <span class="cs">///</span>
+       xlabel(, grid) <span class="cs">///</span>
+       ylabel(, grid angle(horizontal)) <span class="cs">///</span>
+<span class="k">       note</span>(<span class="s">&quot;Shaded area represents 95% confidence interval&quot;</span>, size(small))
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">plot_data</span><span class="p">[</span><span class="s2">&quot;corr&quot;</span><span class="p">],</span> <span class="n">plot_data</span><span class="p">[</span><span class="s2">&quot;ate&quot;</span><span class="p">])</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">plot_data</span><span class="p">[</span><span class="s2">&quot;corr&quot;</span><span class="p">],</span>

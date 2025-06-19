@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -468,7 +468,18 @@ document.write(`
 <li><p>school_poverty：家庭收入低于联邦贫困线标准的学生百分比，标准化处理；</p></li>
 <li><p>school_size：该校四个年级学生总数的标准化值。</p></li>
 </ul>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Load data (assuming CSV is in current directory)</span>
+import delimited <span class="s">&quot;./data/learning_mindset.csv&quot;</span>,<span class="k"> clear</span>
+
+
+<span class="k">list in</span> <span class="m">1</span><span class="o">/</span><span class="m">5</span>
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./data/learning_mindset.csv&quot;</span><span class="p">)</span>
 <span class="n">data</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
@@ -560,7 +571,15 @@ document.write(`
 </div></div></div>
 </div>
 <p>尽管该研究采用了随机化设计，但数据似乎仍存在混杂因素。若审视额外特征，我们会发现它们在处理组与对照组之间存在系统性差异。一个可能的原因是处理变量以学生是否参与研讨会来衡量。因此，虽然参与机会是随机的，但实际参与行为并非如此。此处我们面临的是不依从性问题。一个证据是学生的成功预期与研讨会参与度呈相关性——自我报告成功预期较高的学生更可能参加了成长心态研讨会。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Calculate mean intervention rate by success_expect categories</span>
+<span class="k">table</span> success_expect, stat(mean intervention)
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;success_expect&quot;</span><span class="p">)[</span><span class="s2">&quot;intervention&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 </pre></div>
@@ -581,7 +600,15 @@ Name: intervention, dtype: float64
 </div>
 </div>
 <p>不过，我们仍可观察均值差异 <span class="math notranslate nohighlight">\(E[Y|T=1] - E[Y|T=0]\)</span> 的情况，这将作为后续比较的有用基准。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* run ols </span>
+<span class="k">reg</span> achievement_score intervention
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;achievement_score ~ intervention&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span><span class="o">.</span><span class="n">tables</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 </pre></div>
@@ -602,7 +629,31 @@ Name: intervention, dtype: float64
 </div>
 <p>仅通过比较接受干预与未接受干预的群体，我们可以发现，接受干预者的成绩分数平均比标准化平均分（即零分）高出 0.3185（0.4723 减去 0.1538）。但这个差异是大是小？我明白解读标准化结果可能颇具挑战，但请稍安勿躁。我认为值得深入探讨，因为标准化分数的出现绝非仅此一次。</p>
 <p>被标准化的结果变量意味着它是以标准差为单位来衡量的。因此，处理组比未处理组高出 0.3185 个标准差。这就是此处的含义。至于这个差异是大是小，让我们回顾一下正态分布的一些特性。我们知道其 95%的质量落在两个标准差之间，两端各剩 2.5%。这也意味着，若某人高于均值两个标准差，那么 97.5%（95%加上左侧 2.5%的尾部）的个体都位于此人之下。通过查看正态累积分布函数，我们还知道约 85%的质量低于一个标准差，70%低于 0.5 个标准差。由于处理组的平均标准化得分约为 0.5，这意味着他们在个人成就方面超过了 70%的个体。换言之，他们属于成就更高的前 30%人群。下图直观展示了这一情况。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Set graph style</span>
+<span class="k">set</span> scheme s1color
+color_style tableau
+
+<span class="c1">* Create combined histogram</span>
+<span class="k">twoway</span> (histogram achievement_score, bin(<span class="m">20</span>) color(blue%<span class="m">30</span>) legend(label(<span class="m">1</span> <span class="s">&quot;All&quot;</span>))) <span class="cs">///</span>
+       (histogram achievement_score<span class="k"> if</span> intervention <span class="o">==</span> <span class="m">0</span>, bin(<span class="m">20</span>) color(green%<span class="m">30</span>) legend(label(<span class="m">2</span> <span class="s">&quot;Untreated&quot;</span>))) <span class="cs">///</span>
+       (histogram achievement_score<span class="k"> if</span> intervention <span class="o">==</span> <span class="m">1</span>, bin(<span class="m">20</span>) color(red%<span class="m">30</span>) legend(label(<span class="m">3</span> <span class="s">&quot;Treated&quot;</span>))) <span class="cs">///</span>
+       (function y = <span class="m">0</span>,<span class="k"> range</span>(<span class="o">-</span><span class="m">4</span> <span class="m">4</span>) lcolor(green) lpattern(solid) lwidth(<span class="m">0.4</span>) legend(label(<span class="m">4</span> <span class="s">&quot;Untreated Mean&quot;</span>))) <span class="cs">///</span>
+       (function y = <span class="m">0</span>,<span class="k"> range</span>(<span class="o">-</span><span class="m">4</span> <span class="m">4</span>) lcolor(red) lpattern(solid) lwidth(<span class="m">0.4</span>) legend(label(<span class="m">5</span> <span class="s">&quot;Treated Mean&quot;</span>))), <span class="cs">///</span>
+       title(<span class="s">&quot;Achievement Score Distribution&quot;</span>) <span class="cs">///</span>
+       xtitle(<span class="s">&quot;Achievement Score&quot;</span>) <span class="cs">///</span>
+       ytitle(<span class="s">&quot;Frequency&quot;</span>) <span class="cs">///</span>
+       legend(position(<span class="m">6</span>) rows(<span class="m">1</span>)) <span class="cs">///</span>
+       graphregion(color(white)) <span class="cs">///</span>
+       plotregion(color(white)) <span class="cs">///</span>
+       xlabel(<span class="o">-</span><span class="m">4</span>(<span class="m">1</span>)<span class="m">4</span>, grid) <span class="cs">///</span>
+       ylabel(, grid)
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;achievement_score&quot;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;All&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;intervention==0&quot;</span><span class="p">)[</span><span class="s2">&quot;achievement_score&quot;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C2&quot;</span><span class="p">)</span>
@@ -622,7 +673,7 @@ Name: intervention, dtype: float64
 </section>
 <section id="id3">
 <h2>倾向得分<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
-<p>倾向得分源于一个认识：无需直接控制混杂变量 X 即可实现条件独立性 <span class="math notranslate nohighlight">\((Y_1, Y_0) \perp T | X\)</span>。实际上，控制一个平衡得分 <span class="math notranslate nohighlight">\(E[T|X]\)</span> 就足够了。该平衡得分通常是治疗的条件概率 <span class="math notranslate nohighlight">\(P(T|X)\)</span>，亦称倾向得分 <span class="math notranslate nohighlight">\(e(x)\)</span>。倾向得分使得不必对 X 整体进行条件限制就能实现潜在结果对治疗的独立性，仅需对这一单一变量（即倾向得分）进行条件控制即可：</p>
+<p>倾向得分源于一个认识：无需直接控制混杂变量 X 即可实现条件独立性 <span class="math notranslate nohighlight">\((Y_1, Y_0) \perp T | X\)</span>。实际上，控制一个平衡得分 <span class="math notranslate nohighlight">\(E[T|X]\)</span> 就足够了。该平衡得分通常是处理的条件概率 <span class="math notranslate nohighlight">\(P(T|X)\)</span>，亦称倾向得分 <span class="math notranslate nohighlight">\(e(x)\)</span>。倾向得分使得不必对 X 整体进行条件限制就能实现潜在结果对处理的独立性，仅需对这一单一变量（即倾向得分）进行条件控制即可：</p>
 <p><span class="math notranslate nohighlight">\(
 (Y_1, Y_0) \perp T | e(x)
 \)</span></p>
@@ -698,7 +749,30 @@ E\bigg[Y \dfrac{T-e(x)}{e(x)(1-e(x))}\bigg]
 <h2>倾向得分估计<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
 <p>理想情况下，我们应掌握真实的倾向得分 <span class="math notranslate nohighlight">\(e(x)\)</span>。但实际上，处理分配机制未知，需用其估计值 <span class="math notranslate nohighlight">\(\hat{e}(x)\)</span> 替代。常用方法是逻辑回归，但也可采用梯度提升等机器学习方法（尽管需额外步骤防止过拟合）。</p>
 <p>在此，我将坚持使用逻辑回归。这意味着我需要将数据集中的分类特征转换为虚拟变量。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* 1. Create dummy variables for categorical features</span>
+<span class="k">foreach var in</span> ethnicity gender school_urbanicity {
+<span class="k">    tab</span> <span class="nv">`var&#39;</span>,<span class="k"> gen</span>(<span class="nv">`var&#39;</span>_)
+<span class="k">    label var</span> <span class="nv">`var&#39;</span>_1 <span class="s">&quot;</span><span class="nv">`var&#39;</span><span class="s"> category 1&quot;</span>
+<span class="c1">    * Drop reference category if needed (uncomment)</span>
+<span class="c1">    * drop `var&#39;_1</span>
+}
+
+<span class="c1">* 2. Keep only continuous variables and new dummies</span>
+<span class="k">keep</span> achievement_score intervention <span class="cs">///</span>
+     school_mindset school_achievement school_ethnic_minority <span class="cs">///</span>
+     school_poverty school_size ethnicity_<span class="o">*</span> gender_<span class="o">*</span> school_urbanicity_<span class="o">*</span> <span class="cs">///</span>
+	 schoolid frst_in_family schoolid success_expect
+
+<span class="c1">* 3. Display new dataset structure</span>
+<span class="k">describe</span>
+<span class="k">display</span> <span class="s">&quot;New dataset dimensions: &quot;</span> <span class="nf">c</span>(N) <span class="s">&quot; observations, &quot;</span> <span class="nf">c</span>(k) <span class="s">&quot; variables&quot;</span>
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">categ</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ethnicity&quot;</span><span class="p">,</span> <span class="s2">&quot;gender&quot;</span><span class="p">,</span> <span class="s2">&quot;school_urbanicity&quot;</span><span class="p">]</span>
 <span class="n">cont</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;school_mindset&quot;</span><span class="p">,</span> <span class="s2">&quot;school_achievement&quot;</span><span class="p">,</span> <span class="s2">&quot;school_ethnic_minority&quot;</span><span class="p">,</span> <span class="s2">&quot;school_poverty&quot;</span><span class="p">,</span> <span class="s2">&quot;school_size&quot;</span><span class="p">]</span>
@@ -719,7 +793,31 @@ E\bigg[Y \dfrac{T-e(x)}{e(x)(1-e(x))}\bigg]
 </div>
 </div>
 <p>现在，让我们使用逻辑回归来估计倾向得分。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* 1. Run high-regularization logistic regression </span>
+<span class="k">logit</span> intervention school_mindset school_achievement school_ethnic_minority <span class="cs">///</span>
+                school_poverty school_size ethnicity_<span class="o">*</span> gender_<span class="o">*</span> school_urbanicity_<span class="o">*</span>
+
+<span class="c1">* 2. Predict propensity scores</span>
+<span class="k">predict</span> propensity_score,<span class="k"> pr</span>
+
+<span class="c1">* 3. Create new dataset with key variables</span>
+<span class="k">preserve</span>
+<span class="k">    keep</span> schoolid intervention achievement_score propensity_score
+<span class="k">    order</span> schoolid intervention achievement_score propensity_score
+<span class="c1">    </span>
+<span class="c1">    * Display first 5 observations</span>
+<span class="k">    list in</span> <span class="m">1</span><span class="o">/</span><span class="m">5</span>, noobs clean
+<span class="c1">    </span>
+<span class="c1">    * Save for analysis</span>
+<span class="k">    save</span> propensity_scores,<span class="k"> replace</span>
+<span class="k">restore</span>
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogisticRegression</span>
 
@@ -794,8 +892,28 @@ E\bigg[Y \dfrac{T-e(x)}{e(x)(1-e(x))}\bigg]
 </table>
 </div></div></div>
 </div>
-<p>首先，我们可以确保倾向得分权重确实重构了一个所有人都接受治疗的人群。通过生成权重 <span class="math notranslate nohighlight">\(1/e(x)\)</span>，它创建了一个所有人都接受治疗的群体；而提供权重 <span class="math notranslate nohighlight">\(1/(1-e(x))\)</span> 则创建了一个所有人都未接受治疗的群体。</p>
-<div class="cell docutils container">
+<p>首先，我们可以确保倾向得分权重确实重构了一个所有人都接受处理的人群。通过生成权重 <span class="math notranslate nohighlight">\(1/e(x)\)</span>，它创建了一个所有人都接受处理的群体；而提供权重 <span class="math notranslate nohighlight">\(1/(1-e(x))\)</span> 则创建了一个所有人都未接受处理的群体。</p>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* 1. Calculate inverse probability weights</span>
+<span class="k">gen</span> ipw = .
+<span class="k">replace</span> ipw = <span class="m">1</span><span class="o">/</span>propensity_score<span class="k"> if</span> intervention <span class="o">==</span> <span class="m">1</span>
+<span class="k">replace</span> ipw = <span class="m">1</span><span class="o">/</span>(<span class="m">1</span><span class="o">-</span>propensity_score)<span class="k"> if</span> intervention <span class="o">==</span> <span class="m">0</span>
+
+<span class="c1">* 2. Calculate and display sample sizes</span>
+<span class="k">count</span>
+<span class="k">display</span> <span class="s">&quot;Original Sample Size: &quot;</span> <span class="nf">r</span>(N)
+
+<span class="k">sum</span> ipw<span class="k"> if</span> intervention <span class="o">==</span> <span class="m">1</span>
+<span class="k">display</span> <span class="s">&quot;Treated Population Sample Size: &quot;</span> <span class="nf">r</span>(sum)
+
+<span class="k">sum</span> ipw<span class="k"> if</span> intervention <span class="o">==</span> <span class="m">0</span>
+<span class="k">display</span> <span class="s">&quot;Untreated Population Sample Size: &quot;</span> <span class="nf">r</span>(sum)
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">weight_t</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">data_ps</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;intervention==1&quot;</span><span class="p">)[</span><span class="s2">&quot;propensity_score&quot;</span><span class="p">]</span>
 <span class="n">weight_nt</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">data_ps</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;intervention==0&quot;</span><span class="p">)[</span><span class="s2">&quot;propensity_score&quot;</span><span class="p">])</span>
@@ -814,7 +932,28 @@ Untreated Population Sample Size 10391.5061043366
 </div>
 </div>
 <p>我们还可以利用倾向得分来寻找混杂因素的证据。如果某一人群分段的倾向得分高于另一分段，这意味着存在非随机因素导致处理分配。若该因素同时影响结果变量，则存在混杂。在本例中，我们发现自报更具雄心的学生参加成长心态研讨会的概率也更高。</p>
-<div class="cell tag_hide-input docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Set modern graph style</span>
+<span class="k">set</span> scheme s2color
+color_style tableau
+
+<span class="c1">* Create boxplot with enhanced formatting</span>
+<span class="k">graph</span> box propensity_score, over(success_expect) <span class="cs">///</span>
+    title(<span class="s">&quot;Confounding Evidence&quot;</span>, size(medium)) <span class="cs">///</span>
+    ytitle(<span class="s">&quot;Propensity Score&quot;</span>, size(small)) <span class="cs">///</span>
+    box(<span class="m">1</span>, color(blue%<span class="m">50</span>)) <span class="cs">///</span>
+    box(<span class="m">2</span>, color(orange%<span class="m">50</span>)) <span class="cs">///</span>
+    box(<span class="m">3</span>, color(green%<span class="m">50</span>)) <span class="cs">///</span>
+    graphregion(color(white)) <span class="cs">///</span>
+    plotregion(color(white)) <span class="cs">///</span>
+    ylabel(<span class="m">0.2</span>(<span class="m">0.05</span>)<span class="m">0.5</span>, grid gmin gmax) <span class="cs">///</span>
+    legend(off)
+</pre></div>
+</div>
+</div>
+</details><div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
 <span class="collapsed">Show code cell source</span>
@@ -833,7 +972,20 @@ Untreated Population Sample Size 10391.5061043366
 </div>
 </div>
 <p>我们还需检查处理组与未处理组之间是否存在重叠。为此，可以观察未处理组和处理组的倾向得分经验分布。从下图可见，无人具有零倾向得分，即使在倾向得分较低的区域也能同时找到处理与未处理的个体。这正是我们所说的处理组与未处理组良好平衡的状态。</p>
-<div class="cell tag_hide-input docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">*  Check propensity score distribution</span>
+<span class="k">twoway</span> (histogram propensity_score<span class="k"> if</span> intervention<span class="o">==</span><span class="m">1</span>, color(red%<span class="m">30</span>)) <span class="cs">///</span>
+       (histogram propensity_score<span class="k"> if</span> intervention<span class="o">==</span><span class="m">0</span>, color(blue%<span class="m">30</span>)), <span class="cs">///</span>
+       legend(order(<span class="m">1</span> <span class="s">&quot;Treated&quot;</span> <span class="m">2</span> <span class="s">&quot;Untreated&quot;</span>)) <span class="cs">///</span>
+       title(<span class="s">&quot;Propensity Score Distribution&quot;</span>) <span class="cs">///</span>
+       xtitle(<span class="s">&quot;Propensity Score&quot;</span>) <span class="cs">///</span>
+       graphregion(color(white))
+</pre></div>
+</div>
+</div>
+</details><div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
 <span class="collapsed">Show code cell source</span>
@@ -854,7 +1006,36 @@ Untreated Population Sample Size 10391.5061043366
 </div>
 </div>
 <p>最终，我们可以利用倾向得分加权估计量来评估平均处理效应。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* 1. Calculate normalized IP weights</span>
+<span class="k">gen</span> ipw1 = (intervention <span class="o">-</span> propensity_score) <span class="o">/</span> (propensity_score <span class="o">*</span> (<span class="m">1</span> <span class="o">-</span> propensity_score))
+
+<span class="c1">* 2. Calculate potential outcomes</span>
+<span class="k">sum</span> achievement_score [aw=ipw1]<span class="k"> if</span> intervention <span class="o">==</span> <span class="m">1</span>
+<span class="k">scalar</span> y1 = <span class="nf">r</span>(mean)
+
+<span class="k">sum</span> achievement_score [aw=ipw1]<span class="k"> if</span> intervention <span class="o">==</span> <span class="m">0</span>
+<span class="k">scalar</span> y0 = <span class="nf">r</span>(mean)
+
+<span class="c1">* 3. Calculate ATE</span>
+<span class="k">scalar</span> ate = y1 <span class="o">-</span> y0
+
+<span class="c1">* 4. Display results with 95% CIs</span>
+<span class="k">display</span> <span class="s">&quot;Potential Outcomes and ATE:&quot;</span>
+<span class="k">display</span> <span class="s">&quot;Y1: &quot;</span> <span class="nx">%5.3f</span> y1 <span class="s">&quot; [95% CI: &quot;</span> <span class="nx">%5.3f</span> (y1 <span class="o">-</span> <span class="nf">invttail</span>(<span class="nf">r</span>(N)<span class="o">-</span><span class="m">1</span>,<span class="m">0.025</span>)<span class="o">*</span><span class="nf">r</span>(sd)<span class="o">/</span><span class="nf">sqrt</span>(<span class="nf">r</span>(N))) <span class="s">&quot;, &quot;</span> <span class="nx">%5.3f</span> (y1 <span class="o">+</span> <span class="nf">invttail</span>(<span class="nf">r</span>(N)<span class="o">-</span><span class="m">1</span>,<span class="m">0.025</span>)<span class="o">*</span><span class="nf">r</span>(sd)<span class="o">/</span><span class="nf">sqrt</span>(<span class="nf">r</span>(N))) <span class="s">&quot;]&quot;</span>
+<span class="k">display</span> <span class="s">&quot;Y0: &quot;</span> <span class="nx">%5.3f</span> y0 <span class="s">&quot; [95% CI: &quot;</span> <span class="nx">%5.3f</span> (y0 <span class="o">-</span> <span class="nf">invttail</span>(<span class="nf">r</span>(N)<span class="o">-</span><span class="m">1</span>,<span class="m">0.025</span>)<span class="o">*</span><span class="nf">r</span>(sd)<span class="o">/</span><span class="nf">sqrt</span>(<span class="nf">r</span>(N))) <span class="s">&quot;, &quot;</span> <span class="nx">%5.3f</span> (y0 <span class="o">+</span> <span class="nf">invttail</span>(<span class="nf">r</span>(N)<span class="o">-</span><span class="m">1</span>,<span class="m">0.025</span>)<span class="o">*</span><span class="nf">r</span>(sd)<span class="o">/</span><span class="nf">sqrt</span>(<span class="nf">r</span>(N))) <span class="s">&quot;]&quot;</span>
+<span class="k">display</span> <span class="s">&quot;ATE: &quot;</span> <span class="nx">%5.3f</span> ate <span class="s">&quot; [95% CI: &quot;</span> <span class="nx">%5.3f</span> (ate <span class="o">-</span> <span class="nf">invttail</span>(<span class="nf">r</span>(N)<span class="o">-</span><span class="m">1</span>,<span class="m">0.025</span>)<span class="o">*</span><span class="nf">r</span>(sd)<span class="o">/</span><span class="nf">sqrt</span>(<span class="nf">r</span>(N))) <span class="s">&quot;, &quot;</span> <span class="nx">%5.3f</span> (ate <span class="o">+</span> <span class="nf">invttail</span>(<span class="nf">r</span>(N)<span class="o">-</span><span class="m">1</span>,<span class="m">0.025</span>)<span class="o">*</span><span class="nf">r</span>(sd)<span class="o">/</span><span class="nf">sqrt</span>(<span class="nf">r</span>(N))) <span class="s">&quot;]&quot;</span>
+
+<span class="c1">* 5. Recommended: Use teffects for proper inference</span>
+teffects ipw (achievement_score) (intervention,<span class="k"> logit</span>), <span class="cs">///</span>
+    osample(overlap) <span class="cs">///</span>
+<span class="k">    vce</span>(robust)
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">weight</span> <span class="o">=</span> <span class="p">((</span><span class="n">data_ps</span><span class="p">[</span><span class="s2">&quot;intervention&quot;</span><span class="p">]</span><span class="o">-</span><span class="n">data_ps</span><span class="p">[</span><span class="s2">&quot;propensity_score&quot;</span><span class="p">])</span> <span class="o">/</span>
           <span class="p">(</span><span class="n">data_ps</span><span class="p">[</span><span class="s2">&quot;propensity_score&quot;</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">data_ps</span><span class="p">[</span><span class="s2">&quot;propensity_score&quot;</span><span class="p">])))</span>
@@ -948,7 +1129,42 @@ ATE 0.38884081157857353
 <p>首要一点是，倾向得分的预测质量并不等同于其平衡特性。来自机器学习领域的学者在熟悉因果推断时，最富挑战性的方面之一便是放弃将一切视为预测问题的习惯。实际上，最大化倾向得分的预测能力甚至可能损害因果推断的目标。 <strong>倾向得分无需非常精确地预测处理分配，它只需涵盖所有混杂变量。</strong> 若纳入那些虽能有效预测处理分配但与结果无关的变量，反而会增加倾向得分估计量的方差。这与线性回归中纳入与处理相关但与结果无关变量时所面临的问题类似。</p>
 <p><img alt="img" src="_images/ml-trap.png" /></p>
 <p>为了理解这一点，请考虑以下示例（改编自 Hernán 的著作）。假设有两所学校，其中一所对 99%的学生实施了成长心态研讨会，另一所仅对 1%的学生实施。进一步假设学校本身对处理效应无直接影响（除非通过处理本身），因此无需对其进行控制。若将学校变量加入倾向得分模型，该变量将具有极高的预测力。然而，偶然情况下，我们可能获得一个样本，其中学校 A 的所有学生均接受了处理，导致该校倾向得分为 1，进而引发方差无限大的问题。此虽为极端案例，但我们将通过模拟数据展示其运作机制。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="k">clear</span> all
+<span class="k">set</span> seed <span class="m">42</span>  <span class="c1">// Set random seed for reproducibility (matches Python&#39;s np.random.seed(42))</span>
+
+<span class="c1">// Create data for School A</span>
+<span class="k">set</span> obs <span class="m">400</span>  <span class="c1">// Create 400 observations</span>
+<span class="k">gen</span> school = <span class="m">0</span>  <span class="c1">// School identifier (0 for School A)</span>
+<span class="k">gen</span> intercept = <span class="m">1</span>  <span class="c1">// Constant/intercept term</span>
+<span class="k">gen</span> T = <span class="nf">rbinomial</span>(<span class="m">1</span>, <span class="m">0.99</span>)  <span class="c1">// Generate treatment variable (99% probability of 1)</span>
+<span class="k">tempfile</span> school_a  <span class="c1">// Create temporary file to store School A data</span>
+<span class="k">save</span> <span class="nv">`school_a&#39;</span>  <span class="c1">// Save School A data</span>
+
+<span class="c1">// Create data for School B</span>
+<span class="k">clear</span>  <span class="c1">// Clear memory</span>
+<span class="k">set</span> obs <span class="m">400</span>  <span class="c1">// Create 400 observations</span>
+<span class="k">gen</span> school = <span class="m">1</span>  <span class="c1">// School identifier (1 for School B)</span>
+<span class="k">gen</span> intercept = <span class="m">1</span>  <span class="c1">// Constant/intercept term</span>
+<span class="k">gen</span> T = <span class="nf">rbinomial</span>(<span class="m">1</span>, <span class="m">0.01</span>)  <span class="c1">// Generate treatment variable (1% probability of 1)</span>
+<span class="k">tempfile</span> school_b  <span class="c1">// Create temporary file to store School B data</span>
+<span class="k">save</span> <span class="nv">`school_b&#39;</span>  <span class="c1">// Save School B data</span>
+
+<span class="c1">// Combine datasets (equivalent to pd.concat in Python)</span>
+<span class="k">use</span> <span class="nv">`school_a&#39;</span>,<span class="k"> clear</span>  <span class="c1">// Load School A data</span>
+<span class="k">append</span> using <span class="nv">`school_b&#39;</span>  <span class="c1">// Append School B data</span>
+
+<span class="c1">// Generate outcome variable y (equivalent to .assign() in Python)</span>
+<span class="k">gen</span> y = <span class="nf">rnormal</span>(<span class="m">1</span> <span class="o">+</span> <span class="m">0.1</span> <span class="o">*</span> T)  <span class="c1">// y ~ N(1 + 0.1*T, 1)</span>
+
+<span class="c1">// Display first 5 observations (equivalent to .head() in Python)</span>
+<span class="k">list in</span> <span class="m">1</span><span class="o">/</span><span class="m">5</span>	
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 <span class="n">school_a</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">T</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">binomial</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">.99</span><span class="p">,</span> <span class="mi">400</span><span class="p">),</span> <span class="n">school</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">intercept</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
@@ -1024,7 +1240,77 @@ ATE 0.38884081157857353
 </div></div></div>
 </div>
 <p>完成数据模拟后，我们使用倾向得分算法进行了两次自助法（bootstrap）分析。第一次将学校作为特征纳入倾向得分模型，第二次则未将学校变量纳入模型。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">// Define program to estimate ATE</span>
+<span class="k">capture program drop</span> run_ps
+<span class="k">program</span> define run_ps, rclass
+<span class="k">    syntax varlist</span>, TREATment(varname) OUTcome(varname)
+    
+	<span class="c1">// Remove existing ps variable if it exists</span>
+<span class="k">    capture drop</span> ps
+<span class="k">    capture drop</span> weight
+	
+    <span class="c1">// Logistic regression for propensity score</span>
+<span class="k">    logit</span> <span class="nv">`treatment&#39;</span> <span class="nv">`varlist&#39;</span>
+<span class="k">    predict</span> ps,<span class="k"> pr</span>  <span class="c1">// Get propensity scores</span>
+    
+    <span class="c1">// IPW estimation (inverse probability weighting)</span>
+<span class="k">    tempvar</span> weight
+<span class="k">    gen</span> <span class="nv">`weight&#39;</span> = <span class="nv">`treatment&#39;</span><span class="o">/</span>ps <span class="o">+</span> (<span class="m">1</span><span class="o">-</span><span class="nv">`treatment&#39;</span>)<span class="o">/</span>(<span class="m">1</span><span class="o">-</span>ps)
+    
+    <span class="c1">// Weighted regression for ATE</span>
+<span class="k">    reg</span> <span class="nv">`outcome&#39;</span> <span class="nv">`treatment&#39;</span> [pw=<span class="nv">`weight&#39;</span>]
+    
+    <span class="c1">// Return coefficient on treatment</span>
+<span class="k">    return scalar</span> ate = _b[<span class="nv">`treatment&#39;</span>]
+<span class="k">end</span>
+
+<span class="c1">// Initialize matrices to store results (equivalent to np.array)</span>
+<span class="k">matrix</span> ate_w_f = <span class="nf">J</span>(<span class="m">500</span>, <span class="m">1</span>, .)  <span class="c1">// With school fixed effect</span>
+<span class="k">matrix</span> ate_wo_f = <span class="nf">J</span>(<span class="m">500</span>, <span class="m">1</span>, .)  <span class="c1">// Without school fixed effect</span>
+
+<span class="c1">// Bootstrap loop (500 replications)</span>
+<span class="k">forvalues</span> i = <span class="m">1</span><span class="o">/</span><span class="m">500</span> {
+<span class="k">    preserve</span>  <span class="c1">// Preserve original data</span>
+    
+    <span class="c1">// Resample with replacement (equivalent to sample(frac=1, replace=True))</span>
+<span class="k">    bsample</span>
+    
+    <span class="c1">// Run estimation with school fixed effect</span>
+    run_ps school, treatment(T) outcome(y)
+<span class="k">    matrix</span> ate_w_f[<span class="nv">`i&#39;</span>, <span class="m">1</span>] = <span class="nf">r</span>(ate)
+    
+    <span class="c1">// Run estimation with only intercept</span>
+    run_ps intercept, treatment(T) outcome(y)
+<span class="k">    matrix</span> ate_wo_f[<span class="nv">`i&#39;</span>, <span class="m">1</span>] = <span class="nf">r</span>(ate)
+<span class="k">    </span>
+<span class="k">    restore</span>  <span class="c1">// Restore original data</span>
+}
+
+<span class="c1">// Convert matrices to Stata variables for analysis</span>
+<span class="k">clear</span>
+<span class="k">svmat</span> ate_w_f, names(ate_with_fixed)
+<span class="k">svmat</span> ate_wo_f, names(ate_without_fixed)
+
+<span class="c1">// Summarize results</span>
+<span class="k">summarize</span> ate_with_fixed ate_without_fixed
+
+<span class="c1">// Create kernel density plots with histograms</span>
+<span class="k">twoway</span> <span class="cs">///</span>
+    (histogram ate_with_fixed, color(blue%<span class="m">30</span>) bin(<span class="m">30</span>) legend(label(<span class="m">1</span> <span class="s">&quot;PS W School&quot;</span>))) <span class="cs">///</span>
+    (histogram ate_without_fixed, color(red%<span class="m">30</span>) bin(<span class="m">30</span>) legend(label(<span class="m">2</span> <span class="s">&quot;PS W/O School&quot;</span>))) <span class="cs">///</span>
+    (kdensity ate_with_fixed, lcolor(blue) lwidth(medthick)) <span class="cs">///</span>
+    (kdensity ate_without_fixed, lcolor(red) lwidth(medthick)), <span class="cs">///</span>
+    legend(order(<span class="m">1</span> <span class="m">2</span>) position(<span class="m">6</span>) rows(<span class="m">1</span>)) <span class="cs">///</span>
+    title(<span class="s">&quot;Distribution of ATE Estimates&quot;</span>) <span class="cs">///</span>
+    xtitle(<span class="s">&quot;ATE Estimate&quot;</span>) ytitle(<span class="s">&quot;Density&quot;</span>) <span class="cs">///</span>
+    graphregion(color(white)) plotregion(color(white))
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ate_w_f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">run_ps</span><span class="p">(</span><span class="n">ex_data</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">frac</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="p">[</span><span class="s2">&quot;school&quot;</span><span class="p">],</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">500</span><span class="p">)])</span>
 <span class="n">ate_wo_f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">run_ps</span><span class="p">(</span><span class="n">ex_data</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">frac</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="p">[</span><span class="s2">&quot;intercept&quot;</span><span class="p">],</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">500</span><span class="p">)])</span>
@@ -1047,7 +1333,29 @@ ATE 0.38884081157857353
 </div>
 <p>如你所见，加入学校特征的倾向得分估计器方差极大，而未加入该特征的模型则表现更为稳定。此外，由于学校并非混淆变量，未包含它的模型也不存在偏误。正如我所说，这并非单纯预测处理效应的问题，关键在于构建预测模型时必须控制混杂因素，而非仅着眼于预测处理本身。</p>
 <p>这引出了倾向得分方法中常见的另一个问题。在我们的案例中，数据最终呈现高度平衡状态，但情况并非总是如此。某些情况下，接受处理者的处理概率远高于未处理者，且倾向得分分布的重叠区域非常有限。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">// Set seed for reproducibility</span>
+<span class="k">set</span> seed <span class="m">42</span>
+
+<span class="c1">// Generate Beta-distributed data (500 obs each)</span>
+<span class="k">set</span> obs <span class="m">500</span>
+<span class="k">gen</span> non_treated = <span class="nf">rbeta</span>(<span class="m">4</span>,<span class="m">1</span>)  <span class="c1">// Beta(4,1) distribution</span>
+<span class="k">gen</span> treated = <span class="nf">rbeta</span>(<span class="m">1</span>,<span class="m">3</span>)      <span class="c1">// Beta(1,3) distribution</span>
+
+<span class="c1">// Create histogram plot for positivity check</span>
+<span class="k">twoway</span> <span class="cs">///</span>
+    (histogram non_treated, color(blue%<span class="m">30</span>) bin(<span class="m">30</span>) legend(label(<span class="m">1</span> <span class="s">&quot;Treated&quot;</span>))) <span class="cs">///</span>
+    (histogram treated, color(red%<span class="m">30</span>) bin(<span class="m">30</span>) legend(label(<span class="m">2</span> <span class="s">&quot;Non-Treated&quot;</span>))), <span class="cs">///</span>
+    title(<span class="s">&quot;Positivity Check&quot;</span>) <span class="cs">///</span>
+    xtitle(<span class="s">&quot;Propensity Score&quot;</span>) ytitle(<span class="s">&quot;Frequency&quot;</span>) <span class="cs">///</span>
+    legend(order(<span class="m">1</span> <span class="m">2</span>) position(<span class="m">6</span>) rows(<span class="m">1</span>)) <span class="cs">///</span>
+    graphregion(color(white)) plotregion(color(white))	   
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">beta</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">500</span><span class="p">),</span> <span class="n">kde</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Non Treated&quot;</span><span class="p">)</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">beta</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">500</span><span class="p">),</span> <span class="n">kde</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Treated&quot;</span><span class="p">)</span>
@@ -1067,7 +1375,19 @@ ATE 0.38884081157857353
 <section id="id8">
 <h2>倾向得分匹配<a class="headerlink" href="#id8" title="Link to this heading">#</a></h2>
 <p>如前所述，在拥有倾向得分的情况下，无需直接控制变量 X，仅控制倾向得分即可。因此，可将倾向得分视为对特征空间的一种降维操作——它将 X 中的所有特征压缩至单一的处理分配维度。基于此，我们可将倾向得分作为其他模型（例如回归模型）的输入特征。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="k">reg</span> achievement_score intervention propensity_score,vce(robust)	   
+<span class="c1">	   </span>
+<span class="c1">* Recommended: Use teffects for proper inference</span>
+teffects ipw (achievement_score) (intervention,<span class="k"> logit</span>), <span class="cs">///</span>
+    osample(overlap) <span class="cs">///</span>
+<span class="k">    vce</span>(robust)	
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;achievement_score ~ intervention + propensity_score&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data_ps</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span><span class="o">.</span><span class="n">tables</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 </pre></div>

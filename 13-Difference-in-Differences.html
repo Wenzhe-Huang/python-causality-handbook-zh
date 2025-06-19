@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -419,7 +419,18 @@ document.write(`
 <p>解答此类问题的一种方法是双重差分法（Difference-in-Difference），简称 diff-in-diff。该方法常用于评估宏观干预措施的效果，例如移民对失业率的影响、枪支法律变更对犯罪率的影响，或是单纯衡量营销活动带来的用户参与度差异。这些案例中，干预前后各有一个时间段，研究者需要从总体趋势中剥离出干预措施的实际影响。以一个我亲身处理过的类似问题为例进行说明。</p>
 <p>为评估广告牌作为营销渠道的效果，我们在南里奥格兰德州首府POA（阿雷格里港市）设置了 3 块广告牌，旨在观察此举是否能促进储蓄账户存款增长。需补充说明的是，对巴西地理不太熟悉的读者应注意：南里奥格兰德州位于该国南部，属于最发达地区之一。</p>
 <p>考虑到这一点，我们决定同时分析来自南方另一座首府城市——圣卡塔琳娜州首府FL的数据。我们的设想是将FL作为对照组样本，用以估算与POA相比的反事实 <span class="math notranslate nohighlight">\(Y_0\)</span> （需要说明的是，这并非真实的实验，真实实验数据保密，但思路非常相似）。我们在POA投放了整六月的广告牌，所获数据如下：</p>
-<div class="cell tag_hide-input docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Load data (assuming CSV is in current directory)</span>
+import delimited <span class="s">&quot;./data/billboard_impact.csv&quot;</span>,<span class="k"> clear</span>
+
+
+<span class="k">list in</span> <span class="m">1</span><span class="o">/</span><span class="m">5</span>
+</pre></div>
+</div>
+</div>
+</details><div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
 <span class="collapsed">Show code cell source</span>
@@ -525,7 +536,29 @@ document.write(`
 \hat{ATET} = E[Y(1)|D=1] - E[Y(0)|D=1]
 \)</span></p>
 <p>在我们的例子中，我们将比较 POA 在广告牌设置前后的平均存款额。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* 用处理组处理前作为反事实结果</span>
+<span class="c1">* Calculate mean deposits for POA group before event (jul==0)</span>
+<span class="k">quietly summarize</span> deposits<span class="k"> if</span> poa <span class="o">==</span> <span class="m">1</span> <span class="o">&amp;</span> jul <span class="o">==</span> <span class="m">0</span>
+<span class="k">local</span> poa_before = <span class="nf">r</span>(mean)
+
+<span class="c1">* Calculate mean deposits for POA group after event (jul==1)</span>
+<span class="k">quietly summarize</span> deposits<span class="k"> if</span> poa <span class="o">==</span> <span class="m">1</span> <span class="o">&amp;</span> jul <span class="o">==</span> <span class="m">1</span>
+<span class="k">local</span> poa_after = <span class="nf">r</span>(mean)
+
+<span class="c1">* Calculate the difference</span>
+<span class="k">local</span> diff = <span class="nv">`poa_after&#39;</span> <span class="o">-</span> <span class="nv">`poa_before&#39;</span>
+
+<span class="c1">* Display results</span>
+<span class="k">display</span> <span class="s">&quot;POA Before: &quot;</span> <span class="nv">`poa_before&#39;</span>
+<span class="k">display</span> <span class="s">&quot;POA After: &quot;</span> <span class="nv">`poa_after&#39;</span>
+<span class="k">display</span> <span class="s">&quot;Difference (After - Before): &quot;</span> <span class="nv">`diff&#39;</span>
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">poa_before</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;poa==1 &amp; jul==0&quot;</span><span class="p">)[</span><span class="s2">&quot;deposits&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 
@@ -549,7 +582,29 @@ document.write(`
 \hat{ATET} = E[Y(1)|D=1] - E[Y(1)|D=0]
 \)</span></p>
 <p>在我们的例子中，就是要比较干预后POA与FL的存款情况。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* 用控制组处理后作为反事实结果</span>
+<span class="c1">* Calculate mean deposits for FL group after event (jul==1)</span>
+<span class="k">quietly summarize</span> deposits<span class="k"> if</span> poa <span class="o">==</span> <span class="m">0</span> <span class="o">&amp;</span> jul <span class="o">==</span> <span class="m">1</span>
+<span class="k">local</span> fl_after = <span class="nf">r</span>(mean)
+
+<span class="c1">* Calculate mean deposits for POA group after event (jul==1)</span>
+<span class="k">quietly summarize</span> deposits<span class="k"> if</span> poa <span class="o">==</span> <span class="m">1</span> <span class="o">&amp;</span> jul <span class="o">==</span> <span class="m">1</span>
+<span class="k">local</span> poa_after = <span class="nf">r</span>(mean)
+
+<span class="c1">* Calculate the difference</span>
+<span class="k">local</span> diff = <span class="nv">`poa_after&#39;</span> <span class="o">-</span> <span class="nv">`fl_after&#39;</span>
+
+<span class="c1">* Display results</span>
+<span class="k">display</span> <span class="s">&quot;FL After: &quot;</span> <span class="nv">`fl_after&#39;</span>
+<span class="k">display</span> <span class="s">&quot;POA After: &quot;</span> <span class="nv">`poa_after&#39;</span>
+<span class="k">display</span> <span class="s">&quot;Difference (After - Before): &quot;</span> <span class="nv">`diff&#39;</span>
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fl_after</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;poa==0 &amp; jul==1&quot;</span><span class="p">)[</span><span class="s2">&quot;deposits&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 <span class="n">poa_after</span> <span class="o">-</span> <span class="n">fl_after</span>
@@ -584,7 +639,38 @@ E[Y_0(1) − Y_0(0)|D=1] = E[Y_0(1) − Y_0(0)|D=0]
 \)</span></p>
 <p>之所以得此名，是因为它捕捉的是处理前后处理组与对照组之间差异的差值。</p>
 <p>以下是其在代码中的表现形式。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* DID</span>
+<span class="c1">* Calculate mean deposits for POA group before event (jul==0)</span>
+<span class="k">quietly summarize</span> deposits<span class="k"> if</span> poa <span class="o">==</span> <span class="m">1</span> <span class="o">&amp;</span> jul <span class="o">==</span> <span class="m">0</span>
+<span class="k">local</span> poa_before = <span class="nf">r</span>(mean)
+
+<span class="c1">* Calculate mean deposits for POA group after event (jul==1)</span>
+<span class="k">quietly summarize</span> deposits<span class="k"> if</span> poa <span class="o">==</span> <span class="m">1</span> <span class="o">&amp;</span> jul <span class="o">==</span> <span class="m">1</span>
+<span class="k">local</span> poa_after = <span class="nf">r</span>(mean)
+
+<span class="c1">* Calculate mean deposits for FL group before event (jul==0)</span>
+<span class="k">quietly summarize</span> deposits<span class="k"> if</span> poa <span class="o">==</span> <span class="m">0</span> <span class="o">&amp;</span> jul <span class="o">==</span> <span class="m">0</span>
+<span class="k">local</span> fl_before = <span class="nf">r</span>(mean)
+
+<span class="c1">* Calculate mean deposits for FL group after event (jul==1)</span>
+<span class="k">quietly summarize</span> deposits<span class="k"> if</span> poa <span class="o">==</span> <span class="m">0</span> <span class="o">&amp;</span> jul <span class="o">==</span> <span class="m">1</span>
+<span class="k">local</span> fl_after = <span class="nf">r</span>(mean)
+
+<span class="c1">* Calculate the difference in difference</span>
+<span class="k">local</span> did = (<span class="nv">`poa_after&#39;</span> <span class="o">-</span> <span class="nv">`poa_before&#39;</span>) <span class="o">-</span> (<span class="nv">`fl_after&#39;</span> <span class="o">-</span> <span class="nv">`fl_before&#39;</span>)
+
+
+<span class="c1">* Display results</span>
+<span class="k">display</span> <span class="s">&quot;FL trends: &quot;</span> <span class="nv">`fl_after&#39;</span> <span class="o">-</span> <span class="nv">`fl_before&#39;</span>
+<span class="k">display</span> <span class="s">&quot;POA trends: &quot;</span> <span class="nv">`poa_after&#39;</span> <span class="o">-</span> <span class="nv">`poa_before&#39;</span>
+<span class="k">display</span> <span class="s">&quot;Difference in difference: &quot;</span> <span class="nv">`did&#39;</span>
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fl_before</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;poa==0 &amp; jul==0&quot;</span><span class="p">)[</span><span class="s2">&quot;deposits&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 
@@ -601,7 +687,33 @@ E[Y_0(1) − Y_0(0)|D=1] = E[Y_0(1) − Y_0(0)|D=0]
 </div>
 <p>双重差分法告诉我们，预计每位客户的存款将增加 6.52 雷亚尔。值得注意的是，双重差分法所做的假设比另外两种估计量更为合理。它仅假设两座城市的增长模式相同，既不要求它们具有相同的基准水平，也不要求增长趋势为零。</p>
 <p>为了直观展示双重差分法的作用，我们可以将未处理组的增长趋势投射到处理组中，以观察反事实——即在没有干预的情况下，我们预期会看到的存款数量。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="k">clear</span>
+<span class="k">input</span> period str3 month fl_values poa_values counterfactual
+<span class="m">1</span> <span class="s">&quot;May&quot;</span> <span class="m">171.642308</span> <span class="m">46.016</span> <span class="m">46.016</span>
+<span class="m">2</span> <span class="s">&quot;Jul&quot;</span> <span class="m">206.1655</span> <span class="m">87.06375</span> <span class="m">80.539192</span>
+<span class="k">end</span>
+
+<span class="c1">* Create the plot with proper legend labeling</span>
+<span class="k">twoway</span> <span class="cs">///</span>
+    (connected fl_values period, lwidth(<span class="m">2</span>) lcolor(blue) mcolor(blue)) <span class="cs">///</span>
+    (connected poa_values period, lwidth(<span class="m">2</span>) lcolor(red) mcolor(red)) <span class="cs">///</span>
+    (line counterfactual period, lwidth(<span class="m">2</span>) lcolor(green) lpattern(dash)), <span class="cs">///</span>
+    xlabel(<span class="m">1</span> <span class="s">&quot;May&quot;</span> <span class="m">2</span> <span class="s">&quot;Jul&quot;</span>) <span class="cs">///</span>
+    xtitle(<span class="s">&quot;Month&quot;</span>) ytitle(<span class="s">&quot;Deposits&quot;</span>) <span class="cs">///</span>
+    title(<span class="s">&quot;Deposit Trends Comparison&quot;</span>) <span class="cs">///</span>
+    legend(order(<span class="m">1</span> <span class="s">&quot;FL&quot;</span> <span class="m">2</span> <span class="s">&quot;POA&quot;</span> <span class="m">3</span> <span class="s">&quot;Counterfactual&quot;</span>) position(<span class="m">6</span>) rows(<span class="m">1</span>)) <span class="cs">///</span>
+    graphregion(color(white)) plotregion(color(white))
+
+<span class="c1">* diff_plot: A Stata Module to Visualize Two-Period, Two-Group Difference-In-Differences</span>
+<span class="c1">* ssc install elabel, replace //installing elabel </span>
+<span class="c1">* ssc install diff_plot //installing diff_plot</span>
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="s2">&quot;May&quot;</span><span class="p">,</span> <span class="s2">&quot;Jul&quot;</span><span class="p">],</span> <span class="p">[</span><span class="n">fl_before</span><span class="p">,</span> <span class="n">fl_after</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;FL&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
@@ -627,7 +739,15 @@ Y_i = \beta_0 + \beta_1 POA_i + \beta_2 Jul_i + \beta_3 POA_i*Jul_i + e_i
 \)</span></p>
 <p>注意，<span class="math notranslate nohighlight">\(\beta_0\)</span> 是控制的基线。在我们的案例中，即FL五月份的存款水平。若开启处理城市虚拟变量，则得到 <span class="math notranslate nohighlight">\(\beta_1\)</span>。因此，<span class="math notranslate nohighlight">\(\beta_0 + \beta_1\)</span> 代表干预前五月POA的基线，而 <span class="math notranslate nohighlight">\(\beta_1\)</span> 是在FL基础上POA的基线增量。关闭POA虚拟变量并开启七月虚拟变量时，得到 <span class="math notranslate nohighlight">\(\beta_0 + \beta_2\)</span>，即干预期后七月份FL的水平。<span class="math notranslate nohighlight">\(\beta_2\)</span> 则是控制的趋势，因为我们在基线之上加上它以得到干预后时期的控制水平。简而言之，<span class="math notranslate nohighlight">\(\beta_1\)</span> 是从控制组转向处理组时的增量，<span class="math notranslate nohighlight">\(\beta_2\)</span> 是从干预前到干预后时期的增量。最后，若同时开启两个虚拟变量，则得到 <span class="math notranslate nohighlight">\(\beta_3\)</span>。<span class="math notranslate nohighlight">\(\beta_0 + \beta_1 + \beta_2 + \beta_3\)</span>是干预后POA的水平。因此，<span class="math notranslate nohighlight">\(\beta_3\)</span> 是从五月到七月、从FL到波阿时的增量影响。换言之，这就是双重差分估计量。</p>
 <p>若您对我的说法存疑，不妨亲自验证一番。您将得到与我们先前完全一致的结果数值，同时也会注意到我们如何获得了梦寐以求的标准误差。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* TWFE </span>
+<span class="k">reg</span> deposits i<span class="m">.</span>poa##i<span class="m">.</span>jul
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s1">&#39;deposits ~ poa*jul&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span><span class="o">.</span><span class="n">tables</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 </pre></div>
@@ -657,7 +777,36 @@ Y_i = \beta_0 + \beta_1 POA_i + \beta_2 Jul_i + \beta_3 POA_i*Jul_i + e_i
 <h2>非平行趋势<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
 <p>双重差分法（Diff-in-Diff）一个显而易见的问题是无法满足平行趋势假设。若处理组的增长趋势与对照组不同，双重差分估计将产生偏误。这在非随机数据中尤为常见，例如决定对某地区实施干预是基于其可能对干预反应良好的潜力，或是干预针对的是表现欠佳的地区。以我们的营销案例为例，我们选择在 POA 测试广告牌，并非为了检验广告牌的一般效果，而是因为该地区销售业绩不佳。或许线上营销在当地效果不彰。这种情况下，若未设置广告牌， POA 的增长可能低于其他城市的观测值，这将导致我们低估广告牌在该地的效果。</p>
 <p>一种验证这种情况是否发生的方法是绘制过去时期的趋势图。例如，假设 POA 呈现小幅下降趋势，而 FL 则处于急剧上升阶段。此时，展示前期数据将揭示这些趋势，从而让我们明白双重差分法并非可靠的估计量。</p>
-<div class="cell tag_hide-input docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Non PT</span>
+<span class="c1">* Create temporary dataset for plotting</span>
+<span class="k">clear</span>
+<span class="k">input</span> period str3 month fl_values poa_values counterfactual
+<span class="m">1</span> <span class="s">&quot;Jan&quot;</span> <span class="m">120</span> <span class="m">60</span> .
+<span class="m">2</span> <span class="s">&quot;Mar&quot;</span> <span class="m">150</span> <span class="m">50</span> .
+<span class="m">3</span> <span class="s">&quot;May&quot;</span> <span class="m">171.642308</span> <span class="m">46.016</span> <span class="m">46.016</span>
+<span class="m">4</span> <span class="s">&quot;Jul&quot;</span> <span class="m">206.1655</span> <span class="m">87.06375</span> <span class="m">80.539192</span>
+<span class="k">end</span>
+
+<span class="c1">* Create the plot</span>
+<span class="k">twoway</span> <span class="cs">///</span>
+    (connected fl_values period, lwidth(<span class="m">2</span>) lcolor(blue) mcolor(blue)) <span class="cs">///</span>
+    (connected poa_values period, lwidth(<span class="m">2</span>) lcolor(red) mcolor(red)) <span class="cs">///</span>
+    (line counterfactual period<span class="k"> if</span> period <span class="o">&gt;=</span> <span class="m">3</span>, lwidth(<span class="m">2</span>) lcolor(green) lpattern(dash)), <span class="cs">///</span>
+    xline(<span class="m">3</span>, lpattern(dash) lcolor(gs10) lwidth(<span class="m">1</span>)) <span class="cs">///</span>
+	xlabel(<span class="m">1</span> <span class="s">&quot;Jan&quot;</span> <span class="m">2</span> <span class="s">&quot;Mar&quot;</span> <span class="m">3</span> <span class="s">&quot;May&quot;</span> <span class="m">4</span> <span class="s">&quot;Jul&quot;</span>, angle(<span class="m">45</span>)) <span class="cs">///</span>
+    xtitle(<span class="s">&quot;&quot;</span>) ytitle(<span class="s">&quot;Deposits&quot;</span>) <span class="cs">///</span>
+    title(<span class="s">&quot;Deposit Trends Comparison&quot;</span>, size(medium)) <span class="cs">///</span>
+    legend(order(<span class="m">1</span> <span class="s">&quot;FL&quot;</span> <span class="m">2</span> <span class="s">&quot;POA&quot;</span> <span class="m">3</span> <span class="s">&quot;Counterfactual&quot;</span>) position(<span class="m">6</span>) rows(<span class="m">1</span>)) <span class="cs">///</span>
+    graphregion(color(white)) plotregion(color(white)) <span class="cs">///</span>
+    scheme(s1color) <span class="cs">///</span>
+    xsize(<span class="m">10</span>) ysize(<span class="m">5</span>)  <span class="c1">// Sets figure size to 10x5 inches</span>
+</pre></div>
+</div>
+</div>
+</details><div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
 <span class="collapsed">Show code cell source</span>

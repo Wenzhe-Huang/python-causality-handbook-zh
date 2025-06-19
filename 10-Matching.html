@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -1028,7 +1028,7 @@ ATE = \int(E[Y|X, T=1] - E[Y|X, T=0])dP(x)
 </div>
 </div>
 </div>
-<p>但这只是个刻意设计的示例，仅为引入匹配概念。现实中，我们通常面对多个特征且单元间无法完美匹配的情形。此时，需定义某种邻近度度量来比较单元间的相似程度。常用的度量之一是欧几里得范数 <span class="math notranslate nohighlight">\(||X_i - X_j||\)</span>。然而，该差异对特征尺度并不具有不变性。这意味着像年龄这样取值在十位数级别的特征，在计算范数时其重要性将远低于收入这类百位数量级的特征。因此，在应用范数前，需对特征进行缩放处理，使它们大致处于同一量级。</p>
+<p>但这只是个刻意设计的示例，仅为引入匹配概念。现实中，我们通常面对多个特征且单元间无法完美匹配的情形。此时，需定义某种邻近度度量来比较单元间的相似程度。常用的度量之一是欧几里德范数 <span class="math notranslate nohighlight">\(||X_i - X_j||\)</span>。然而，该差异对特征尺度并不具有不变性。这意味着像年龄这样取值在十这个量级的特征，在计算范数时其重要性将远低于收入这类百位量级的特征。因此，在应用范数前，需对特征进行缩放处理，使它们大致处于同一量级。</p>
 <p>在定义了距离度量之后，我们现在可以将匹配定义为与待匹配样本最接近的邻居。用数学术语表达，匹配估计量可以写作如下形式</p>
 <p><span class="math notranslate nohighlight">\(
 \hat{ATE} = \frac{1}{N} \sum^N_{i=1} (2T_i - 1)\big(Y_i - Y_{jm}(i)\big)

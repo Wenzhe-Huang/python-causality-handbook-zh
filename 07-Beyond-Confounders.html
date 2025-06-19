@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -419,7 +419,18 @@ document.write(`
 <p>我们已经了解到，在回归模型中添加额外的控制变量有助于识别因果效应。若控制变量为混杂因素，将其纳入模型不仅是锦上添花，更是必要条件。当缺乏经验者见此情形，常会本能地将所有可测变量塞入模型。在当今大数据时代，这轻易就能超过 1000 个变量。事实证明，这不仅无必要，反而可能损害因果识别。现在，我们将关注点转向非混杂因素的控制变量。首先探讨有益的控制变量，随后再深入剖析有害的控制变量。</p>
 <p>以一个激励性案例为例，假设你是某金融科技公司催收团队的数据科学家。你的下一项任务是评估发送债务协商邮件的影响。你的响应变量是逾期客户的还款金额。</p>
 <p>为解答此问题，您的团队从逾期客户库中随机选取 5000 名客户进行一项随机测试。对每位客户，您抛掷硬币决定：若为正面，则向该客户发送邮件；反之，则将其留作对照组。通过此测试，您期望量化该邮件能额外产生多少收益。</p>
-<div class="cell tag_hide-input docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Load data (assuming CSV is in current directory)</span>
+import delimited <span class="s">&quot;./data/collections_email.csv&quot;</span>,<span class="k"> clear</span>
+
+
+<span class="k">list in</span> <span class="m">1</span><span class="o">/</span><span class="m">5</span>
+</pre></div>
+</div>
+</div>
+</details><div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
 <span class="collapsed">Show code cell source</span>
@@ -533,7 +544,24 @@ document.write(`
 ATE = E[Y|T=1] - E[Y|T=0]
 \)</span></p>
 <p>鉴于你足够聪明，并希望为估计值设置一个置信区间，于是采用了线性回归方法。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Calculate difference in means</span>
+<span class="k">sum</span> payments<span class="k"> if</span> email <span class="o">==</span> <span class="m">1</span>
+<span class="k">scalar</span> mean_treat = <span class="nf">r</span>(mean)
+
+<span class="k">sum</span> payments<span class="k"> if</span> email <span class="o">==</span> <span class="m">0</span>
+<span class="k">scalar</span> mean_control = <span class="nf">r</span>(mean)
+
+<span class="k">display</span> <span class="s">&quot;Difference in means: &quot;</span> <span class="nx">%5.2f</span> (mean_treat <span class="o">-</span> mean_control)
+
+<span class="c1">* Run regression (equivalent to t-test)</span>
+<span class="k">regress</span> payments email
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Difference in means:&quot;</span><span class="p">,</span>
       <span class="n">data</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;email==1&quot;</span><span class="p">)[</span><span class="s2">&quot;payments&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="n">data</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;email==0&quot;</span><span class="p">)[</span><span class="s2">&quot;payments&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
@@ -563,7 +591,27 @@ ATE = E[Y|T=1] - E[Y|T=0]
 <p>注意你的数据中还包含其他有趣的列。例如， <code class="docutils literal notranslate"><span class="pre">credit_limit</span></code> 代表客户逾期前的信用额度， <code class="docutils literal notranslate"><span class="pre">risk_score</span></code> 对应邮件发送前对客户风险的评估值。可以合理推测，信用额度和风险等级很可能是预测还款情况的有效指标。但这些信息如何发挥作用呢？</p>
 <p>首先，我们需要理解为何即使处理效果确实存在，我们仍可能无法在统计上发现其显著性。原因或许如本例所示，处理对结果的影响微乎其微。细想之下，促使人们偿还债务的主要因素大多超出了催收部门的控制范围——人们还款是因为找到了新工作、改善了财务状况或收入等。用统计学术语来说，<strong>付款行为的变异性更多是由电子邮件之外的其他因素所解释的</strong>。</p>
 <p>为了直观理解这一点，我们可以绘制付款金额与处理变量（电子邮件）的散点图。图中红色线条展示了模型的拟合线。为增强可视化效果，我在电子邮件变量中加入了少量噪声，以避免数据点完全集中在 0 或 1 的位置。</p>
-<div class="cell tag_hide-input docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Create jittered email variable</span>
+<span class="k">gen</span> email_jitter = email <span class="o">+</span> <span class="nf">rnormal</span>(<span class="m">0</span>, <span class="m">0.01</span>)
+
+<span class="c1">* Create scatterplot with jitter</span>
+<span class="k">twoway</span> (scatter payments email_jitter, mcolor(blue%<span class="m">80</span>) jitter(<span class="m">5</span>)) <span class="cs">///</span>
+       (function y = _b[_cons] <span class="o">+</span> _b[email]<span class="o">*</span>x,<span class="k"> range</span>(<span class="o">-</span><span class="m">0.2</span> <span class="m">1.2</span>) lcolor(orange) lwidth(medthick)), <span class="cs">///</span>
+       title(<span class="s">&quot;Payment by Email Treatment&quot;</span>) <span class="cs">///</span>
+       xtitle(<span class="s">&quot;Email Treatment&quot;</span>) <span class="cs">///</span>
+       ytitle(<span class="s">&quot;Payments&quot;</span>) <span class="cs">///</span>
+       legend(off) <span class="cs">///</span>
+       graphregion(color(white)) <span class="cs">///</span>
+       plotregion(color(white)) <span class="cs">///</span>
+       xlabel(<span class="m">0</span> <span class="s">&quot;Control&quot;</span> <span class="m">1</span> <span class="s">&quot;Treated&quot;</span>, noticks) <span class="cs">///</span>
+       xscale(range(<span class="o">-</span><span class="m">0.3</span> <span class="m">1.3</span>))
+</pre></div>
+</div>
+</div>
+</details><div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
 <span class="collapsed">Show code cell source</span>
@@ -581,14 +629,30 @@ ATE = E[Y|T=1] - E[Y|T=0]
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="_images/b19a4ca0ea52aa290fb9ea0996f32e311ee67c7b4bd796a1a7f5367a9fda92d4.png" src="_images/b19a4ca0ea52aa290fb9ea0996f32e311ee67c7b4bd796a1a7f5367a9fda92d4.png" />
+<img alt="_images/d8cca5b78898ae9aad484cf00be01f721e1bbc0504bb41e5f001bbd7deee627d.png" src="_images/d8cca5b78898ae9aad484cf00be01f721e1bbc0504bb41e5f001bbd7deee627d.png" />
 </div>
 </div>
 <p>从图中可见，单一处理组内的付款金额波动极为剧烈。视觉上，两组数据都呈现出从略低于 400 到 1000 的大幅跨度。如果电子邮件的影响仅在 5.00 或 10.00 雷亚尔量级，那么在如此巨大的变异性中难以察觉其作用也就不足为奇了。</p>
 <p>幸运的是，回归分析能帮助我们降低这种变异性。关键在于运用额外的控制变量。<strong>若某一变量能有效预测结果，它将解释结果中的大量方差</strong>。如果风险和信用额度是付款行为的良好预测指标，通过控制这些变量，我们便能更轻松地识别电子邮件对付款行为的影响。回顾回归分析的工作原理，这一点便有了直观的解释。在回归模型中添加额外变量意味着在考察处理效应时保持这些变量恒定。因此，逻辑上，当我们观察风险和信用额度水平相近的客户时，响应变量 <code class="docutils literal notranslate"><span class="pre">payments</span></code> 的方差应当更小。换言之，若风险和信用额度能准确预测付款行为，那么具有相似风险和信用额度的客户其付款水平也应相近，从而展现出更小的方差。</p>
 <p><img alt="img" src="_images/y-pred.png" /></p>
 <p>为了说明这一点，我们采用部分剔除的方法将回归分解为两个步骤。首先，我们将处理变量（电子邮件）和结果变量（付款）对额外控制变量（信用额度和风险评分）进行回归。接着，在第一步得到的基础上，我们将处理变量的残差对付款的残差进行回归。（这纯粹是教学性质的，实际操作中无需如此繁琐）。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Step 1: Regress email on covariates</span>
+<span class="k">regress</span> email credit_limit risk_score
+<span class="k">predict</span> res_email, resid
+
+<span class="c1">* Step 2: Regress payments on same covariates</span>
+<span class="k">regress</span> payments credit_limit risk_score
+<span class="k">predict</span> res_payments, resid
+
+<span class="c1">* Step 3: Regress payment residuals on email residuals</span>
+<span class="k">regress</span> res_payments res_email
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_email</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s1">&#39;email ~ credit_limit + risk_score&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 <span class="n">model_payments</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s1">&#39;payments ~ credit_limit + risk_score&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
@@ -635,7 +699,24 @@ Email Residual Variance 0.24918421069820032
 </div>
 <p>注意到支付金额的方差从 10807 降至 5652。在控制了风险和信用额度后，我们几乎将其减少了一半。同时也要注意到，我们未能降低处理邮件的变异性。这是合理的，因为风险和信用额度并不能预测邮件（根据随机性的定义，没有任何因素可以做到）。</p>
 <p>现在，我们看到了更为合理的结果。这一新的估计值告诉我们，预计收到邮件的顾客平均比对照组多支付 4.4 雷亚尔。此估计值如今在统计上显著区别于零。我们还可以观察到各对照组内的方差现在有所降低。</p>
-<div class="cell tag_hide-input docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Create the residuals plot</span>
+<span class="k">twoway</span> (scatter res_payments res_email, mcolor(blue%<span class="m">50</span>) msymbol(Oh)) <span class="cs">///</span>
+       (lfit res_payments res_email, lcolor(orange) lwidth(medthick)), <span class="cs">///</span>
+       title(<span class="s">&quot;Partial Regression Plot&quot;</span>) <span class="cs">///</span>
+       xtitle(<span class="s">&quot;Email Residuals (orthogonal to covariates)&quot;</span>) <span class="cs">///</span>
+       ytitle(<span class="s">&quot;Payments Residuals (orthogonal to covariates)&quot;</span>) <span class="cs">///</span>
+       legend(off) <span class="cs">///</span>
+       graphregion(color(white)) <span class="cs">///</span>
+       plotregion(color(white)) <span class="cs">///</span>
+       xlabel(<span class="o">-</span><span class="m">0.7</span>(<span class="m">0.2</span>)<span class="m">1</span>) <span class="cs">///</span>
+       ylabel(, angle(horizontal))
+</pre></div>
+</div>
+</div>
+</details><div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
 <span class="collapsed">Show code cell source</span>
@@ -655,7 +736,14 @@ Email Residual Variance 0.24918421069820032
 </div>
 </div>
 <p>如前所述，我们这样做是出于教学目的。实际操作中，您只需将控制变量与处理变量一同加入回归模型，所得估计值将完全相同。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="k">regress</span> payments email credit_limit risk_score
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_2</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s1">&#39;payments ~ email + credit_limit + risk_score&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 <span class="n">model_2</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span><span class="o">.</span><span class="n">tables</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -710,7 +798,28 @@ Email Residual Variance 0.24918421069820032
 <section id="id3">
 <h2>多数有害的控制变量<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
 <p>作为第二个激励性例子，让我们考虑一个涉及两家医院的药物测试场景。这两家医院都在对一种处理特定疾病的新药进行随机试验，关注的结果是住院天数。若处理有效，将减少患者的住院时间。其中一家医院的政策是向 90%的患者提供真实药物，而 10%接受安慰剂；另一家医院则采取不同策略：随机为 10%的患者提供药物，其余 90%接受安慰剂。你还被告知，通常给予 90%真实药物和 10%安慰剂的那家医院接收的病例病情更为严重。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Load data (assuming CSV is in current directory)</span>
+import delimited <span class="s">&quot;./data/hospital_treatment.csv&quot;</span>,<span class="k"> clear</span>
+
+
+<span class="k">list in</span> <span class="m">1</span><span class="o">/</span><span class="m">5</span>
+
+<span class="k">reg</span> days treatment
+
+<span class="k">reg</span> days treatment<span class="k"> if</span> hospital <span class="o">==</span> <span class="m">0</span>
+
+<span class="k">reg</span> days treatment<span class="k"> if</span> hospital <span class="o">==</span> <span class="m">1</span>
+
+<span class="k">reg</span> days treatment severity
+
+<span class="k">reg</span> days treatment severity hospital
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hospital</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./data/hospital_treatment.csv&quot;</span><span class="p">)</span>
 <span class="n">hospital</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
@@ -873,7 +982,23 @@ Email Residual Variance 0.24918421069820032
 <p>接下来出现的问题是，我们是否也应该将医院纳入模型中？毕竟，我们知道医院决定了处理方式，对吧？确实如此，但一旦我们控制了病情严重程度，医院与住院天数这一结果就不再相关。而我们知道，要成为混杂因素，变量必须同时影响处理和结果。在此案例中，我们有一个仅影响处理的变量。</p>
 <p>但或许控制它确实能降低方差，对吧？然而，事实并非如此。要使控制变量能降低方差，它必须是对结果而非处理有良好预测性的变量，而此处的情况恰恰相反。</p>
 <p>不过，我们或许还是想控制它，对吧？这总不会有坏处……还是说，真的会有？</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Step 1: Regress treatment on covariates</span>
+<span class="k">regress</span> treatment severity i<span class="m">.</span>hospital
+<span class="k">predict</span> res_treatment, resid
+
+<span class="c1">* Step 2: Regress days on same covariates</span>
+<span class="k">regress</span> days severity i<span class="m">.</span>hospital
+<span class="k">predict</span> res_days, resid
+
+<span class="c1">* Step 3: Regress days residuals on treatment residuals</span>
+<span class="k">regress</span> res_days res_treatment
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hosp_5</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s1">&#39;days ~ treatment + severity + hospital&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">hospital</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 <span class="n">hosp_5</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span><span class="o">.</span><span class="n">tables</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -910,7 +1035,39 @@ Email Residual Variance 0.24918421069820032
 \)</span></p>
 <p>从该公式可以看出，标准误差与变量 <span class="math notranslate nohighlight">\(X\)</span> 的方差成反比。这意味着，如果 <span class="math notranslate nohighlight">\(X\)</span> 变化不大，将难以估计其对结果的影响。这一点在直觉上也讲得通。举个极端例子，假设你想评估某种药物的效果，于是对 10000 人进行测试，但其中仅 1 人接受了处理。这将使寻找平均处理效应（ATE）变得极为困难，我们不得不依赖将单个个体与其余所有人进行比较。换言之，我们需要处理变量存在大量变异，才能更容易发现其影响。</p>
 <p>至于为什么将医院纳入模型会增加我们估计的误差，是因为医院是处理的一个良好预测变量，但并不是结果的预测变量（在控制了疾病严重程度之后）。因此，通过预测处理，医院实际上降低了模型的方差！再次地，我们可以将回归模型分解为两个步骤来观察这一点。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Calculate raw treatment variance</span>
+<span class="k">sum</span> treatment
+<span class="k">display</span> <span class="s">&quot;Treatment Variance: &quot;</span> <span class="nx">%6.3f</span> <span class="nf">r</span>(Var)
+
+<span class="c1">* Calculate residualized treatment variance</span>
+<span class="k">sum</span> res_treatment
+<span class="k">display</span> <span class="s">&quot;Treatment Residual Variance: &quot;</span> <span class="nx">%6.3f</span> <span class="nf">r</span>(Var)
+
+<span class="c1">* Calculate variance explained by covariates</span>
+<span class="k">display</span> <span class="s">&quot;Variance Explained by Controls: &quot;</span> <span class="nx">%6.3f</span> (<span class="nv">`r(Var)&#39;</span> <span class="o">-</span> <span class="nf">r</span>(Var))
+
+<span class="c1">* Calculate sigma_hat (MSE)</span>
+<span class="k">quietly regress</span> res_days res_treatment
+<span class="k">scalar</span> sigma_hat =<span class="k"> e</span>(rmse)<span class="o">^</span><span class="m">2</span>  <span class="c1">// MSE = RMSE squared</span>
+
+<span class="c1">* Calculate sum of squared residuals for treatment</span>
+<span class="k">quietly sum</span> res_treatment
+<span class="k">scalar</span> ssr_treatment = <span class="nf">r</span>(Var)<span class="o">*</span>(<span class="nf">r</span>(N)<span class="o">-</span><span class="m">1</span>)  <span class="c1">// Var*N = sum of squares</span>
+
+<span class="c1">* Compute variance and SE of coefficient</span>
+<span class="k">scalar</span> var_beta = sigma_hat<span class="o">/</span>ssr_treatment
+<span class="k">display</span> <span class="s">&quot;SE of the Coefficient: &quot;</span> <span class="nx">%6.4f</span> <span class="nf">sqrt</span>(var_beta)
+
+<span class="c1">* Verification against Stata&#39;s built-in calculation</span>
+<span class="k">matrix list e</span>(V)  <span class="c1">// Shows full variance-covariance matrix</span>
+<span class="k">display</span> <span class="s">&quot;Stata&#39;s SE: &quot;</span> <span class="nx">%6.4f</span> <span class="nf">sqrt</span>(<span class="nf">e</span>(V)[<span class="m">1</span>,<span class="m">1</span>])
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_treatment</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s1">&#39;treatment ~ severity + hospital&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">hospital</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 <span class="n">model_days</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s1">&#39;days ~ severity + hospital&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">hospital</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
@@ -997,7 +1154,43 @@ Treatment Residual Variance 0.057529091872119076
 <section id="id4">
 <h2>有害控制变量 - 选择偏误<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
 <p>让我们回到催收邮件的例子。记得邮件是随机分配给客户的。我们已经解释了 <code class="docutils literal notranslate"><span class="pre">credit_limit</span></code> 和 <code class="docutils literal notranslate"><span class="pre">risk_score</span></code> 的含义。现在，来看剩下的变量。 <code class="docutils literal notranslate"><span class="pre">opened</span></code> 是一个虚拟变量，表示客户是否打开了邮件。 <code class="docutils literal notranslate"><span class="pre">agreement</span></code> 是另一个虚拟变量，标记客户在收到邮件后是否联系了催收部门协商债务。你认为以下哪种模型更合适？第一种是包含处理变量加上 <code class="docutils literal notranslate"><span class="pre">credit_limit</span></code> 和 <code class="docutils literal notranslate"><span class="pre">risk_score</span></code> 的模型；第二种则额外加入了 <code class="docutils literal notranslate"><span class="pre">opened</span></code> 和 <code class="docutils literal notranslate"><span class="pre">agreement</span></code> 虚拟变量。</p>
-<div class="cell docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Load data (assuming CSV is in current directory)</span>
+import delimited <span class="s">&quot;./data/collections_email.csv&quot;</span>,<span class="k"> clear</span>
+
+
+<span class="k">list in</span> <span class="m">1</span><span class="o">/</span><span class="m">5</span>
+
+<span class="c1">* Run the regression</span>
+<span class="k">regress</span> payments email credit_limit risk_score
+<span class="c1">* Store results and display formatted table</span>
+<span class="k">estimates</span> store email_model
+esttab email_model, cells(<span class="s">&quot;b(star fmt(3)) se(par fmt(3))&quot;</span>) <span class="cs">///</span>
+    stats(N r2_a, labels(<span class="s">&quot;Observations&quot;</span> <span class="s">&quot;Adj. R-squared&quot;</span>)) <span class="cs">///</span>
+    title(<span class="s">&quot;Email Treatment Effect with Controls&quot;</span>) <span class="cs">///</span>
+    varwidth(<span class="m">25</span>)
+
+<span class="c1">* Run regression with full controls</span>
+<span class="k">regress</span> payments email credit_limit risk_score opened agreement
+
+<span class="c1">* Store and display results</span>
+<span class="k">estimates</span> store email_full
+esttab email_full, cells(<span class="s">&quot;b(star fmt(3)) se(par fmt(3))&quot;</span>) <span class="cs">///</span>
+    stats(N r2_a, labels(<span class="s">&quot;Observations&quot;</span> <span class="s">&quot;Adj. R-squared&quot;</span>)) <span class="cs">///</span>
+    title(<span class="s">&quot;Email Treatment Effect with Full Controls&quot;</span>) <span class="cs">///</span>
+    varwidth(<span class="m">25</span>) <span class="cs">///</span>
+<span class="k">    order</span>(email credit_limit risk_score opened agreement)
+
+<span class="c1">* Display both models</span>
+esttab email_model email_full, <span class="cs">///</span>
+    mtitle(<span class="s">&quot;email_model&quot;</span> <span class="s">&quot;email_full&quot;</span>) <span class="cs">///</span>
+    stats(N r2_a, fmt(<span class="m">0</span> <span class="m">3</span>))	
+</pre></div>
+</div>
+</div>
+</details><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">email_1</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s1">&#39;payments ~ email + credit_limit + risk_score&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 <span class="n">email_1</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span><span class="o">.</span><span class="n">tables</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -1119,7 +1312,28 @@ E[Y_0|T=0, Agreement=1] &gt; E[Y_0|T=1, Agreement=1]
 <section id="bad-cop">
 <h3>Bad COP<a class="headerlink" href="#bad-cop" title="Link to this heading">#</a></h3>
 <p>情况通常如下：你需要预测一个连续变量，但其分布在零值处存在过度集中现象。例如，若建立消费者支出模型，你会得到类似伽马分布但带有大量零值的数据分布。</p>
-<div class="cell tag_hide-input docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">查看 Stata 代码</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-stata notranslate"><div class="highlight"><pre><span></span><span class="c1">* Generate the mixed distribution</span>
+<span class="k">clear</span>
+<span class="k">set</span> obs <span class="m">1700</span>
+<span class="k">gen</span> spend = <span class="nf">rgamma</span>(<span class="m">5</span>,<span class="m">50</span>)<span class="k"> in</span> <span class="m">1</span><span class="o">/</span><span class="m">1000</span>  <span class="c1">// Gamma-distributed spends</span>
+<span class="k">replace</span> spend = <span class="m">0</span><span class="k"> in</span> <span class="m">1001</span><span class="o">/</span><span class="m">1700</span>       <span class="c1">// Zero-spend customers</span>
+
+<span class="c1">* Create histogram</span>
+<span class="k">hist</span> spend, bin(<span class="m">20</span>) <span class="cs">///</span>
+    title(<span class="s">&quot;Distribution of Customer Spend&quot;</span>) <span class="cs">///</span>
+    xtitle(<span class="s">&quot;Customer Spend&quot;</span>) <span class="cs">///</span>
+    ytitle(<span class="s">&quot;Frequency&quot;</span>) <span class="cs">///</span>
+    graphregion(color(white)) <span class="cs">///</span>
+    plotregion(color(white))	<span class="cs">///</span>
+    xlabel(<span class="m">0</span>(<span class="m">100</span>)<span class="m">800</span>) <span class="cs">///</span>
+<span class="k">    note</span>(<span class="s">&quot;Note: 700 zero-spend customers&quot;</span>, size(small))
+</pre></div>
+</div>
+</div>
+</details><div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
 <span class="collapsed">Show code cell source</span>
@@ -1137,7 +1351,7 @@ E[Y_0|T=0, Agreement=1] &gt; E[Y_0|T=1, Agreement=1]
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="_images/61eb0a2ca5aee33037b650ecf1c6de57623c59d546dea84892b14962a37f8142.png" src="_images/61eb0a2ca5aee33037b650ecf1c6de57623c59d546dea84892b14962a37f8142.png" />
+<img alt="_images/d33c326a9516c57991add583b5b16289f605153f0b3d09e29fe5cd7d623a8493.png" src="_images/d33c326a9516c57991add583b5b16289f605153f0b3d09e29fe5cd7d623a8493.png" />
 </div>
 </div>
 <p>当数据科学家看到这一点时，脑海中首先浮现的想法是将建模过程分解为两个步骤。第一步是参与度，即 <span class="math notranslate nohighlight">\(Y &gt; 0\)</span> 的概率。在我们的消费示例中，这将建模客户是否决定消费。第二部分则为那些决定参与的客户建模 <span class="math notranslate nohighlight">\(Y\)</span> ，即条件正向效应。在本例中，这指的是客户在决定消费后实际花费的金额。如果我们想估计处理 <span class="math notranslate nohighlight">\(T\)</span> 对支出的影响，其表现形式大致如下：</p>
