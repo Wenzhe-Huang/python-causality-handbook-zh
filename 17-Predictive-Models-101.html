@@ -62,6 +62,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '17-Predictive-Models-101';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="18 - 异质性处理效应与个性化" href="18-Heterogeneous-Treatment-Effects-and-Personalization.html" />
     <link rel="prev" title="16 - 断点回归设计" href="16-Regression-Discontinuity-Design.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -196,6 +197,8 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">第二部分 - 阴</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">17 - 预测模型入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="18-Heterogeneous-Treatment-Effects-and-Personalization.html">18 - 异质性处理效应与个性化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="19-Evaluating-Causal-Models.html">19 - 评估因果模型</a></li>
 </ul>
 
     </div>
@@ -398,7 +401,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">单一特征策略</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">将机器学习模型用于决策输入</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">更精细化的策略</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">核心要点</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">关键观点</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">参考说明</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">参与贡献</a></li>
 </ul>
@@ -836,7 +839,7 @@ E[Y|X]
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/1043de700155ec8c5e4c4b6dd0242fa6392c176d069a004c5a6446ef020bbb43.png" src="_images/1043de700155ec8c5e4c4b6dd0242fa6392c176d069a004c5a6446ef020bbb43.png" />
+<img alt="_images/96809a725cb89f58254aaac3845812141758f43b84fdf5e7a0df10cad877d31b.png" src="_images/96809a725cb89f58254aaac3845812141758f43b84fdf5e7a0df10cad877d31b.png" />
 </div>
 </div>
 <p>但遗憾的是，结果依然不理想。无论收入水平如何，所有分位组的客户其平均净值仍为负值。尽管高收入客户“没那么差”，即其平均亏损相对较小，但总体而言，他们仍然是亏损客户。因此，收入变量在这里并未帮到我们太多。</p>
@@ -856,7 +859,7 @@ E[Y|X]
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/b1ef0a31966ed81ced7a59e0e54559c008d5a169e3edea2b47661131c1870089.png" src="_images/b1ef0a31966ed81ced7a59e0e54559c008d5a169e3edea2b47661131c1870089.png" />
+<img alt="_images/4080be19c442dd66146ff0a82b277ad60f2769ec08a8fdb74143497d81ee9539.png" src="_images/4080be19c442dd66146ff0a82b277ad60f2769ec08a8fdb74143497d81ee9539.png" />
 </div>
 </div>
 <p>太好了！从图中我们可以清楚地看到，一些地区是盈利的，比如地区 2、17、39；而另一些地区则是亏损的，比如地区 0、9、29，尤其是表现特别差的地区 26。这个结果非常有希望！我们可以据此制定一个简单的策略：只与数据显示为盈利的地区客户开展业务。</p>
@@ -1116,7 +1119,7 @@ Test R2:  0.6938513063048141
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/01f2b5600d099338262fa386730aa5f2bf36dc3811232a575a1d52eb3a167c67.png" src="_images/01f2b5600d099338262fa386730aa5f2bf36dc3811232a575a1d52eb3a167c67.png" />
+<img alt="_images/b445e060510b8b2748f61007e85b2ceb001a9f13fa96702819078f25cc38a075.png" src="_images/b445e060510b8b2748f61007e85b2ceb001a9f13fa96702819078f25cc38a075.png" />
 </div>
 </div>
 <p>我们可以观察到，有些模型带的净值非常为负，而另一些则非常为正；还有一些模型带的净值则处于不确定状态——我们无法明确判断其为正还是为负。</p>
@@ -1310,7 +1313,7 @@ Test R2:  0.6938513063048141
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="_images/7fc3b72a3e32c3ae10ec99dd9bb1a9bde528a83dd9b18a81102f009d4d417876.png" src="_images/7fc3b72a3e32c3ae10ec99dd9bb1a9bde528a83dd9b18a81102f009d4d417876.png" />
+<img alt="_images/7edb8b9e2cad4141443aa28f4da5c3b88a2ea2a46b5d9de182fc2775695f2af2.png" src="_images/7edb8b9e2cad4141443aa28f4da5c3b88a2ea2a46b5d9de182fc2775695f2af2.png" />
 </div>
 </div>
 <p>有了这些分组（bands），我们就可以将大部分的营销预算集中投放在第 19 和第 20 组客户身上。请注意，我们的决策模式已经从最初的<strong>二元选择（是否合作）</strong>，演变为一个<strong>连续决策问题</strong>：即<strong>对每位客户应投入多少营销资源</strong>。</p>
@@ -1321,7 +1324,7 @@ Test R2:  0.6938513063048141
 <p>也就是说，对于每位客户 <span class="math notranslate nohighlight">\(i\)</span>，我们按照模型预测的净值投入其中 30% 的营销预算（这里的 30% 只是一个示意性的参数，具体数值可以根据实际情况调整）。</p>
 </section>
 <section id="id9">
-<h2>核心要点<a class="headerlink" href="#id9" title="Link to this heading">#</a></h2>
+<h2>关键观点<a class="headerlink" href="#id9" title="Link to this heading">#</a></h2>
 <p>在非常短的时间内，我们已经覆盖了大量内容，因此这一总结非常有必要，帮助我们理清目前的进展。</p>
 <p>首先，我们学习了机器学习的大多数应用，其核心只是围绕一个目标：做出高质量的预测。所谓预测，可以理解为：从一个已知的输入变量，映射到一个起初未知但定义明确的输出变量。这种预测本质上就是估计条件期望函数 <span class="math notranslate nohighlight">\(E[Y \mid X]\)</span>。</p>
 <p>当然，说“仅仅是做预测”可能并不完全公平。我们也看到了，良好的预测能够帮助我们解决许多超出直觉的问题，例如语言翻译、自动驾驶等。</p>
@@ -1335,13 +1338,13 @@ Test R2:  0.6938513063048141
 </section>
 <section id="id10">
 <h2>参考说明<a class="headerlink" href="#id10" title="Link to this heading">#</a></h2>
-<p>本章内容大多是我个人的经验总结，很多观点和方法来自于我的实务体会。因此，我无法为这些内容提供严格意义上的学术参考文献。这也意味着，这些内容尚未经过系统性的学术审查，不像正规科研工作那样经过同行评议与理论论证。你也许会注意到，我在这里主要谈论的是“在实践中有效的方法”*，而没有花太多篇幅去解释其背后的理论基础。这可以被看作是一种“来自一线的经验科学”（a sort of science from the streets）。不过，既然我将这部分内容公开发布，自然也欢迎所有人的批评与反馈——如果你发现其中有明显错误或不妥之处，非常欢迎你提交 issue，我会尽我所能给予回应。</p>
-<p>最后，我也意识到，对于那些希望系统学习机器学习的读者来说，我在本章的讲解可能过于简略了。坦率地说，我认为自己真正能够贡献价值的领域，是因果推断的教学，而非机器学习。后者已经有大量优质的公开资源，远远超过我所能提供的内容。其中的经典之作，就是 <a class="reference external" href="https://www.coursera.org/learn/machine-learning">Andrew Ng 的机器学习课程</a>，如果你是机器学习初学者，我强烈推荐你去认真学习这门课程。</p>
+<p>本章内容主要基于作者个人的经验总结，许多观点和方法源自实践中的体会。因此，无法提供严格意义上的学术参考文献。与正规科研工作不同，这些内容没有经过系统性的学术审查，也未经过同行评议与理论论证。读者或许会注意到，本文更多讨论的是“实践中有效的方法”，而非详细阐述其背后的理论基础。这种方法可以被视为“来自一线的经验科学”（a sort of science from the streets）。尽管如此，既然这些内容已公开发布，也非常欢迎批评与反馈——如果读者发现其中有明显错误或不妥之处，欢迎提出 issue，作者会尽力回应。</p>
+<p>最后，对于那些希望系统学习机器学习的读者，作者也意识到本章的讲解可能过于简略。坦率地说，作者认为自己真正能够贡献价值的领域是因果推断的教学，而非机器学习。机器学习领域已有大量优质的公开资源，远超作者所能提供的内容。其中的经典之作，就是 <a class="reference external" href="https://www.coursera.org/learn/machine-learning">Andrew Ng 的机器学习课程</a>，如果读者是机器学习初学者，作者强烈推荐认真学习这门课程。</p>
 </section>
 <section id="id11">
 <h2>参与贡献<a class="headerlink" href="#id11" title="Link to this heading">#</a></h2>
 <p><strong>《Causal Inference for the Brave and True》</strong> 是一本关于因果推断的开源教材，致力于以经济上可负担、认知上可理解的方式，普及这门“科学的统计基础”。全书基于 Python，仅使用自由开源软件编写，原始英文版本由 <a class="reference external" href="https://github.com/matheusfacure">Matheus Facure</a> 编写与维护。</p>
-<p>本书的中文版由黄文喆与许文立教授合作翻译，并托管在 <a class="reference external" href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh">GitHub 中文主页</a>。希望本地化的内容能帮助更多中文读者学习和掌握因果推断方法。</p>
+<p>本书的中文版由黄文喆与许文立助理教授合作翻译，并托管在 <a class="reference external" href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh">GitHub 中文主页</a>。希望本地化的内容能帮助更多中文读者学习和掌握因果推断方法。</p>
 <p>如果你觉得这本书对你有帮助，并希望支持该项目，可以前往 <a class="reference external" href="https://www.patreon.com/causal_inference_for_the_brave_and_true">Patreon</a> 支持原作者。</p>
 <p>如果你暂时不方便进行经济支持，也可以通过以下方式参与贡献：</p>
 <ul class="simple">
@@ -1393,6 +1396,15 @@ Test R2:  0.6938513063048141
         <p class="prev-next-title">16 - 断点回归设计</p>
       </div>
     </a>
+    <a class="right-next"
+       href="18-Heterogeneous-Treatment-Effects-and-Personalization.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">18 - 异质性处理效应与个性化</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               
@@ -1416,7 +1428,7 @@ Test R2:  0.6938513063048141
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">单一特征策略</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">将机器学习模型用于决策输入</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">更精细化的策略</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">核心要点</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">关键观点</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">参考说明</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">参与贡献</a></li>
 </ul>
