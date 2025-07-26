@@ -199,6 +199,8 @@
 <li class="toctree-l1"><a class="reference internal" href="17-Predictive-Models-101.html">17 - 预测模型入门</a></li>
 <li class="toctree-l1"><a class="reference internal" href="18-Heterogeneous-Treatment-Effects-and-Personalization.html">18 - 异质性处理效应与个性化</a></li>
 <li class="toctree-l1"><a class="reference internal" href="19-Evaluating-Causal-Models.html">19 - 评估因果模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="20-Plug-and-Play-Estimators.html">20 - 即插即用估计器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="21-Meta-Learners.html">21 - 元学习器</a></li>
 </ul>
 
     </div>
@@ -631,7 +633,7 @@ ATE = E[Y|T=1] - E[Y|T=0]
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="_images/3754ce24930067510da2ab2c6d1ccaa5fd8982927a476ba9c90c6d74a135f3c1.png" src="_images/3754ce24930067510da2ab2c6d1ccaa5fd8982927a476ba9c90c6d74a135f3c1.png" />
+<img alt="_images/dc255f61564dcae596b3813ca5fc8d9ad848827956cfd990e69f948c17a34693.png" src="_images/dc255f61564dcae596b3813ca5fc8d9ad848827956cfd990e69f948c17a34693.png" />
 </div>
 </div>
 <p>从图中可见，单一处理组内的付款金额波动极为剧烈。视觉上，两组数据都呈现出从略低于 400 到 1000 的大幅跨度。如果电子邮件的影响仅在 5.00 或 10.00 雷亚尔量级，那么在如此巨大的变异性中难以察觉其作用也就不足为奇了。</p>
@@ -1353,7 +1355,7 @@ E[Y_0|T=0, Agreement=1] &gt; E[Y_0|T=1, Agreement=1]
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="_images/3312410032b662dc0542fd880a9b7c104c3d8ce1ba5c542a317a2e5c02cfca74.png" src="_images/3312410032b662dc0542fd880a9b7c104c3d8ce1ba5c542a317a2e5c02cfca74.png" />
+<img alt="_images/bb1b58339ec5fb8aa02298198bac64b21696b28c2b1291bf63c883f39128e88d.png" src="_images/bb1b58339ec5fb8aa02298198bac64b21696b28c2b1291bf63c883f39128e88d.png" />
 </div>
 </div>
 <p>当数据科学家看到这一点时，脑海中首先浮现的想法是将建模过程分解为两个步骤。第一步是参与度，即 <span class="math notranslate nohighlight">\(Y &gt; 0\)</span> 的概率。在我们的消费示例中，这将建模客户是否决定消费。第二部分则为那些决定参与的客户建模 <span class="math notranslate nohighlight">\(Y\)</span> ，即条件正向效应。在本例中，这指的是客户在决定消费后实际花费的金额。如果我们想估计处理 <span class="math notranslate nohighlight">\(T\)</span> 对支出的影响，其表现形式大致如下：</p>

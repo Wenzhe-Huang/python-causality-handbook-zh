@@ -1,0 +1,1261 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>20 - 即插即用估计器 &#8212; 因果推断：献给求真敢为者</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '20-Plug-and-Play-Estimators';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="21 - 元学习器" href="21-Meta-Learners.html" />
+    <link rel="prev" title="19 - 评估因果模型" href="19-Evaluating-Causal-Models.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">因果推断：献给求真敢为者</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    因果推断：献给求真敢为者
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">第一部分 - 阳</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01-Introduction-To-Causality.html">01 - 因果性导论</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-Randomised-Experiments.html">02 - 随机实验</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03-Stats-Review-The-Most-Dangerous-Equation.html">03 - 统计回顾：最危险的方程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04-Graphical-Causal-Models.html">04 - 图形因果模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05-The-Unreasonable-Effectiveness-of-Linear-Regression.html">05 - 线性回归的惊人有效性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06-Grouped-and-Dummy-Regression.html">06 - 分组与虚拟变量回归</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07-Beyond-Confounders.html">07 - 超越混杂因素</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-Instrumental-Variables.html">08 - 工具变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-Non-Compliance-and-LATE.html">09 - 不依从性与局部平均处理效应</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10-Matching.html">10 - 匹配法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11-Propensity-Score.html">11 - 倾向得分</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12-Doubly-Robust-Estimation.html">12 - 双重稳健估计</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13-Difference-in-Differences.html">13 - 双重差分法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="14-Panel-Data-and-Fixed-Effects.html">14 - 面板数据与固定效应</a></li>
+<li class="toctree-l1"><a class="reference internal" href="15-Synthetic-Control.html">15 - 合成控制法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="16-Regression-Discontinuity-Design.html">16 - 断点回归设计</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">第二部分 - 阴</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="17-Predictive-Models-101.html">17 - 预测模型入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="18-Heterogeneous-Treatment-Effects-and-Personalization.html">18 - 异质性处理效应与个性化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="19-Evaluating-Causal-Models.html">19 - 评估因果模型</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">20 - 即插即用估计器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="21-Meta-Learners.html">21 - 元学习器</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2F20-Plug-and-Play-Estimators.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/20-Plug-and-Play-Estimators.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>20 - 即插即用估计器</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">问题设定</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">目标变换</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">连续处理的情况</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">非线性处理效应</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">关键观点</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">参考说明</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">参与贡献</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1>20 - 即插即用估计器<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<p>到目前为止，我们已经讨论了在处理不是随机分配的情况下如何校正数据，这种情况会引入混杂偏差。这有助于解决因果推断中的识别问题。换句话说，一旦单位是可交换的，或者满足 <span class="math notranslate nohighlight">\( Y(0), Y(1) \perp X\)</span> 的条件，我们就可以识别处理效应。但这还远未结束。</p>
+<p>识别意味着我们能够得到平均处理效应。也就是说，我们知道某个处理在平均意义下的效果。这固然有用，可以帮助我们决定是否推出某项处理。但我们想要的不止于此，我们希望知道是否存在对处理反应更好或更差的亚群体，以便只对那些能够受益的个体实施处理，从而制定更优的政策。</p>
+<section id="id2">
+<h2>问题设定<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>让我们回顾感兴趣的设定。根据潜在结果，我们可以定义个体处理效应为两个潜在结果之差：</p>
+<p><span class="math notranslate nohighlight">\(
+\tau_i = Y_i(1) − Y_i(0),
+\)</span></p>
+<p>对于连续处理的情况，定义 <span class="math notranslate nohighlight">\( \tau_i = \partial Y(t)\)</span>，其中 <span class="math notranslate nohighlight">\(t\)</span> 为处理变量。当然，我们永远无法观察到个体处理效应，因为我们只能看到潜在结果中的一个：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+Y^{obs}_i(t)=
+\begin{cases}
+Y_i(1), &amp; \text{if } t=1\\
+Y_i(0), &amp; \text{if } t=0
+\end{cases}
+\end{split}\]</div>
+<p>平均处理效应（ATE）定义为</p>
+<p><span class="math notranslate nohighlight">\(
+\tau = E[Y_i(1) − Y_i(0)] = E[\tau_i]
+\)</span></p>
+<p>条件平均处理效应（CATE）定义为</p>
+<p><span class="math notranslate nohighlight">\(
+\tau(x) = E[Y_i(1) − Y_i(0)|X] = E[\tau_i|X]
+\)</span></p>
+<p>在本书的第一部分，我们主要关注 ATE。现在我们关注的是 CATE。CATE 对于个性化决策非常有用。例如，如果某种药物是我们的处理 <span class="math notranslate nohighlight">\(t\)</span>，我们想知道哪类患者对该药物反应更敏感（较高的 CATE），以及是否存在某些患者的反应为负（CATE &lt; 0）。</p>
+<p>我们已经看到如何通过在线性回归模型中加入处理与特征之间的交互项来估计 CATE：</p>
+<p><span class="math notranslate nohighlight">\(
+y_i = \beta_0 + \beta_1 t_i + \beta_2 X_i + \beta_3 t_i X_i + e_i.
+\)</span></p>
+<p>如果估计该模型，我们可以得到 <span class="math notranslate nohighlight">\(\tau(x)\)</span> 的估计：</p>
+<p><span class="math notranslate nohighlight">\(
+\hat{\tau}(x) = \hat{\beta}_1 + \hat{\beta}_3 X_i
+\)</span></p>
+<p>然而，线性模型仍然有一些缺陷，主要是对特征 <span class="math notranslate nohighlight">\(X\)</span> 做出线性假设。注意在这个模型中 <span class="math notranslate nohighlight">\(\beta_2\)</span> 并不重要。但如果特征 <span class="math notranslate nohighlight">\(X\)</span> 与结果之间的关系不是线性的，那么因果参数 <span class="math notranslate nohighlight">\(\beta_1\)</span> 和 <span class="math notranslate nohighlight">\(\beta_3\)</span> 的估计将会偏离真实值。</p>
+<p>如果我们能用更灵活的机器学习模型替代线性模型就好了。我们甚至可以将处理作为特征输入到机器学习模型，例如提升树或神经网络：</p>
+<p><span class="math notranslate nohighlight">\(
+y_i = M(X_i, T_i) + e_i
+\)</span></p>
+<p>但是从这种模型中我们无法直接得到处理效应的估计，因为该模型输出的是 <span class="math notranslate nohighlight">\(\hat{y}\)</span> 的预测，而不是 <span class="math notranslate nohighlight">\(\hat{\tau(x)}\)</span> 的预测。理想情况下，我们希望使用一种机器学习回归模型，它不是最小化结果的均方误差 (MSE)：</p>
+<p><span class="math notranslate nohighlight">\(
+E[(Y_i - \hat{Y}_i)^2]
+\)</span></p>
+<p>而是最小化处理效应的均方误差：</p>
+<p><span class="math notranslate nohighlight">\(
+E[(\tau(x)_i - \hat{\tau}(x)_i)^2] = E[(Y_i(1) - Y_i(0) - \hat{\tau}(x)_i)^2].
+\)</span></p>
+<p>然而，这样的目标函数是不可行的。问题在于 <span class="math notranslate nohighlight">\(\tau(x)_i\)</span> 是不可观测的，因此我们无法直接针对它优化。这让我们陷入了困境……让我们尝试简化问题，也许能想到一些办法。</p>
+<p><img alt="img" src="_images/infeasible.png" /></p>
+</section>
+<section id="id3">
+<h2>目标变换<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>假设我们的处理是二元的。例如，你是一家投资公司，正在测试发送金融教育邮件的效果。你希望邮件能使人们投资更多。假设你开展了一项随机实验，50% 的客户收到了邮件，另 50% 的客户没有收到。</p>
+<p>下面有一个大胆的想法：通过处理变量来变换结果变量。</p>
+<p><span class="math notranslate nohighlight">\(
+Y^*_i = 2 Y_i * T_i - 2 Y_i*(1-T_i)
+\)</span></p>
+<p>因此，如果某个个体接受了处理，我们将其结果乘以 2；如果没有接受处理，则将结果乘以 -2。例如，某位客户投资了 2000 巴西雷亚尔并收到了邮件，变换后的目标是 4000；如果他没有收到邮件，则变换后的目标是 -4000。</p>
+<p>这听起来有些奇怪，好像在说邮件的效果可能是负数，但请耐心看下去。通过一些数学推导我们会发现，这个变换后的目标的期望等于处理效应。这非常惊人，也就是说，通过这种看似古怪的变换，我们能够估计一些连观察都无法观察到的东西。</p>
+<p>为了理解这一点，我们需要一些数学推导。由于随机分配，我们有 <span class="math notranslate nohighlight">\(T \perp Y(0), Y(1)\)</span>，也就是熟悉的无混淆性，这意味着 <span class="math notranslate nohighlight">\(E[T\,Y(t)] = E[T]\cdot E[Y(t)]\)</span>，即独立性的定义。</p>
+<p>此外，我们知道</p>
+<p><span class="math notranslate nohighlight">\(
+Y_i T_i = Y(1)_i T_i \text{ 且 }  Y_i (1-T_i) = Y(0)_i (1-T_i)
+\)</span></p>
+<p>因为处理决定了哪个潜在结果被实现。有了这些，我们可以计算 <span class="math notranslate nohighlight">\(Y^*_i\)</span> 的条件期望：</p>
+<p><span class="math notranslate nohighlight">\(
+\begin{align}
+E[Y^*_i|X_i=x] &amp;= E[2 Y(1)_i * T_i - 2 Y(0)_i*(1-T_i)|X_i=x] \\
+&amp;= 2E[Y(1)_i * T_i | X_i=x] - 2E[Y(0)_i*(1-T_i)|X_i=x]\\
+&amp;= 2E[Y(1)_i| X_i=x] * E[ T_i | X_i=x] - 2E[Y(0)_i| X_i=x]*E[(1-T_i)|X_i=x] \\
+&amp;= 2E[Y(1)_i| X_i=x] * 0.5 - 2E[Y(0)_i| X_i=x]*0.5 \\
+&amp;= E[Y(1)_i| X_i=x] - E[Y(0)_i| X_i=x] \\
+&amp;= \tau(x)_i
+\end{align}
+\)</span></p>
+<p>因此，这个看似疯狂的想法最终产生了个体处理效应 <span class="math notranslate nohighlight">\(\tau(x)_i\)</span> 的无偏估计。现在，我们可以用以下准则替换之前不可实现的优化准则：</p>
+<p><span class="math notranslate nohighlight">\(
+E[(Y^*_i - \hat{\tau}(x)_i)^2] 
+\)</span></p>
+<p>简单来说，只需用任何回归机器学习模型预测 <span class="math notranslate nohighlight">\(Y^*_i\)</span>，模型输出的就是处理效应的预测。</p>
+<p>我们已经解决了简单的情况，那么更复杂的情况呢？例如处理分配不是五五开，甚至不是随机的？答案稍微复杂一些，但并不难。首先，如果没有随机分配，我们至少需要满足条件独立性 <span class="math notranslate nohighlight">\(T \perp Y(1), Y(0) | X\)</span>。也就是说，在控制 <span class="math notranslate nohighlight">\(X\)</span> 后，处理可以视为随机。在这种情况下，我们将变换后的目标推广为</p>
+<p><span class="math notranslate nohighlight">\(
+Y^*_i = Y_i * \dfrac{T_i - e(X_i)}{e(X_i)(1-e(X_i))}
+\)</span></p>
+<p>其中 <span class="math notranslate nohighlight">\(e(X_i)\)</span> 是倾向得分。如果处理不是 50% 的概率分配，而是按不同的概率 <span class="math notranslate nohighlight">\(p\)</span> 随机分配，只需把上式中的倾向得分换成 <span class="math notranslate nohighlight">\(p\)</span>。如果处理并非随机分配，则必须使用倾向得分，无论是记录下来的还是估计得到的。</p>
+<p>如果计算这个变换后的目标的期望，你会发现它同样等于处理效应。证明虽然有点繁琐，但如下所示（可以跳过）：</p>
+<p><span class="math notranslate nohighlight">\(
+\begin{align}
+E[Y^*_i|X_i=x] &amp;= E\big[Y_i * \dfrac{T_i - e(X_i)}{e(X_i)(1-e(X_i))}|X_i=x\big] \\
+&amp;= E\big[Y_i T_i * \dfrac{T_i - e(X_i)}{e(X_i)(1-e(X_i))} + Y_i (1-T_i) * \dfrac{T_i - e(X_i)}{e(X_i)(1-e(X_i))}|X_i=x\big]\\
+&amp;= E\big[Y(1)_i * \dfrac{T_i(1 - e(X_i))}{e(X_i)(1-e(X_i))} | X_i=x\big] - E\big[Y(0)_i * \dfrac{(1-T_i)e(X_i)}{e(X_i)(1-e(X_i))}|X_i=x\big]\\
+&amp;= \dfrac{1}{e(X_i)} E[Y(1)_i * T_i|X_i=x] - \dfrac{1}{1-e(X_i)} E[Y(0)_i * (1-T_i)| X_i=x]\\
+&amp;= \dfrac{1}{e(X_i)} E[Y(1)_i|X_i=x] * E[T_i|X_i=x] - \dfrac{1}{1-e(X_i)} E[Y(0)_i|X_i=x] * E[(1-T_i)| X_i=x]\\
+&amp;= E[Y(1)_i|X_i=x] - E[Y(0)_i|X_i=x]\\
+&amp;= \tau(x)_i
+\end{align}
+\)</span></p>
+<p>像往常一样，我认为通过一个例子会更直观。再次考虑我们发送投资邮件，让人们多投资的例子。结果变量是一个二元变量（是否投资），记作 <code class="docutils literal notranslate"><span class="pre">converted</span></code>。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nb21</span><span class="w"> </span><span class="kn">import</span> <span class="n">cumulative_gain</span><span class="p">,</span> <span class="n">elast</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">email</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./data/invest_email_rnd.csv&quot;</span><span class="p">)</span>
+<span class="n">email</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>age</th>
+      <th>income</th>
+      <th>insurance</th>
+      <th>invested</th>
+      <th>em1</th>
+      <th>em2</th>
+      <th>em3</th>
+      <th>converted</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>44.1</td>
+      <td>5483.80</td>
+      <td>6155.29</td>
+      <td>14294.81</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>39.8</td>
+      <td>2737.92</td>
+      <td>50069.40</td>
+      <td>7468.15</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>49.0</td>
+      <td>2712.51</td>
+      <td>5707.08</td>
+      <td>5095.65</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>39.7</td>
+      <td>2326.37</td>
+      <td>15657.97</td>
+      <td>6345.20</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>35.3</td>
+      <td>2787.26</td>
+      <td>27074.44</td>
+      <td>14114.86</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>我们的目标是进行个性化决策。让我们专注于 email-1，希望只将它发送给那些会对其反应更好的客户。</p>
+<p>换言之，我们希望估计 email-1 的条件平均处理效应：</p>
+<p><span class="math notranslate nohighlight">\(
+E[Converted(1)_i - Converted(0)_i|X_i=x] = \tau(x)_i
+\)</span></p>
+<p>这样我们就可以针对那些 CATE 较高、对邮件反应最好的客户。</p>
+<p>不过首先，我们要将数据集划分为训练集和验证集。我们将在一部分数据上估计 <span class="math notranslate nohighlight">\(\tau(x)_i\)</span>，然后在另一部分数据上评估这些估计。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">test</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(9000, 8) (6000, 8)
+</pre></div>
+</div>
+</div>
+</div>
+<p>现在我们将应用刚才学到的目标变换。由于邮件是随机分配的（尽管比例不是五五开），我们不需要考虑倾向得分，它只是一个常数，等于处理的分配概率。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;converted&quot;</span>
+<span class="n">T</span> <span class="o">=</span> <span class="s2">&quot;em1&quot;</span>
+<span class="n">X</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="s2">&quot;income&quot;</span><span class="p">,</span> <span class="s2">&quot;insurance&quot;</span><span class="p">,</span> <span class="s2">&quot;invested&quot;</span><span class="p">]</span>
+
+<span class="n">ps</span> <span class="o">=</span> <span class="n">train</span><span class="p">[</span><span class="n">T</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+<span class="n">y_star_train</span> <span class="o">=</span> <span class="n">train</span><span class="p">[</span><span class="n">y</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="o">-</span> <span class="n">ps</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">ps</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">ps</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>有了变换后的目标，我们可以选择任意机器学习回归算法来预测它。这里我们使用提升树（boosted trees）。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lightgbm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LGBMRegressor</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+
+<span class="n">cate_learner</span> <span class="o">=</span> <span class="n">LGBMRegressor</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">min_child_samples</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">num_leaves</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">force_col_wise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">cate_learner</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">X</span><span class="p">],</span> <span class="n">y_star_train</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>现在这个模型可以估计 <span class="math notranslate nohighlight">\(\tau(x)_i\)</span>，也就是说，它输出的是 <span class="math notranslate nohighlight">\(\hat{\tau}(x)_i\)</span>。在测试集上做预测时，会发现一些个体的 CATE 高于其他个体。例如，客户 6958 的 CATE 为 0.1，意味着如果向该客户发送邮件，他购买投资产品的概率预测会增加 0.1。相比之下，客户 3903 的概率只增加 0.04。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test_pred</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">cate</span><span class="o">=</span><span class="n">cate_learner</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="n">X</span><span class="p">]))</span>
+<span class="n">test_pred</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>age</th>
+      <th>income</th>
+      <th>insurance</th>
+      <th>invested</th>
+      <th>em1</th>
+      <th>em2</th>
+      <th>em3</th>
+      <th>converted</th>
+      <th>cate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>6958</th>
+      <td>40.9</td>
+      <td>4486.14</td>
+      <td>37320.33</td>
+      <td>12559.25</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0.105665</td>
+    </tr>
+    <tr>
+      <th>7534</th>
+      <td>42.6</td>
+      <td>6386.19</td>
+      <td>13270.47</td>
+      <td>29114.42</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0.121922</td>
+    </tr>
+    <tr>
+      <th>2975</th>
+      <td>47.6</td>
+      <td>1900.26</td>
+      <td>25588.72</td>
+      <td>2420.39</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0.034161</td>
+    </tr>
+    <tr>
+      <th>3903</th>
+      <td>41.0</td>
+      <td>5802.19</td>
+      <td>57087.37</td>
+      <td>20182.20</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0.046805</td>
+    </tr>
+    <tr>
+      <th>8437</th>
+      <td>49.1</td>
+      <td>2202.96</td>
+      <td>5050.81</td>
+      <td>9245.88</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>-0.009099</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>为了评估这个模型的效果，我们可以绘制训练集和测试集的累积增益曲线。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gain_curve_test</span> <span class="o">=</span> <span class="n">cumulative_gain</span><span class="p">(</span><span class="n">test_pred</span><span class="p">,</span> <span class="s2">&quot;cate&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;converted&quot;</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="s2">&quot;em1&quot;</span><span class="p">)</span>
+<span class="n">gain_curve_train</span> <span class="o">=</span> <span class="n">cumulative_gain</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">cate</span><span class="o">=</span><span class="n">cate_learner</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">X</span><span class="p">])),</span> <span class="s2">&quot;cate&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;converted&quot;</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="s2">&quot;em1&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gain_curve_test</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C0&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Test&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gain_curve_train</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C1&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Train&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">elast</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="s2">&quot;converted&quot;</span><span class="p">,</span> <span class="s2">&quot;em1&quot;</span><span class="p">)],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Baseline&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/db579a66f70d5972d37cb8366d4c721ad9b2eaa174439e669f7c6a434ba68343.png" src="_images/db579a66f70d5972d37cb8366d4c721ad9b2eaa174439e669f7c6a434ba68343.png" />
+</div>
+</div>
+<p>正如我们所见，在测试集上，这个即插即用估计器比随机策略要好。然而，它似乎存在严重的过拟合问题，因为训练集上的表现远好于测试集。</p>
+<p>这实际上是这种目标变换方法最大的缺点之一。通过这种目标变换，你获得了极大的简便性，只需变换目标就可以使用任何机器学习估计器来预测异质处理效应。然而代价是估计的方差很大。原因在于，这个变换后的目标是个体处理效应的极其嘈杂的估计，噪声会传导到你的估计中。如果样本量不大，这将是一个大问题；但在百万级以上样本量的大数据应用中，这个问题会小一些。</p>
+</section>
+<section id="id4">
+<h2>连续处理的情况<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<p><img alt="img" src="_images/second-estimator.png" /></p>
+<p>目标变换方法的另一个明显缺点是它只适用于离散或二元的处理。这在因果推断的文献中非常常见：大多数研究都针对二元处理，而很少涉及连续处理。这让我十分困扰，因为在实际行业中，连续处理无处不在，通常表现为需要优化的价格。因此，尽管我找不到关于连续处理的目标变换的任何资料，我还是提出了一个在实践中有效的方法。但请记住，这背后没有非常坚实的计量经济学理论支撑。</p>
+<p>为了说明这一点，让我们回到冰淇淋销售的例子。当时我们要做的是估计需求对价格的弹性，从而更好地设置冰淇淋的价格以优化收入。请记得，数据集中的观测单位是一天，我们希望知道什么时候人们对价格上涨不那么敏感。还要记得价格在这个数据集是随机设定的，因此我们不用担心混杂偏差。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">prices_rnd</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./data/ice_cream_sales_rnd.csv&quot;</span><span class="p">)</span>
+<span class="n">prices_rnd</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>temp</th>
+      <th>weekday</th>
+      <th>cost</th>
+      <th>price</th>
+      <th>sales</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>25.8</td>
+      <td>1</td>
+      <td>0.3</td>
+      <td>7</td>
+      <td>230</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>22.7</td>
+      <td>3</td>
+      <td>0.5</td>
+      <td>4</td>
+      <td>190</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>33.7</td>
+      <td>7</td>
+      <td>1.0</td>
+      <td>5</td>
+      <td>237</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>23.0</td>
+      <td>4</td>
+      <td>0.5</td>
+      <td>5</td>
+      <td>193</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>24.4</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>3</td>
+      <td>252</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>和之前一样，先将数据分成训练集和测试集。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">prices_rnd</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">train</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">test</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>((3500, 5), (1500, 5))
+</pre></div>
+</div>
+</div>
+</div>
+<p>现在我们需要一点创造力。对于离散情况，条件平均处理效应表示在给定单位特征 <span class="math notranslate nohighlight">\(X\)</span> 的情况下，从未接受处理到接受处理时结果的变化：</p>
+<p><span class="math notranslate nohighlight">\(
+\tau(x) = E[Y_i(1) − Y_i(0)|X] = E[\tau_i|X]
+\)</span></p>
+<p>用通俗的语言说，这就是估计处理对不同单位特征组合的影响，其中特征组合由特征 <span class="math notranslate nohighlight">\(X\)</span> 定义。对于连续处理，我们没有这种开关。所有单位都接受了处理，只是强度不同。因此我们不能谈论给予处理与否，而要讨论增加处理的效应。换言之，我们想知道如果将处理量增加一些，结果会怎样变化。这相当于估计结果函数 <span class="math notranslate nohighlight">\(Y\)</span> 对处理 <span class="math notranslate nohighlight">\(t\)</span> 的偏导数。由于我们希望在每个组别（CATE，而非 ATE）的条件下了解这一点，我们要对特征 <span class="math notranslate nohighlight">\(X\)</span> 进行条件：</p>
+<p><span class="math notranslate nohighlight">\(
+\tau(x) = E[\partial Y_i(t)|X] = E[\tau_i|X]
+\)</span></p>
+<p>我们如何估计这一点呢？首先考虑简单的情形，即结果对处理是线性的。假设你有两类天气：热天（黄色）和冷天（蓝色）。在冷天，人们对价格上涨更敏感。同时，随着价格上涨，需求呈线性下降。</p>
+<p><img alt="img" src="_images/linear-case.png" /></p>
+<p>在这种情况下，CATE 就是每条需求曲线的斜率。这些斜率告诉我们若价格增加任意金额，需求将下降多少。如果这种关系确实是线性的，我们可以分别在热天和冷天通过简单线性回归的系数来估计这些弹性。</p>
+<div class="math notranslate nohighlight">
+\[
+\hat{\tau(x)} = Cov(Y_i, T_i)/Var(T_i) = \dfrac{\sum(Y_i- \bar{Y})(T_i - \bar{T})}{\sum (T_i - \bar{T})^2}
+\]</div>
+<p>我们可以从这个估计量得到启发，思考如果将它应用到单个单位会怎么样。换句话说，如果我们在每一天都定义类似的东西，它看起来会是这样：</p>
+<p><span class="math notranslate nohighlight">\(
+Y^*_i = (Y_i- \bar{Y})\dfrac{(T_i - \bar{T})}{\sigma^2_T}
+\)</span></p>
+<p>通俗地说，就是将原始的目标减去其平均值，再乘以处理变量（同样要减去平均值），最后除以处理的方差。如此一来，我们就得到了连续处理情况下的目标变换。</p>
+<p><img alt="img" src="_images/genious.jpeg" /></p>
+<p>现在的问题是：这真的有效吗？事实上它确实有效，我们可以给出类似二元处理情形的证明。首先，令</p>
+<p><span class="math notranslate nohighlight">\(
+V_i = \dfrac{(T_i - \bar{T})}{\sigma^2_T}
+\)</span></p>
+<p>注意 <span class="math notranslate nohighlight">\(E[V_i|X_i=x]=0\)</span>，因为在随机分配下 <span class="math notranslate nohighlight">\(E[T_i|X_i=x]=\bar{T}\)</span>，也就是说每个 <span class="math notranslate nohighlight">\(X\)</span> 区域都有 <span class="math notranslate nohighlight">\(E[T_i]=\bar{T}\)</span>。还要注意 <span class="math notranslate nohighlight">\(E[T_i V_i | X_i=x]=1\)</span>，因为 <span class="math notranslate nohighlight">\(E[T_i(T_i - \bar{T})|X_i=x] = E[(T_i - \bar{T})^2|X_i=x]\)</span>，这正是处理的方差。最后，在条件独立（随机分配下自然满足）情况下，有 <span class="math notranslate nohighlight">\(E[T_i e_i | X_i=x] = E[T_i | X_i=x] E[e_i | X_i=x]\)</span>。</p>
+<p>为了证明该目标变换有效，我们需要记住，我们要估计的其实是局部线性模型的参数：</p>
+<p><span class="math notranslate nohighlight">\(
+Y_i = \alpha + \beta T_i + e_i \mid X_i=x
+\)</span></p>
+<p>在我们的例子中，这些线性模型对应于冷热天的需求曲线。这里我们关注的是 <span class="math notranslate nohighlight">\(\beta\)</span> 参数，即条件弹性或 CATE。通过一些推导，我们可以证明：</p>
+<p><span class="math notranslate nohighlight">\(
+\begin{align}
+E[Y^*_i|X_i=x] &amp;= E[(Y_i-\bar{Y})V_i | X_i=x] \\
+&amp;= E[(\alpha + \beta T_i + e_i - \bar{Y})V_i | X_i=x] \\
+&amp;= \alpha E[V_i | X_i=x] + \beta E[T_i V_i | X_i=x] + E[e_i V_i | X_i=x] \\
+&amp;= \beta + E[e_i V_i | X_i=x] \\
+&amp;= \beta = \tau(x)
+\end{align}
+\)</span></p>
+<p>请注意，这只适用于随机分配的处理。如果处理不是随机的，我们必须用一个模型 <span class="math notranslate nohighlight">\(M(X_i)\)</span> 来估计 <span class="math notranslate nohighlight">\(E[T_i|X_i=x]\)</span>，用它替代 <span class="math notranslate nohighlight">\(\bar{T}\)</span>：</p>
+<p><span class="math notranslate nohighlight">\(
+Y^*_i = (Y_i- \bar{Y})\dfrac{(T_i - M(T_i))}{(T_i - M(T_i))^2}
+\)</span></p>
+<p>这样可以确保上式推导中第三行的 <span class="math notranslate nohighlight">\(\alpha E[V_i | X_i=x]\)</span> 项消失，且 <span class="math notranslate nohighlight">\(E[T_i V_i | X_i=x]\)</span> 等于 1。如果你只关心对单位按处理效应排序，而不需要准确的数量，那么不必令 <span class="math notranslate nohighlight">\(E[T_i V_i | X_i=x]\)</span> 等于 1；换言之，如果你只想知道在哪些天需求对价格上涨更敏感，而不关心差异有多大，估计的 <span class="math notranslate nohighlight">\(\beta\)</span> 是否缩放并不重要。在这种情况下，可以省略分母：</p>
+<p><span class="math notranslate nohighlight">\(
+Y^*_i = (Y_i- \bar{Y})(T_i - M(T_i))
+\)</span></p>
+<p>如果这些数学推导让你感到疲惫，不必担心，代码其实很简单。我们再次用上述公式对训练集的目标进行变换。这里处理是随机分配的，因而不需要训练一个预测价格的模型。我也省略了分母，因为此处我只关心对处理效应的排序。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y_star_cont</span> <span class="o">=</span> <span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">train</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="o">*</span> <span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="s2">&quot;sales&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">train</span><span class="p">[</span><span class="s2">&quot;sales&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>然后，和之前一样，我们用一个机器学习回归模型来预测这个变换后的目标。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cate_learner</span> <span class="o">=</span> <span class="n">LGBMRegressor</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">min_child_samples</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">num_leaves</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="n">cate_learner</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">[[</span><span class="s2">&quot;temp&quot;</span><span class="p">,</span> <span class="s2">&quot;weekday&quot;</span><span class="p">,</span> <span class="s2">&quot;cost&quot;</span><span class="p">]],</span> <span class="n">y_star_cont</span><span class="p">)</span>
+
+<span class="n">cate_test_transf_y</span> <span class="o">=</span> <span class="n">cate_learner</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test</span><span class="p">[[</span><span class="s2">&quot;temp&quot;</span><span class="p">,</span> <span class="s2">&quot;weekday&quot;</span><span class="p">,</span> <span class="s2">&quot;cost&quot;</span><span class="p">]])</span>
+
+<span class="n">test_pred</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">cate</span><span class="o">=</span><span class="n">cate_test_transf_y</span><span class="p">)</span>
+<span class="n">test_pred</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>temp</th>
+      <th>weekday</th>
+      <th>cost</th>
+      <th>price</th>
+      <th>sales</th>
+      <th>cate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2815</th>
+      <td>15.7</td>
+      <td>4</td>
+      <td>1.5</td>
+      <td>3</td>
+      <td>187</td>
+      <td>-3.536723</td>
+    </tr>
+    <tr>
+      <th>257</th>
+      <td>29.4</td>
+      <td>3</td>
+      <td>1.0</td>
+      <td>3</td>
+      <td>209</td>
+      <td>8.334653</td>
+    </tr>
+    <tr>
+      <th>2585</th>
+      <td>24.6</td>
+      <td>6</td>
+      <td>1.0</td>
+      <td>10</td>
+      <td>197</td>
+      <td>5.628261</td>
+    </tr>
+    <tr>
+      <th>3260</th>
+      <td>20.2</td>
+      <td>1</td>
+      <td>0.5</td>
+      <td>4</td>
+      <td>246</td>
+      <td>-45.753226</td>
+    </tr>
+    <tr>
+      <th>1999</th>
+      <td>10.0</td>
+      <td>4</td>
+      <td>0.5</td>
+      <td>10</td>
+      <td>139</td>
+      <td>-7.794578</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>这一次，CATE 的解释不太直观。由于在目标变换中去掉了分母，所看到的 CATE 被 <span class="math notranslate nohighlight">\(Var(X)\)</span> 缩放了。然而，这样的预测仍然可以很好地对处理效应进行排序。为了验证这一点，我们可以像之前一样使用累积增益曲线。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gain_curve_test</span> <span class="o">=</span> <span class="n">cumulative_gain</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">cate</span><span class="o">=</span><span class="n">cate_test_transf_y</span><span class="p">),</span>
+                                <span class="s2">&quot;cate&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;sales&quot;</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="s2">&quot;price&quot;</span><span class="p">)</span>
+
+<span class="n">gain_curve_train</span> <span class="o">=</span> <span class="n">cumulative_gain</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">cate</span><span class="o">=</span><span class="n">cate_learner</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">train</span><span class="p">[[</span><span class="s2">&quot;temp&quot;</span><span class="p">,</span> <span class="s2">&quot;weekday&quot;</span><span class="p">,</span> <span class="s2">&quot;cost&quot;</span><span class="p">]])),</span>
+                                   <span class="s2">&quot;cate&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;sales&quot;</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="s2">&quot;price&quot;</span><span class="p">)</span>
+
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gain_curve_test</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Test&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gain_curve_train</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Train&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">elast</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="s2">&quot;sales&quot;</span><span class="p">,</span> <span class="s2">&quot;price&quot;</span><span class="p">)],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Baseline&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/26d761e8cfff04dd3855c7f6c420ecd077ed2c5f0520b120c3c744cbf5e4dbff.png" src="_images/26d761e8cfff04dd3855c7f6c420ecd077ed2c5f0520b120c3c744cbf5e4dbff.png" />
+</div>
+</div>
+<p>对于这份数据，使用变换后的目标的模型明显优于随机策略。此外，训练集和测试集的结果也比较接近，因此方差不是问题。这只是该数据集的特性；还记得在二元处理情形下情况并非如此，当时模型的表现并不理想。</p>
+<section id="id5">
+<h3>非线性处理效应<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
+<p>说完了连续处理的情况，还有一个问题需要解决。我们假定处理效应是线性的，但这种假设往往不合理，处理效应通常会以某种形式呈现饱和。在我们的例子中，可以合理地认为需求在初始涨价时下降更快，随后下降速度减缓。</p>
+<p><img alt="img" src="_images/non-linear-case.png" /></p>
+<p>问题在于<strong>弹性或处理效应会随处理水平而变化</strong>。在我们的例子中，曲线开始阶段的处理效应更强，而随着价格升高，效应减小。假设你有两种天气：热天（黄色）和冷天（蓝色），我们希望通过因果模型区分它们。但在非线性情况下，如果我们在曲线的不同价格点观察，热天和冷天的弹性可能相同（见右图），这使得因果模型难以区分它们。</p>
+<p>这个问题没有简单的解决办法，我必须承认仍在探索最优的方法。目前的做法是思考处理效应的函数形式，尝试使其线性化。例如，需求通常具有以下形式，其中更大的 <span class="math notranslate nohighlight">\(\alpha\)</span> 表示价格每提高一个单位，需求下降得更快：</p>
+<p><span class="math notranslate nohighlight">\(
+D_i = \dfrac{1}{P_i^{\alpha}}
+\)</span></p>
+<p>因此，如果对需求 <span class="math notranslate nohighlight">\(Y\)</span> 和价格 <span class="math notranslate nohighlight">\(T\)</span> 同时做对数变换，就会得到近似线性的关系：</p>
+<p><span class="math notranslate nohighlight">\(
+\begin{align}
+\log(D)_i &amp;= \log\bigg(\dfrac{1}{P_i^{\alpha}}\bigg) \\
+&amp;= \log(1) - \log(P_i^{\alpha}) \\
+&amp;= \log(1) - \log(P_i^{\alpha}) \\
+&amp;= - \alpha * \log(P_i) \\
+\end{align}
+\)</span></p>
+<p>线性化并不容易，需要仔细思考。但你也可以尝试不同的变换，看看哪种效果最好。通常，对数或平方根等变换会有帮助。</p>
+</section>
+</section>
+<section id="id6">
+<h2>关键观点<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<p>我们正在迈向使用机器学习模型来估计条件平均处理效应。最大的挑战是如何将预测模型改造成估计因果效应的模型。换个角度看，预测模型关注的是估计结果 <span class="math notranslate nohighlight">\(Y\)</span> 作为特征 <span class="math notranslate nohighlight">\(X\)</span> 以及可能的处理 <span class="math notranslate nohighlight">\(T\)</span> 的函数 <span class="math notranslate nohighlight">\(Y = M(X,T)\)</span>，而因果模型需要估计该函数对处理的偏导数 <span class="math notranslate nohighlight">\(\partial Y = \partial M(X,T)\)</span>。这并不容易，因为虽然我们能观察到结果 <span class="math notranslate nohighlight">\(Y\)</span>，却无法在个体层面观察到 <span class="math notranslate nohighlight">\(\partial Y\)</span>。因此在设计模型的目标函数时必须很有创造性。</p>
+<p>这里我们看到了一个非常简单的目标变换技巧。其思想是将原始目标 <span class="math notranslate nohighlight">\(Y\)</span> 与处理 <span class="math notranslate nohighlight">\(T\)</span> 组合起来，形成一个在期望上等于 CATE 的变换后的目标。有了这个新目标，就可以将任何预测型机器学习模型用来估计它，模型输出的便是 CATE 的估计。顺便提一下，除了目标变换，这种方法也被称为 <strong>F-Learner</strong>。</p>
+<p>然而这种简单性也有代价。变换后的目标是个体处理效应的一个噪声很大的估计，这种噪声会以方差形式传导到模型的估计中。因此，目标变换更适用于大数据场景，在大样本下方差问题较小。目标变换的另一个缺点是它只适用于二元或类别型处理。我们已经尽力提出了一个连续处理版本，并且似乎有效，但目前仍缺乏坚实的理论框架来支持它。</p>
+<p>最后，我们讨论了非线性处理效应及其带来的挑战。当处理效应随处理水平而变化时，我们可能误以为不同个体具有相同的反应曲线，只是因为它们对处理的敏感度相同，而实际上它们接受的处理强度不同。</p>
+</section>
+<section id="id7">
+<h2>参考说明<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
+<p>本章内容主要基于作者个人的经验总结，许多观点和方法源自实践中的体会。因此，无法提供严格意义上的学术参考文献。与正规科研工作不同，这些内容没有经过系统性的学术审查，也未经过同行评议与理论论证。读者或许会注意到，本文更多讨论的是“实践中有效的方法”，而非详细阐述其背后的理论基础。这种方法可以被视为“来自一线的经验科学”（a sort of science from the streets）。尽管如此，既然这些内容已公开发布，也非常欢迎批评与反馈——如果读者发现其中有明显错误或不妥之处，欢迎提出 issue，作者会尽力回应。</p>
+<p>最后，对于那些希望系统学习机器学习的读者，作者也意识到本章的讲解可能过于简略。坦率地说，作者认为自己真正能够贡献价值的领域是因果推断的教学，而非机器学习。机器学习领域已有大量优质的公开资源，远超作者所能提供的内容。其中的经典之作，就是 <a class="reference external" href="https://www.coursera.org/learn/machine-learning">Andrew Ng 的机器学习课程</a>，如果读者是机器学习初学者，作者强烈推荐认真学习这门课程。</p>
+</section>
+<section id="id8">
+<h2>参与贡献<a class="headerlink" href="#id8" title="Link to this heading">#</a></h2>
+<p><strong>《Causal Inference for the Brave and True》</strong> 是一本关于因果推断的开源教材，致力于以经济上可负担、认知上可理解的方式，普及这门“科学的统计基础”。全书基于 Python，仅使用自由开源软件编写，原始英文版本由 <a class="reference external" href="https://github.com/matheusfacure">Matheus Facure</a> 编写与维护。</p>
+<p>本书的中文版由黄文喆与许文立助理教授合作翻译，并托管在 <a class="reference external" href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh">GitHub 中文主页</a>。希望本地化的内容能帮助更多中文读者学习和掌握因果推断方法。</p>
+<p>如果你觉得这本书对你有帮助，并希望支持该项目，可以前往 <a class="reference external" href="https://www.patreon.com/causal_inference_for_the_brave_and_true">Patreon</a> 支持原作者。</p>
+<p>如果你暂时不方便进行经济支持，也可以通过以下方式参与贡献：</p>
+<ul class="simple">
+<li><p>修正错别字</p></li>
+<li><p>提出翻译或表达建议</p></li>
+<li><p>反馈你未能理解的部分内容</p></li>
+</ul>
+<p>欢迎前往英文版或中文版仓库点击 <a class="reference external" href="https://github.com/matheusfacure/python-causality-handbook/issues">issues 区</a> 或 <a class="reference external" href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh/issues">中文版 issues 区</a> 提出反馈。</p>
+<p>最后，如果你喜欢这本书的内容，也请将其分享给可能感兴趣的朋友，并为项目在 GitHub 上点亮一颗星：<a class="reference external" href="https://github.com/matheusfacure/python-causality-handbook">英文版仓库</a> / <a class="reference external" href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh">中文版仓库</a>。</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="19-Evaluating-Causal-Models.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">19 - 评估因果模型</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="21-Meta-Learners.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">21 - 元学习器</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">问题设定</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">目标变换</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">连续处理的情况</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">非线性处理效应</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">关键观点</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">参考说明</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">参与贡献</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Matheus Facure
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -199,6 +199,8 @@
 <li class="toctree-l1"><a class="reference internal" href="17-Predictive-Models-101.html">17 - 预测模型入门</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">18 - 异质性处理效应与个性化</a></li>
 <li class="toctree-l1"><a class="reference internal" href="19-Evaluating-Causal-Models.html">19 - 评估因果模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="20-Plug-and-Play-Estimators.html">20 - 即插即用估计器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="21-Meta-Learners.html">21 - 元学习器</a></li>
 </ul>
 
     </div>
@@ -1065,7 +1067,7 @@ sales_i = \beta_0 + \beta_1 price_i + \pmb{\beta_2 X_i} \times price_i + \pmb{\b
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/5cb80dcdc63034413887578e0ed5d0cf9f2a33ea12579799c591b38314fab074.png" src="_images/5cb80dcdc63034413887578e0ed5d0cf9f2a33ea12579799c591b38314fab074.png" />
+<img alt="_images/247a700f3abdb3046c560f275923e7e78a0d418a17e672b6724a075d4b6d0720.png" src="_images/247a700f3abdb3046c560f275923e7e78a0d418a17e672b6724a075d4b6d0720.png" />
 </div>
 </div>
 <p>正如我们所看到的，这种划分方案似乎是有用的。在第一组中，价格敏感度很高。随着价格的上涨，销量大幅下降。然而在第二组中，随着价格上涨，销量大致保持不变。实际上，销量看起来甚至会随着价格的提高而上升，但这很可能是噪声。</p>
@@ -1079,7 +1081,7 @@ sales_i = \beta_0 + \beta_1 price_i + \pmb{\beta_2 X_i} \times price_i + \pmb{\b
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/c7dc3ce7d8842fb0083e7741a081b08936021c70733cac4d0cba8e9b62f7df13.png" src="_images/c7dc3ce7d8842fb0083e7741a081b08936021c70733cac4d0cba8e9b62f7df13.png" />
+<img alt="_images/0922e9ca84e593feead8c50486347acc6a12651175d50a0262e678638c3709fe.png" src="_images/0922e9ca84e593feead8c50486347acc6a12651175d50a0262e678638c3709fe.png" />
 </div>
 </div>
 <p>我非常喜欢这幅图，因为它传达了一个重要的观点。如你所见，预测模型的分区是在 y 轴上分割单位。在第一组那样的日子，我们卖出的冰淇淋不多，而在第二组那样的日子，我们卖得更多。我觉得这很神奇，因为预测模型正是在做它应该做的事情：预测销售量。它能区分冰淇淋销量低的日子和销量高的日子。</p>
