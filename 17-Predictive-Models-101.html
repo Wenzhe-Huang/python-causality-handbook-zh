@@ -201,6 +201,19 @@
 <li class="toctree-l1"><a class="reference internal" href="19-Evaluating-Causal-Models.html">19 - 评估因果模型</a></li>
 <li class="toctree-l1"><a class="reference internal" href="20-Plug-and-Play-Estimators.html">20 - 即插即用估计器</a></li>
 <li class="toctree-l1"><a class="reference internal" href="21-Meta-Learners.html">21 - 元学习器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="22-Debiased-Orthogonal-Machine-Learning.html">22 - 去偏/正交机器学习</a></li>
+<li class="toctree-l1"><a class="reference internal" href="23-Challenges-with-Effect-Heterogeneity-and-Nonlinearity.html">23 - 处理效应异质性和非线性的挑战</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="24-The-Diff-in-Diff-Saga.html">24 - 双重差分传奇</a></li>
+<li class="toctree-l1"><a class="reference internal" href="25-Synthetic-Diff-in-Diff.html">25 - 合成双重差分</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">附录</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Debiasing-with-Orthogonalization.html">Debiasing with Orthogonalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Debiasing-with-Propensity-Score.html">Debiasing with Propensity Score</a></li>
+<li class="toctree-l1"><a class="reference internal" href="When-Prediction-Fails.html">When Prediction Fails</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Prediction-Metrics-For-Causal-Models.html">Why Prediction Metrics are Dangerous For Causal Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Conformal-Inference-for-Synthetic-Control.html">Conformal Inference for Synthetic Controls</a></li>
 </ul>
 
     </div>
@@ -841,7 +854,7 @@ E[Y|X]
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/bf9cd3f33c9c1cf13778c4ef630e326674d4903574b19cc95e2f133d71d56dde.png" src="_images/bf9cd3f33c9c1cf13778c4ef630e326674d4903574b19cc95e2f133d71d56dde.png" />
+<img alt="_images/b475f3cd3b97eba7720531b7b4e3ea61129d5dec2fdfd42cef5a9196368c030a.png" src="_images/b475f3cd3b97eba7720531b7b4e3ea61129d5dec2fdfd42cef5a9196368c030a.png" />
 </div>
 </div>
 <p>但遗憾的是，结果依然不理想。无论收入水平如何，所有分位组的客户其平均净值仍为负值。尽管高收入客户“没那么差”，即其平均亏损相对较小，但总体而言，他们仍然是亏损客户。因此，收入变量在这里并未帮到我们太多。</p>
@@ -861,7 +874,7 @@ E[Y|X]
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/388a2dceda118998df2012bd454c1abb9bcb0ba3fb238294b892eb4e8e29fb60.png" src="_images/388a2dceda118998df2012bd454c1abb9bcb0ba3fb238294b892eb4e8e29fb60.png" />
+<img alt="_images/94d0e592b4723687fbdf905fe14e20e044e82ab479fa3482cfea09462bb79d88.png" src="_images/94d0e592b4723687fbdf905fe14e20e044e82ab479fa3482cfea09462bb79d88.png" />
 </div>
 </div>
 <p>太好了！从图中我们可以清楚地看到，一些地区是盈利的，比如地区 2、17、39；而另一些地区则是亏损的，比如地区 0、9、29，尤其是表现特别差的地区 26。这个结果非常有希望！我们可以据此制定一个简单的策略：只与数据显示为盈利的地区客户开展业务。</p>
@@ -1121,7 +1134,7 @@ Test R2:  0.6938513063048141
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/54bac68b2602b43e0d86decac0a465fb91821aefd8380577f7d11bb4eefec6d5.png" src="_images/54bac68b2602b43e0d86decac0a465fb91821aefd8380577f7d11bb4eefec6d5.png" />
+<img alt="_images/d0b050f4248472c5f85ebe23b0ae80cf6f28029641dd71c9614d71d45b2e5576.png" src="_images/d0b050f4248472c5f85ebe23b0ae80cf6f28029641dd71c9614d71d45b2e5576.png" />
 </div>
 </div>
 <p>我们可以观察到，有些模型带的净值非常为负，而另一些则非常为正；还有一些模型带的净值则处于不确定状态——我们无法明确判断其为正还是为负。</p>
@@ -1315,7 +1328,7 @@ Test R2:  0.6938513063048141
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="_images/1195a584369bfbc49e438a099dd59b209d7f29be3d1c18a57c7d719738a0a0af.png" src="_images/1195a584369bfbc49e438a099dd59b209d7f29be3d1c18a57c7d719738a0a0af.png" />
+<img alt="_images/c7c0fe104773a4ca8a8bdaf3981dc4effee449df766d7ba0f800d258f5fd520a.png" src="_images/c7c0fe104773a4ca8a8bdaf3981dc4effee449df766d7ba0f800d258f5fd520a.png" />
 </div>
 </div>
 <p>有了这些分组（bands），我们就可以将大部分的营销预算集中投放在第 19 和第 20 组客户身上。请注意，我们的决策模式已经从最初的<strong>二元选择（是否合作）</strong>，演变为一个<strong>连续决策问题</strong>：即<strong>对每位客户应投入多少营销资源</strong>。</p>

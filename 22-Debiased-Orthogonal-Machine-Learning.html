@@ -1,0 +1,1782 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>22 - 去偏/正交机器学习 &#8212; 因果推断：献给求真敢为者</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '22-Debiased-Orthogonal-Machine-Learning';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="23 - 处理效应异质性和非线性的挑战" href="23-Challenges-with-Effect-Heterogeneity-and-Nonlinearity.html" />
+    <link rel="prev" title="21 - 元学习器" href="21-Meta-Learners.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">因果推断：献给求真敢为者</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    因果推断：献给求真敢为者
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">第一部分 - 阳</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01-Introduction-To-Causality.html">01 - 因果性导论</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-Randomised-Experiments.html">02 - 随机实验</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03-Stats-Review-The-Most-Dangerous-Equation.html">03 - 统计回顾：最危险的方程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04-Graphical-Causal-Models.html">04 - 图形因果模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05-The-Unreasonable-Effectiveness-of-Linear-Regression.html">05 - 线性回归的惊人有效性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06-Grouped-and-Dummy-Regression.html">06 - 分组与虚拟变量回归</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07-Beyond-Confounders.html">07 - 超越混杂因素</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-Instrumental-Variables.html">08 - 工具变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-Non-Compliance-and-LATE.html">09 - 不依从性与局部平均处理效应</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10-Matching.html">10 - 匹配法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11-Propensity-Score.html">11 - 倾向得分</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12-Doubly-Robust-Estimation.html">12 - 双重稳健估计</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13-Difference-in-Differences.html">13 - 双重差分法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="14-Panel-Data-and-Fixed-Effects.html">14 - 面板数据与固定效应</a></li>
+<li class="toctree-l1"><a class="reference internal" href="15-Synthetic-Control.html">15 - 合成控制法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="16-Regression-Discontinuity-Design.html">16 - 断点回归设计</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">第二部分 - 阴</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="17-Predictive-Models-101.html">17 - 预测模型入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="18-Heterogeneous-Treatment-Effects-and-Personalization.html">18 - 异质性处理效应与个性化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="19-Evaluating-Causal-Models.html">19 - 评估因果模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="20-Plug-and-Play-Estimators.html">20 - 即插即用估计器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="21-Meta-Learners.html">21 - 元学习器</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">22 - 去偏/正交机器学习</a></li>
+<li class="toctree-l1"><a class="reference internal" href="23-Challenges-with-Effect-Heterogeneity-and-Nonlinearity.html">23 - 处理效应异质性和非线性的挑战</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="24-The-Diff-in-Diff-Saga.html">24 - 双重差分传奇</a></li>
+<li class="toctree-l1"><a class="reference internal" href="25-Synthetic-Diff-in-Diff.html">25 - 合成双重差分</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">附录</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Debiasing-with-Orthogonalization.html">Debiasing with Orthogonalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Debiasing-with-Propensity-Score.html">Debiasing with Propensity Score</a></li>
+<li class="toctree-l1"><a class="reference internal" href="When-Prediction-Fails.html">When Prediction Fails</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Prediction-Metrics-For-Causal-Models.html">Why Prediction Metrics are Dangerous For Causal Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Conformal-Inference-for-Synthetic-Control.html">Conformal Inference for Synthetic Controls</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2F22-Debiased-Orthogonal-Machine-Learning.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/22-Debiased-Orthogonal-Machine-Learning.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>22 - 去偏/正交机器学习</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">对骚扰参数使用机器学习</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#frisch-waugh-lovell">Frisch-Waugh-Lovell 定理</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fwl-double-debiased-ml">加强版 FWL：Double/Debiased ML</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#double-ml-cate">使用 Double-ML 估计 CATE</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#double-debiased-ml">非参数 Double/Debiased ML</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">什么是“非参数”？</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">可能需要更多计量经济学！</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">关键观点</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">参考说明</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">参与贡献</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1>22 - 去偏/正交机器学习<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<p>我们接下来要介绍的这种元学习器其实早在“元学习器”这个称谓出现之前就被提出。据我所知，它源自一篇优秀的 2016 年论文，这篇论文为因果推断文献开辟了一个丰饶的领域。这篇论文名为《双重机器学习用于处理和因果参数》（Double Machine Learning for Treatment and Causal Parameters），作者阵容强大：Victor Chernozhukov、Denis Chetverikov、Mert Demirer、Esther Duflo（顺便说一下，她与 Abhijit Banerjee 和 Michael Kremer 因“通过实验方法缓解全球贫困”共同获得了 2019 年诺贝尔经济学奖）、Christian Hansen、Whitney Newey 和 James Robins。难怪这篇论文如此精彩，我甚至借用了 Paul Goldsmith-Pinkham 的创意，将作者们画成复仇者联盟，以示敬意。</p>
+<p><img alt="img" src="_images/avengers.png" /></p>
+<p>唯一的问题是，这篇论文非常难读（这很正常，因为它是计量经济学论文）。既然这本书旨在让因果推断走向大众，我们就来尝试让去偏/正交机器学习的思想变得直观易懂。</p>
+<p>为什么值得单独用一章来讲述它，而不是把它和其他元学习器放在一起？吸引我注意的一点是这种去偏/正交机器学习的理论基础非常充分。我们之前见到的 T-learner、S-learner 和 X-learner 都有点类似巧妙的小技巧。我们可以给出它们为何有效的直观解释，但它们似乎不够一般。而去偏/正交机器学习则提供了一个既直观又严谨的通用框架，而且适用于连续和离散两类处理，这是 T-learner 和 X-learner 无法做到的。更不用说这些论文对这种估计量的渐近性质做了极好的分析。因此，让我们开始吧。</p>
+<p>作为激励例子，我们再次回到冰淇淋销售数据。提醒一下，我们试图找到价格对销售影响的异质性。我们的测试集中的价格是随机分配的，但训练数据中的价格只是观测到的，可能带有偏差。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nb21</span><span class="w"> </span><span class="kn">import</span> <span class="n">cumulative_gain</span><span class="p">,</span> <span class="n">elast</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.formula.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">smf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">style</span>
+<span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;ggplot&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./data/ice_cream_sales_rnd.csv&quot;</span><span class="p">)</span>
+<span class="n">train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./data/ice_cream_sales.csv&quot;</span><span class="p">)</span>
+<span class="n">train</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>temp</th>
+      <th>weekday</th>
+      <th>cost</th>
+      <th>price</th>
+      <th>sales</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>17.3</td>
+      <td>6</td>
+      <td>1.5</td>
+      <td>5.6</td>
+      <td>173</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>25.4</td>
+      <td>3</td>
+      <td>0.3</td>
+      <td>4.9</td>
+      <td>196</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>23.3</td>
+      <td>5</td>
+      <td>1.5</td>
+      <td>7.6</td>
+      <td>207</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>26.9</td>
+      <td>1</td>
+      <td>0.3</td>
+      <td>5.3</td>
+      <td>241</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>20.2</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>7.2</td>
+      <td>227</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">train</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">1000</span><span class="p">),</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;price&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;sales&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;weekday&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;price&#39;, ylabel=&#39;sales&#39;&gt;
+</pre></div>
+</div>
+<img alt="_images/3815e1efb7314268888e8dab35c564779d8eb0e95b12d2d46478e83bd244a1c4.png" src="_images/3815e1efb7314268888e8dab35c564779d8eb0e95b12d2d46478e83bd244a1c4.png" />
+</div>
+</div>
+<p>一个明显的偏差来源很容易看出来。正如图中所示，周末（星期 1 和 7）的价格要高得多，但我们还可能有其他混杂因素，如温度和成本。因此，如果我们想做任何因果推断，就需要校正这种偏差。</p>
+<section id="id2">
+<h2>对骚扰参数使用机器学习<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>一种尝试消除这种偏差的方法是使用线性模型来估计价格对销售的处理效应，同时控制混杂变量。</p>
+<div class="math notranslate nohighlight">
+\[
+Sales_i = \alpha + \tau \; price_i + \beta_1 \; temp_i + \beta_2 \; cost_i + \pmb{\beta_3} \; Weekday_i + e_i
+\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(\pmb{\beta_3}\)</span> 是与每个工作日虚拟变量相关联的参数向量。</p>
+<p>注意我们只对参数 <span class="math notranslate nohighlight">\(\tau\)</span> 感兴趣，因为那是我们的处理效应。其他参数称为干扰（nuisance）参数，因为我们并不关心它们。不过，事实证明，即使我们不关心它们，也必须正确估计它们，否则处理效应就会偏离真实值，这真是有点烦人。</p>
+<p>例如，从直觉上看，<code class="docutils literal notranslate"><span class="pre">temp</span></code> 与销售之间的关系可能不是线性的。随着气温升高，人们会去海滩并购买更多冰淇淋，销售额会上升。但在某个温度之后太热了，人们选择呆在家里，这时销售会下降。<code class="docutils literal notranslate"><span class="pre">temp</span></code> 与销售的关系可能先上升后下降，也就是说，上面的模型可能是错的，它应该包括一个二次项：</p>
+<div class="math notranslate nohighlight">
+\[
+Sales_i = \alpha + \tau \; price_i + \beta_1 \; temp_i + \beta_2 \; temp_i^2 + \beta_3 \; cost_i + \pmb{\beta_4} \; Weekday_i + e_i
+\]</div>
+<p><img alt="img" src="_images/non-linear.png" /></p>
+<p>思考如何为干扰参数建模已经很枯燥了，何况如果我们有几十甚至上百个协变量？在现代数据集中，这很常见。我们能做什么呢？答案在于计量经济学中最酷的定理之一。</p>
+<section id="frisch-waugh-lovell">
+<h3>Frisch-Waugh-Lovell 定理<a class="headerlink" href="#frisch-waugh-lovell" title="Link to this heading">#</a></h3>
+<p>Frisch、Waugh 和 Lovell 是 20 世纪的计量经济学家，他们发现了线性回归中一个非常酷的性质。这对你来说并不陌生，我们在谈到回归残差和固定效应时已经提到过。但由于这个定理是理解正交机器学习的关键，非常值得回顾。</p>
+<p>假设你有一个线性回归模型，包含一组特征 <span class="math notranslate nohighlight">\(X_1\)</span> 和另一组特征 <span class="math notranslate nohighlight">\(X_2\)</span>。估计该模型的参数</p>
+<p><span class="math notranslate nohighlight">\(
+\hat{Y} = \hat{\beta}_1 X_1 + \hat{\beta}_2 X_2
+\)</span></p>
+<p>其中 <span class="math notranslate nohighlight">\(X_1\)</span> 和 <span class="math notranslate nohighlight">\(X_2\)</span> 是特征矩阵（每列是一个特征，每行是一条观测），<span class="math notranslate nohighlight">\(\hat{\beta}_1\)</span> 和 <span class="math notranslate nohighlight">\(\hat{\beta}_2\)</span> 是行向量。你可以通过以下步骤得到与直接回归相同的 <span class="math notranslate nohighlight">\(\hat{\beta}_1\)</span>：</p>
+<ol class="arabic simple">
+<li><p>用第二组特征回归结果 <span class="math notranslate nohighlight">\(y\)</span> 得到 <span class="math notranslate nohighlight">\(\hat{y}^* = \hat{\gamma}_1 X_2\)</span>。</p></li>
+<li><p>用第二组特征回归第一组特征 <span class="math notranslate nohighlight">\(X_1\)</span> 得到 <span class="math notranslate nohighlight">\(\hat{X}_1 = \hat{\gamma}_2 X_2\)</span>。</p></li>
+<li><p>取残差 <span class="math notranslate nohighlight">\(\tilde{X}_1 = X_1 - \hat{X}_1\)</span> 和 <span class="math notranslate nohighlight">\(\tilde{y}_1 = y - \hat{y}^*\)</span>。</p></li>
+<li><p>用特征残差回归结果残差 <span class="math notranslate nohighlight">\(\tilde{y}_1 = \hat{\beta}_1 \, \tilde{X}_1\)</span>。</p></li>
+</ol>
+<p>这太酷了。这里有一个通用的表示，但注意其中一组特征可以只是处理变量。这意味着你可以单独估计所有干扰参数。先用特征回归结果得到结果残差，再用特征回归处理得到处理残差，最后用处理残差回归结果残差。这将给出与直接在结果上回归特征和处理得到的估计完全相同的 <span class="math notranslate nohighlight">\(\hat{\beta}_1\)</span>。</p>
+<p>不要只是听我说。任何对因果推断感兴趣的人都应该至少做一次 FWL 定理练习。下面的例子中，我们首先估计协变量对结果（销售）和处理（价格）的影响，然后用 FWL 步骤估计处理效应。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;sales~temp+C(weekday)+cost&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">train</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">mt</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;price~temp+C(weekday)+cost&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">train</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>然后，利用这些残差，我们估计价格对销售的平均处理效应（ATE）。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;sales_res~price_res&quot;</span><span class="p">,</span> 
+        <span class="n">data</span><span class="o">=</span><span class="n">train</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">sales_res</span><span class="o">=</span><span class="n">my</span><span class="o">.</span><span class="n">resid</span><span class="p">,</span> <span class="c1"># sales residuals</span>
+                          <span class="n">price_res</span><span class="o">=</span><span class="n">mt</span><span class="o">.</span><span class="n">resid</span><span class="p">)</span> <span class="c1"># price residuals</span>
+       <span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span><span class="o">.</span><span class="n">tables</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><table class="simpletable">
+<tr>
+      <td></td>         <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th> <td>-4.843e-13</td> <td>    0.111</td> <td>-4.38e-12</td> <td> 1.000</td> <td>   -0.217</td> <td>    0.217</td>
+</tr>
+<tr>
+  <th>price_res</th> <td>   -4.0004</td> <td>    0.110</td> <td>  -36.428</td> <td> 0.000</td> <td>   -4.216</td> <td>   -3.785</td>
+</tr>
+</table></div></div>
+</div>
+<p>我们估计出的 ATE 为 -4，这意味着价格每提高一个单位，销售将减少 4 单位。</p>
+<p>现在，让我们在同一个模型中同时包含处理和协变量，估计同一个参数。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;sales~price+temp+C(weekday)+cost&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">train</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-4.000429145475441
+</pre></div>
+</div>
+</div>
+</div>
+<p>如你所见，得到的数字完全一致！这说明，无论是一次性估计处理效应，还是按照 FWL 步骤分开估计，从数学上来说是相同的。</p>
+<p>换句话说，处理效应可以通过<strong>残差回归</strong>来得到，其中我们先将 <span class="math notranslate nohighlight">\(Y\)</span> 对 <span class="math notranslate nohighlight">\(X\)</span> 回归得到残差，再将残差回归于将 <span class="math notranslate nohighlight">\(T\)</span> 对 <span class="math notranslate nohighlight">\(X\)</span> 回归得到的残差。用符号表示为：</p>
+<p><span class="math notranslate nohighlight">\(
+(Y - (Y \sim X)) \sim (T - (T \sim X))
+\)</span></p>
+<p>这本质上是在下面的模型中估计因果参数 <span class="math notranslate nohighlight">\(\tau\)</span>：</p>
+<p><span class="math notranslate nohighlight">\(
+Y_i - E[Y_i | X_i] = \tau \cdot (T_i - E[T_i | X_i]) + \epsilon_i
+\)</span></p>
+<p>FWL 的妙处在于，它让我们可以将因果参数的估计过程与干扰参数的估计过程分离。但我们还没有回答最初的问题：怎样避免为干扰参数指定正确的函数形式？换句话说，如何只关注因果参数，而不必担心干扰参数？这正是机器学习发挥作用的地方。</p>
+</section>
+<section id="fwl-double-debiased-ml">
+<h3>加强版 FWL：Double/Debiased ML<a class="headerlink" href="#fwl-double-debiased-ml" title="Link to this heading">#</a></h3>
+<p>Double/Debiased ML 可以看作是 FWL 定理的升级版。思路很简单：在构建结果和处理残差时使用机器学习模型：</p>
+<p><span class="math notranslate nohighlight">\(
+Y_i - \hat{M}_y(X_i) = \tau \cdot (T_i - \hat{M}_t(X_i)) + \epsilon_i
+\)</span></p>
+<p>其中 <span class="math notranslate nohighlight">\(\hat{M}_y(X_i)\)</span> 估计 <span class="math notranslate nohighlight">\(E[Y|X]\)</span>，<span class="math notranslate nohighlight">\(\hat{M}_t(X_i)\)</span> 估计 <span class="math notranslate nohighlight">\(E[T|X]\)</span>。由于 ML 模型非常灵活，它们可以捕捉 <span class="math notranslate nohighlight">\(Y\)</span> 与 <span class="math notranslate nohighlight">\(T\)</span> 对 <span class="math notranslate nohighlight">\(X\)</span> 之间的复杂关系，同时保持 FWL 式的正交化。这意味着我们不必对协变量 <span class="math notranslate nohighlight">\(X\)</span> 与结果 <span class="math notranslate nohighlight">\(Y\)</span> 或处理之间的关系作任何参数假设，就能得到正确的处理效应。在不存在未观测混杂的情况下，我们可以通过以下正交化步骤恢复 ATE：</p>
+<ol class="arabic simple">
+<li><p>使用灵活的 ML 回归模型 <span class="math notranslate nohighlight">\(M_y\)</span> 用特征 <span class="math notranslate nohighlight">\(X\)</span> 预测结果 <span class="math notranslate nohighlight">\(Y\)</span>。</p></li>
+<li><p>使用灵活的 ML 回归模型 <span class="math notranslate nohighlight">\(M_t\)</span> 用特征 <span class="math notranslate nohighlight">\(X\)</span> 预测处理 <span class="math notranslate nohighlight">\(T\)</span>。</p></li>
+<li><p>计算残差 <span class="math notranslate nohighlight">\(\tilde{Y} = Y - M_y(X)\)</span> 和 <span class="math notranslate nohighlight">\(\tilde{T} = T - M_t(X)\)</span>。</p></li>
+<li><p>将结果残差回归于处理残差：<span class="math notranslate nohighlight">\(\tilde{Y} = \alpha + \tau \tilde{T}\)</span>。</p></li>
+</ol>
+<p>这里的 <span class="math notranslate nohighlight">\(\tau\)</span> 就是 ATE，可以用普通最小二乘等方法估计。</p>
+<p>利用机器学习的强大之处在于灵活性，可以在干扰关系中捕捉复杂函数形式。但这种灵活性也带来麻烦，因为模型可能会过拟合。这就是我们需要引入交叉预测和折外残差的原因：我们将数据分成 K 份，在 K-1 份上训练模型，在剩下一份上预测残差，这样即便模型过拟合，也不会把残差压到零。最后合并所有部分的预测，用这些残差来估计最终的因果模型 <span class="math notranslate nohighlight">\(\tilde{Y} = \alpha + \tau \tilde{T}\)</span>。</p>
+<p>接下来我们通过一步一步的实现来展示 Double/Debiased ML，在实践中解释每一步的作用。我们首先用 ML 模型估计干扰关系，从处理模型 <span class="math notranslate nohighlight">\(M_t\)</span> 开始；我们将用 LGBM 模型通过 <code class="docutils literal notranslate"><span class="pre">temp</span></code>、<code class="docutils literal notranslate"><span class="pre">weekday</span></code> 和 <code class="docutils literal notranslate"><span class="pre">cost</span></code> 预测价格，这些预测将用 <code class="docutils literal notranslate"><span class="pre">sklearn</span></code> 的 <code class="docutils literal notranslate"><span class="pre">cross_val_predict</span></code> 函数得到折外预测。我还为可视化添加了平均值 <span class="math notranslate nohighlight">\(\hat{\mu_t}\)</span> 到残差中。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lightgbm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LGBMRegressor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">cross_val_predict</span>
+
+<span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;sales&quot;</span>
+<span class="n">T</span> <span class="o">=</span> <span class="s2">&quot;price&quot;</span>
+<span class="n">X</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;temp&quot;</span><span class="p">,</span> <span class="s2">&quot;weekday&quot;</span><span class="p">,</span> <span class="s2">&quot;cost&quot;</span><span class="p">]</span>
+
+<span class="n">debias_m</span> <span class="o">=</span> <span class="n">LGBMRegressor</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">force_col_wise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">train_pred</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">price_res</span> <span class="o">=</span>  <span class="n">train</span><span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="o">-</span>
+                          <span class="n">cross_val_predict</span><span class="p">(</span><span class="n">debias_m</span><span class="p">,</span> <span class="n">train</span><span class="p">[</span><span class="n">X</span><span class="p">],</span> <span class="n">train</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+                          <span class="o">+</span> <span class="n">train</span><span class="p">[</span><span class="n">T</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="c1"># add mu_t for visualization. </span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>注意我将 <span class="math notranslate nohighlight">\(M_t\)</span> 称为去偏模型，这是因为在 Double/Debias ML 中，它的作用是为处理去偏。残差 <span class="math notranslate nohighlight">\(\tilde{T} = T - M_t(X)\)</span> 可以被看作是处理的一个版本，其中所有来自 <span class="math notranslate nohighlight">\(X\)</span> 的混杂偏差都被模型剔除了。换句话说，<span class="math notranslate nohighlight">\(\tilde{T}\)</span> 与 <span class="math notranslate nohighlight">\(X\)</span> 正交。直观地讲，<span class="math notranslate nohighlight">\(\tilde{T}\)</span> 不再能用 <span class="math notranslate nohighlight">\(X\)</span> 解释，因为它已经被解释掉了。</p>
+<p>为了看这一点，我们可以绘制与之前相同的图，但将价格替换为价格残差。还记得之前周末价格更高吗？现在这种偏差消失了。所有工作日的价格残差分布都相同。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">train_pred</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">1000</span><span class="p">),</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;price_res&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;sales&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;weekday&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/9d2fcee56b6da313dea5fb2c0a6ea59d8407dd6d163871f1bb2306021ff4f708.png" src="_images/9d2fcee56b6da313dea5fb2c0a6ea59d8407dd6d163871f1bb2306021ff4f708.png" />
+</div>
+</div>
+<p><span class="math notranslate nohighlight">\(M_t\)</span> 的作用是对处理去偏，那么 <span class="math notranslate nohighlight">\(M_y\)</span> 的作用是什么呢？它的作用是消除 <span class="math notranslate nohighlight">\(Y\)</span> 中的方差，因此我称之为降噪模型（denoising model）。直观地说，<span class="math notranslate nohighlight">\(M_y\)</span> 创建了一个结果的版本，其中来自 <span class="math notranslate nohighlight">\(X\)</span> 的所有方差都被解释掉了。结果是，在 <span class="math notranslate nohighlight">\(\tilde{Y}\)</span> 中做因果估计更容易。由于噪声更少，因果关系更容易看清。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">denoise_m</span> <span class="o">=</span> <span class="n">LGBMRegressor</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">force_col_wise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">train_pred</span> <span class="o">=</span> <span class="n">train_pred</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">sales_res</span> <span class="o">=</span>  <span class="n">train</span><span class="p">[</span><span class="n">y</span><span class="p">]</span> <span class="o">-</span>
+                               <span class="n">cross_val_predict</span><span class="p">(</span><span class="n">denoise_m</span><span class="p">,</span> <span class="n">train</span><span class="p">[</span><span class="n">X</span><span class="p">],</span> <span class="n">train</span><span class="p">[</span><span class="n">y</span><span class="p">],</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+                               <span class="o">+</span> <span class="n">train</span><span class="p">[</span><span class="n">y</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>如果我们绘制与之前相同的图，但将销售额替换为销售残差，可以看到 <span class="math notranslate nohighlight">\(Y\)</span> 的方差比之前小得多。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">train_pred</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">1000</span><span class="p">),</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;price_res&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;sales_res&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;weekday&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/5adf58543b8ebb43d87e2c13437f54fe34705010cc44a4b840219a2439ddb9e1.png" src="_images/5adf58543b8ebb43d87e2c13437f54fe34705010cc44a4b840219a2439ddb9e1.png" />
+</div>
+</div>
+<p>现在很容易看出价格与销售之间的负相关关系。</p>
+<p>最后，为了估计这种因果关系，我们可以对残差运行回归。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">final_model</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="s1">&#39;sales_res ~ price_res&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">train_pred</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">final_model</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span><span class="o">.</span><span class="n">tables</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><table class="simpletable">
+<tr>
+      <td></td>         <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th> <td>  224.5586</td> <td>    0.443</td> <td>  506.469</td> <td> 0.000</td> <td>  223.689</td> <td>  225.428</td>
+</tr>
+<tr>
+  <th>price_res</th> <td>   -3.9228</td> <td>    0.071</td> <td>  -54.962</td> <td> 0.000</td> <td>   -4.063</td> <td>   -3.783</td>
+</tr>
+</table></div></div>
+</div>
+<p>正如我们所看到的，当我们使用正交化后的销售和价格时，我们可以非常确信价格和销售之间是负相关的，这很合乎情理。随着价格上涨，冰淇淋的需求应该下降。</p>
+<p>但如果看未经残差处理的原始价格与销售关系，由于偏差，我们会发现它们呈正相关。这是因为商家在预期销售高峰时提高价格。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">final_model</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="s1">&#39;sales ~ price&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">train_pred</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">final_model</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span><span class="o">.</span><span class="n">tables</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><table class="simpletable">
+<tr>
+      <td></td>         <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th> <td>  192.9679</td> <td>    1.013</td> <td>  190.414</td> <td> 0.000</td> <td>  190.981</td> <td>  194.954</td>
+</tr>
+<tr>
+  <th>price</th>     <td>    1.2294</td> <td>    0.162</td> <td>    7.575</td> <td> 0.000</td> <td>    0.911</td> <td>    1.547</td>
+</tr>
+</table></div></div>
+</div>
+</section>
+<section id="double-ml-cate">
+<h3>使用 Double-ML 估计 CATE<a class="headerlink" href="#double-ml-cate" title="Link to this heading">#</a></h3>
+<p>到目前为止，我们已经看到 Double/Debiased ML 使我们能够专注于估计平均处理效应 (ATE)。它同样可以用来估计处理效应异质性，即条件平均处理效应 (CATE)。本质上，我们现在认为因果参数 <span class="math notranslate nohighlight">\(\tau\)</span> 会随着单位的协变量而变化。</p>
+<p><span class="math notranslate nohighlight">\(
+Y_i - {M}_y(X_i)
+= \tau(X_i) \cdot (T_i - {M}_t(X_i)) + \epsilon_i
+\)</span></p>
+<p>为了估计这个模型，我们将使用同样的价格和销售残差，但现在我们将价格残差与其他协变量相互作用。然后，我们可以拟合一个线性的 CATE 模型</p>
+<p><span class="math notranslate nohighlight">\(
+\tilde{Y}_i = \alpha + \beta_1 \tilde{T}_i + \pmb{\beta}_2 \pmb{X}_i \tilde{T}_i + \epsilon_i
+\)</span></p>
+<p>估计完该模型后，为了预测 CATE，我们将使用随机的测试集。由于最终模型是线性的，我们可以机械地计算 CATE：</p>
+<p><span class="math notranslate nohighlight">\(
+\hat{\mu}(\partial Sales_i, X_i) = M(Price=1, X_i) - M(Price=0, X_i)
+\)</span></p>
+<p>其中 <span class="math notranslate nohighlight">\(M\)</span> 是我们的最终线性模型。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">final_model_cate</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="s1">&#39;sales_res ~ price_res * (temp + C(weekday) + cost)&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">train_pred</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="n">cate_test</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">cate</span><span class="o">=</span><span class="n">final_model_cate</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">price_res</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+                        <span class="o">-</span> <span class="n">final_model_cate</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">price_res</span><span class="o">=</span><span class="mi">0</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>为了检验该模型在区分高价格敏感性和低价格敏感性单位方面表现如何，我们将使用累积弹性曲线。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gain_curve_test</span> <span class="o">=</span> <span class="n">cumulative_gain</span><span class="p">(</span><span class="n">cate_test</span><span class="p">,</span> <span class="s2">&quot;cate&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">T</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gain_curve_test</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C0&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Test&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">elast</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">T</span><span class="p">)],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Baseline&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;R-Learner&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/4b8f662d5614f459c0fc5eb51b13b1aca8cef281c7a3dc8f50f3e0789f6d7364.png" src="_images/4b8f662d5614f459c0fc5eb51b13b1aca8cef281c7a3dc8f50f3e0789f6d7364.png" />
+</div>
+</div>
+<p>使用最终线性模型的 Double/Debiased ML 程序已经非常不错，如上图所示。但也许我们能做得更好。事实上，这是一种非常通用的程序，我们可以像元学习器一样理解它。Nie 和 Wager 将其称为 R-Learner，以纪念 Robinson (1988) 的工作，并强调残差化的重要性。</p>
+<p>这种推广来自于认识到 Double/Debiased ML 程序定义了一个新的损失函数，我们可以用任何方法来最小化它。接下来，我们将看到如何以类似于目标变换方法或 F-learner 的方式实现这一点。</p>
+</section>
+</section>
+<section id="double-debiased-ml">
+<h2>非参数 Double/Debiased ML<a class="headerlink" href="#double-debiased-ml" title="Link to this heading">#</a></h2>
+<p>Double-ML 的好处在于它让我们摆脱了在因果模型中学习干扰参数的烦恼。这样，我们可以将所有注意力集中在学习感兴趣的因果参数上，无论是 ATE 还是 CATE。然而，在上述设定下，我们在 ML 残差化之后仍然使用线性模型作为最终的因果模型。在我们的例子中，这意味着我们假设价格对销售的影响是线性的。这在价格变化范围较小时可能还好，但微观经济理论告诉我们情况不一定如此。例如，在低价区间，价格每升高一个单位需求可能下降 2 单位；而在高价区间，价格每升高一个单位需求可能只下降 1 单位。这显然不是线性关系。</p>
+<p>我们可以利用微观经济理论来推测结果对处理的函数形式，但也许我们可以把这一任务交给机器学习模型。换句话说，让机器自己学习那种复杂的函数形式。事实证明，只要对原来的 Double/Debiased ML 算法做些调整，这完全可行。</p>
+<p>首先，与之前完全相同，我们用 ML 模型和交叉预测对处理和结果进行正交化。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;sales&quot;</span>
+<span class="n">T</span> <span class="o">=</span> <span class="s2">&quot;price&quot;</span>
+<span class="n">X</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;temp&quot;</span><span class="p">,</span> <span class="s2">&quot;weekday&quot;</span><span class="p">,</span> <span class="s2">&quot;cost&quot;</span><span class="p">]</span>
+
+<span class="n">debias_m</span> <span class="o">=</span> <span class="n">LGBMRegressor</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">force_col_wise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">denoise_m</span> <span class="o">=</span> <span class="n">LGBMRegressor</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">force_col_wise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">train_pred</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">price_res</span> <span class="o">=</span>  <span class="n">train</span><span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="o">-</span> <span class="n">cross_val_predict</span><span class="p">(</span><span class="n">debias_m</span><span class="p">,</span> <span class="n">train</span><span class="p">[</span><span class="n">X</span><span class="p">],</span> <span class="n">train</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+                          <span class="n">sales_res</span> <span class="o">=</span>  <span class="n">train</span><span class="p">[</span><span class="n">y</span><span class="p">]</span> <span class="o">-</span> <span class="n">cross_val_predict</span><span class="p">(</span><span class="n">denoise_m</span><span class="p">,</span> <span class="n">train</span><span class="p">[</span><span class="n">X</span><span class="p">],</span> <span class="n">train</span><span class="p">[</span><span class="n">y</span><span class="p">],</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>到目前为止还没有什么不同之处。现在事情开始有趣了。回想一下 Double/Debiased-ML 将数据建模为：</p>
+<p><span class="math notranslate nohighlight">\(
+Y_i = \hat{M}_y(X_i) + \tau(X_i)\big(T_i - \hat{M}_t(X_i)\big) + \hat{\epsilon}_i
+\)</span></p>
+<p>其中 <span class="math notranslate nohighlight">\(\hat{M}_y\)</span> 和 <span class="math notranslate nohighlight">\(\hat{M}_t\)</span> 分别是用特征预测结果和处理的模型。若重新排列上述表达式，可以隔离误差项：</p>
+<p><span class="math notranslate nohighlight">\(
+\hat{\epsilon}_i = \big(Y_i - \hat{M}_y(X_i)\big) - \tau(X_i)\big(T_i - \hat{M}_t(X_i)\big)
+\)</span></p>
+<p>这非常棒，因为我们可以将其称为<strong>因果损失函数</strong>。这意味着，如果我们最小化该损失的平方，我们将估计 <span class="math notranslate nohighlight">\(\tau(X_i)\)</span> 的期望，即 CATE。</p>
+<p><span class="math notranslate nohighlight">\(
+\hat{L}_n(\tau(x)) = \frac{1}{n} \sum_{i=1}^n \Big( (Y_i - \hat{M}_y(X_i)) - \tau(X_i)(T_i - \hat{M}_t(X_i)) \Big)^2
+\)</span></p>
+<p>这个损失也称为 <strong>R-Loss</strong>，这是 R-learner 最小化的目标。如何最小化它呢？有多种方法，这里我们介绍最简单的一种。为了简化符号，我们用残差化后的处理和结果来重写上述损失函数：</p>
+<p><span class="math notranslate nohighlight">\(
+\hat{L}_n(\tau(x)) = \frac{1}{n} \sum_{i=1}^n \big( \tilde{Y}_i - \tau(X_i) \tilde{T}_i \big)^2
+\)</span></p>
+<p>通过代数变换，可以把 <span class="math notranslate nohighlight">\(\tilde{T}_i\)</span> 提到括号外，将 <span class="math notranslate nohighlight">\(\tau(X_i)\)</span> 单独放在括号内部：</p>
+<div class="math notranslate nohighlight">
+\[
+\hat{L}_n(\tau(x)) = \frac{1}{n} \sum_{i=1}^n \tilde{T}_i^2 \left(\frac{\tilde{Y}_i}{\tilde{T}_i} - \tau(X_i)\right)^2
+\]</div>
+<p>最小化上述损失等价于最小化括号内的表达式，同时用 <span class="math notranslate nohighlight">\(\tilde{T}_i^2\)</span> 作为权重。这一技巧称为加权技巧（weight trick），用以构建非参数因果损失。注意这与我们之前看到的目标变换思想非常相似——确实，这也是一种目标变换，但加入了权重。</p>
+<p>总结一下，在得到了干扰模型和残差化的处理与结果后，我们将：</p>
+<ol class="arabic simple">
+<li><p>构建权重 <span class="math notranslate nohighlight">\(\tilde{T}_i^2\)</span>；</p></li>
+<li><p>构建目标 <span class="math notranslate nohighlight">\(\tilde{Y}_i / \tilde{T}_i\)</span>；</p></li>
+<li><p>使用任意预测方法在权重下预测目标 (2)。</p></li>
+</ol>
+<p>下面就是对应的代码。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_final</span> <span class="o">=</span> <span class="n">LGBMRegressor</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">force_col_wise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+ 
+<span class="c1"># create the weights</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">train_pred</span><span class="p">[</span><span class="s2">&quot;price_res&quot;</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> 
+ 
+<span class="c1"># create the transformed target</span>
+<span class="n">y_star</span> <span class="o">=</span> <span class="p">(</span><span class="n">train_pred</span><span class="p">[</span><span class="s2">&quot;sales_res&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">train_pred</span><span class="p">[</span><span class="s2">&quot;price_res&quot;</span><span class="p">])</span>
+ 
+<span class="c1"># use a weighted regression ML model to predict the target with the weights.</span>
+<span class="n">model_final</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">train</span><span class="p">[</span><span class="n">X</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">y_star</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">w</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The above ML model, even though it is an off-the-shelf predictive model, is estimating the CATE. That’s the power of the non-parametric Double-ML. Before, we were using a linear regression as the final model for the CATE estimation. Now, since we defined a generic loss, we can use any predictive model at our disposal as the final model.</p>
+<p>Let’s now use the test set to compare this non-parametric version with the linear version we had before.</p>
+<p>First, we estimate the individual treatment effect.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cate_test_non_param</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">cate</span><span class="o">=</span><span class="n">model_final</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="n">X</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, we can plot the non-parametric cumulative elasticity curve side by side with the one we got from the parametric  (linear) version of Double/Orthogonal-ML.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gain_curve_test_non_param</span> <span class="o">=</span> <span class="n">cumulative_gain</span><span class="p">(</span><span class="n">cate_test_non_param</span><span class="p">,</span> <span class="s2">&quot;cate&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">T</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gain_curve_test_non_param</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C0&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Non-Parametric&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gain_curve_test</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C1&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Parametric&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">elast</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">T</span><span class="p">)],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Baseline&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;R-Learner&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/0fd88ceefbc65ba0eb1c60291bba9f6fdd9a6a0bddc92d8de2c36412ea62a5ac.png" src="_images/0fd88ceefbc65ba0eb1c60291bba9f6fdd9a6a0bddc92d8de2c36412ea62a5ac.png" />
+</div>
+</div>
+<p>这里改进不大，但多少有点进步。此外，不必事先指定处理函数的形式本身就是一个巨大的优势。</p>
+<section id="id3">
+<h3>什么是“非参数”？<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<p>在继续之前，我想强调一个常见的误解。当我们想到用非参数 Double-ML 模型来估计 CATE 时，好像意味着我们会得到非线性的处理效应。比如，假设一个非常简单的数据生成过程（DGP），其中折扣以平方根形式非线性地影响销售：</p>
+<p><span class="math notranslate nohighlight">\(
+Sales_i = 20 + 10\sqrt{Discount_i} + e_i
+\)</span></p>
+<p>处理效应是销售函数对处理的导数：</p>
+<p><span class="math notranslate nohighlight">\(
+\dfrac{\partial Sales_i}{\partial Discount_i} = \frac{10}{2\sqrt{Discount_i}}
+\)</span></p>
+<p>可以看到，处理效应并不是线性的。随着处理增加，效应实际上减弱。这对这个 DGP 很合理：一开始少量折扣会显著增加销售，但折扣给多了之后，额外的折扣对销售的影响会越来越小，因为人们不会无限购买，所以折扣只有在他们尚未满足之前才有效。</p>
+<p>那么问题来了，非参数 ML 能否捕捉这种饱和行为的处理效应？能否从小的折扣水平外推得知，如果折扣更高，处理效应会更低？答案是……某种程度上可以。为了更好地理解这一点，我们生成与上述 DGP 类似的数据。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">321</span><span class="p">)</span>
+<span class="n">n</span><span class="o">=</span><span class="mi">5000</span>
+<span class="n">discount</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">gamma</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">discount</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># for better ploting</span>
+<span class="n">sales</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">20</span><span class="o">+</span><span class="mi">10</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">discount</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>如果我们绘制这个数据生成过程，可以看到变量之间的平方根关系。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">discount</span><span class="p">,</span> <span class="mi">20</span> <span class="o">+</span> <span class="mi">10</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">discount</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Sales&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Discount&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/dd6c6291e098a6ca3ade3bd1955153c8ffceb91f4a95838eb8d7a25a0c21e067.png" src="_images/dd6c6291e098a6ca3ade3bd1955153c8ffceb91f4a95838eb8d7a25a0c21e067.png" />
+</div>
+</div>
+<p>现在，让我们把非参数 Double/Debias ML 应用于这份数据。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">debias_m</span> <span class="o">=</span> <span class="n">LGBMRegressor</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">force_col_wise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">denoise_m</span> <span class="o">=</span> <span class="n">LGBMRegressor</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">force_col_wise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># orthogonalising step</span>
+<span class="n">discount_res</span> <span class="o">=</span>  <span class="n">discount</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="o">-</span> <span class="n">cross_val_predict</span><span class="p">(</span><span class="n">debias_m</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">discount</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">discount</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">sales_res</span> <span class="o">=</span>  <span class="n">sales</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="o">-</span> <span class="n">cross_val_predict</span><span class="p">(</span><span class="n">denoise_m</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">sales</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">sales</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="c1"># final, non parametric causal model</span>
+<span class="n">non_param</span> <span class="o">=</span> <span class="n">LGBMRegressor</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">force_col_wise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">discount_res</span> <span class="o">**</span> <span class="mi">2</span> 
+<span class="n">y_star</span> <span class="o">=</span> <span class="n">sales_res</span> <span class="o">/</span> <span class="n">discount_res</span>
+
+<span class="n">non_param</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">discount_res</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">y</span><span class="o">=</span><span class="n">y_star</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">w</span><span class="o">.</span><span class="n">ravel</span><span class="p">());</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>利用上述模型，我们可以得到 CATE 估计。问题在于，CATE 不是线性的；随着处理增加，CATE 应当下降。我们想知道非参数模型是否能够捕捉这种非线性。</p>
+<p>要正确回答这个问题，让我们回忆 Double/Debiased ML 对数据生成过程的基本假设。这些假设可由之前的等式表示：</p>
+<p><span class="math notranslate nohighlight">\(
+\tilde{Y}_i = \tau(X_i) \tilde{T}_i + e_i
+\)</span></p>
+<p>用语言来说，这意味着残差化后的结果等于残差化后的处理乘以条件处理效应。这说明<strong>处理对结果的影响是线性的</strong>。这里没有非线性。该模型暗示，当我们把处理从 1 增加到 10，或从 100 增加到 110，结果都会增加一个固定的量 <span class="math notranslate nohighlight">\(\tau(X_i)\)</span>，只是简单的乘法。</p>
+<p>那这是否意味着非参数模型不能捕捉处理效应的非线性？也不是……实际上，Double/ML 所做的是<strong>寻找非线性 CATE 的局部线性近似</strong>。换句话说，它找到结果相对于处理在某个处理水平处的导数。这等价于找到在处理点附近与结果函数相切的直线的斜率。</p>
+<p><img alt="img" src="_images/linear-aprox.png" /></p>
+<p>这意味着，非参数 Double-ML 确实能够意识到随着处理增加，处理效应会降低，但它提供的是局部斜率而不是全局非线性函数。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cate</span> <span class="o">=</span> <span class="n">non_param</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">discount</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">discount</span><span class="p">,</span> <span class="n">sales</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">discount</span><span class="p">,</span> <span class="mi">20</span> <span class="o">+</span> <span class="mi">10</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">discount</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Ground Truth&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;C1&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Sales by Discount&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Discount&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">discount</span><span class="p">,</span> <span class="n">cate</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;$\hat{</span><span class="se">\\</span><span class="s2">tau}(x)$&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;C4&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">discount</span><span class="p">,</span> <span class="mi">5</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">discount</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Ground Truth&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;C2&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;CATE ($\partial$Sales) by Discount&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Discount&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;&gt;:12: SyntaxWarning: invalid escape sequence &#39;\h&#39;
+&lt;&gt;:14: SyntaxWarning: invalid escape sequence &#39;\p&#39;
+&lt;&gt;:12: SyntaxWarning: invalid escape sequence &#39;\h&#39;
+&lt;&gt;:14: SyntaxWarning: invalid escape sequence &#39;\p&#39;
+/var/folders/lf/pj0tjh091t56trz0l1z6m8kc0000gn/T/ipykernel_60870/1491753946.py:12: SyntaxWarning: invalid escape sequence &#39;\h&#39;
+  plt.scatter(discount, cate, label=&quot;$\hat{\\tau}(x)$&quot;, c=&quot;C4&quot;)
+/var/folders/lf/pj0tjh091t56trz0l1z6m8kc0000gn/T/ipykernel_60870/1491753946.py:14: SyntaxWarning: invalid escape sequence &#39;\p&#39;
+  plt.title(&quot;CATE ($\partial$Sales) by Discount&quot;)
+</pre></div>
+</div>
+<img alt="_images/d3ae9cc8870c602dc04ae55f5028967080541b5eba6ced4f1a7b352e24ea673f.png" src="_images/d3ae9cc8870c602dc04ae55f5028967080541b5eba6ced4f1a7b352e24ea673f.png" />
+</div>
+</div>
+<p>这听起来像是技术细节，但有非常实际的后果。例如，假设在上述例子中你发现某位客户的处理效应为 2，也就是说如果将折扣提高 1 个单位，该客户的销售额会增加 2 个单位。你可能会想：“太好了！我要给这个人更多折扣！毕竟每 1 单位折扣能带来 2 单位销售。”然而这是错误的结论。处理效应为 2 只是在那一折扣水平下的局部结果。一旦提高折扣，效应就会下降。例如，这个假想客户只有 5 的折扣，因此处理效应很高。如果你看到这个巨大的处理效应并用它来证明应该给这个客户 20 的折扣，那么当你这么做时，效应可能从 2 降至 0.5。以 2 的处理效应计算看似合理的 20 的折扣，在处理效应只有 0.5 时可能不再盈利。</p>
+<p>这意味着在将非线性的处理效应外推到新的处理水平时必须格外小心。否则你可能做出非常不划算的决定。换句话说，当处理效应不是线性时，即使是非参数 Double/Debiased-ML 也<strong>难以进行反事实结果预测</strong>。它会试图将低处理水平下的处理效应线性外推到高处理水平，反之亦然，由于非线性，这种外推可能会偏离实际。</p>
+<p>为解决这个问题，还有一个最后的思路……</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">KFold</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">cv_estimate</span><span class="p">(</span><span class="n">train_data</span><span class="p">,</span> <span class="n">n_splits</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">model_params</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">cv</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="n">n_splits</span><span class="p">)</span>    
+    <span class="n">models</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">cv_pred</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">train_data</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">train_data</span><span class="p">):</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="o">**</span><span class="n">model_params</span><span class="p">)</span>
+        <span class="n">m</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_data</span><span class="p">[</span><span class="n">X</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train</span><span class="p">],</span> <span class="n">train_data</span><span class="p">[</span><span class="n">y</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train</span><span class="p">])</span>
+        <span class="n">cv_pred</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">test</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">train_data</span><span class="p">[</span><span class="n">X</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">test</span><span class="p">])</span>
+        <span class="n">models</span> <span class="o">+=</span> <span class="p">[</span><span class="n">m</span><span class="p">]</span>
+    
+    <span class="k">return</span> <span class="n">cv_pred</span><span class="p">,</span> <span class="n">models</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>现在我们有了自己的交叉预测函数，并且得到了模型，我们可以继续执行正交化步骤。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;sales&quot;</span>
+<span class="n">T</span> <span class="o">=</span> <span class="s2">&quot;price&quot;</span>
+<span class="n">X</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;temp&quot;</span><span class="p">,</span> <span class="s2">&quot;weekday&quot;</span><span class="p">,</span> <span class="s2">&quot;cost&quot;</span><span class="p">]</span>
+
+<span class="n">debias_m</span> <span class="o">=</span> <span class="n">LGBMRegressor</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">force_col_wise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">denoise_m</span> <span class="o">=</span> <span class="n">LGBMRegressor</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">force_col_wise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">y_hat</span><span class="p">,</span> <span class="n">models_y</span> <span class="o">=</span> <span class="n">cv_estimate</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">LGBMRegressor</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">force_col_wise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">t_hat</span><span class="p">,</span> <span class="n">models_t</span> <span class="o">=</span> <span class="n">cv_estimate</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">LGBMRegressor</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">force_col_wise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span> <span class="n">X</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
+
+<span class="n">y_res</span> <span class="o">=</span> <span class="n">train</span><span class="p">[</span><span class="n">y</span><span class="p">]</span> <span class="o">-</span> <span class="n">y_hat</span>
+<span class="n">t_res</span> <span class="o">=</span> <span class="n">train</span><span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="o">-</span> <span class="n">t_hat</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>正交化之后，我们将 <span class="math notranslate nohighlight">\(\tilde{T}\)</span> 与 <span class="math notranslate nohighlight">\(X\)</span> 一起输入机器学习模型，用它来预测 <span class="math notranslate nohighlight">\(\tilde{Y}\)</span>。这里我使用的是 LGBM 模型，但你可以选择任何机器学习模型。LGBM 的一个好处是可以设置单调约束。基于我们对价格的了解，销售应随着价格的上升而下降。我们可以将这一点纳入约束，让 LGBM 模型在价格上升时<strong>不要增加</strong>其预测值。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># -1 on price saying that the predictions should not increase as price increases</span>
+<span class="n">monotone_constraints</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">col</span> <span class="o">==</span> <span class="n">T</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">X</span><span class="o">+</span><span class="p">[</span><span class="n">T</span><span class="p">]]</span>
+ 
+<span class="n">model_final</span> <span class="o">=</span> <span class="n">LGBMRegressor</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">monotone_constraints</span><span class="o">=</span><span class="n">monotone_constraints</span><span class="p">,</span> <span class="n">force_col_wise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">model_final</span> <span class="o">=</span> <span class="n">model_final</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">train</span><span class="p">[</span><span class="n">X</span><span class="p">]</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="n">T</span><span class="p">:</span> <span class="n">t_res</span><span class="p">}),</span> <span class="n">y</span><span class="o">=</span><span class="n">y_res</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>现在事情有点奇怪。如果仔细想想，这个最终的 ML 模型实际上是在估计以下的 <span class="math notranslate nohighlight">\(\tau\)</span> 函数：</p>
+<p><span class="math notranslate nohighlight">\(
+\tilde{Y}_i = \tau(X_i, \tilde{T}_i) + e_i
+\)</span></p>
+<p>但从这个函数中并没有明确的方式提取处理效应。因此，我们不再尝试直接提取处理效应，而是像前面图示那样输入反事实预测。我们将为每个单位模拟不同的价格水平，并使用 Double-ML 模型预测在这些不同价格水平下的销售量。</p>
+<p>为此，我们将 1) 将测试集与包含所有模拟价格的价格表进行笛卡尔连接，得到如下结果……</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pred_test</span> <span class="o">=</span> <span class="p">(</span><span class="n">test</span>
+             <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;price&quot;</span><span class="p">:</span><span class="s2">&quot;factual_price&quot;</span><span class="p">})</span>
+             <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">jk</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+             <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span> <span class="c1"># create day ID</span>
+             <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">jk</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">9</span><span class="p">))),</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;jk&quot;</span><span class="p">)</span>
+             <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;jk&quot;</span><span class="p">]))</span>
+
+<span class="n">pred_test</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;index==0&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>index</th>
+      <th>temp</th>
+      <th>weekday</th>
+      <th>cost</th>
+      <th>factual_price</th>
+      <th>sales</th>
+      <th>price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>25.8</td>
+      <td>1</td>
+      <td>0.3</td>
+      <td>7</td>
+      <td>230</td>
+      <td>3.000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>25.8</td>
+      <td>1</td>
+      <td>0.3</td>
+      <td>7</td>
+      <td>230</td>
+      <td>3.875</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0</td>
+      <td>25.8</td>
+      <td>1</td>
+      <td>0.3</td>
+      <td>7</td>
+      <td>230</td>
+      <td>4.750</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0</td>
+      <td>25.8</td>
+      <td>1</td>
+      <td>0.3</td>
+      <td>7</td>
+      <td>230</td>
+      <td>5.625</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0</td>
+      <td>25.8</td>
+      <td>1</td>
+      <td>0.3</td>
+      <td>7</td>
+      <td>230</td>
+      <td>6.500</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0</td>
+      <td>25.8</td>
+      <td>1</td>
+      <td>0.3</td>
+      <td>7</td>
+      <td>230</td>
+      <td>7.375</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0</td>
+      <td>25.8</td>
+      <td>1</td>
+      <td>0.3</td>
+      <td>7</td>
+      <td>230</td>
+      <td>8.250</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>0</td>
+      <td>25.8</td>
+      <td>1</td>
+      <td>0.3</td>
+      <td>7</td>
+      <td>230</td>
+      <td>9.125</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>0</td>
+      <td>25.8</td>
+      <td>1</td>
+      <td>0.3</td>
+      <td>7</td>
+      <td>230</td>
+      <td>10.000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>注意我们只展示了索引为 1 的那一天，即单个单位。在那一天，该单位的实际价格是 7。但我们模拟了从 3 到 10 的不同反事实价格。现在，我们将把所有这些反事实价格输入因果模型，该模型会根据模拟的价格给出反事实销售预测。</p>
+<p>由于我们的模型形式为：</p>
+<p><span class="math notranslate nohighlight">\(
+\widehat{Price_i} = \hat{\tau}(X_i, \tilde{T}_i)
+\)</span></p>
+<p>在进行反事实预测之前，我们需要得到 <span class="math notranslate nohighlight">\(\tilde{T}_i\)</span>，即价格残差。我们将首先用所有的处理模型进行预测（记住训练时我们用了 5 折交叉预测），然后将五个模型的预测平均为一个单一预测，最后用这个集成模型的预测减去我们之前生成的反事实价格，以获得残差。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">ensamble_pred</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">m</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">X</span><span class="p">])</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">models</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">t_res_test</span> <span class="o">=</span> <span class="n">pred_test</span><span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="o">-</span> <span class="n">ensamble_pred</span><span class="p">(</span><span class="n">pred_test</span><span class="p">,</span> <span class="n">models_t</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+
+<span class="n">pred_test</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">_pred&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_final</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">pred_test</span><span class="p">[</span><span class="n">X</span><span class="p">]</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="n">T</span><span class="p">:</span> <span class="n">t_res_test</span><span class="p">}))</span>
+
+<span class="n">pred_test</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;index==0&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>index</th>
+      <th>temp</th>
+      <th>weekday</th>
+      <th>cost</th>
+      <th>factual_price</th>
+      <th>sales</th>
+      <th>price</th>
+      <th>sales_pred</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>25.8</td>
+      <td>1</td>
+      <td>0.3</td>
+      <td>7</td>
+      <td>230</td>
+      <td>3.000</td>
+      <td>24.302849</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>25.8</td>
+      <td>1</td>
+      <td>0.3</td>
+      <td>7</td>
+      <td>230</td>
+      <td>3.875</td>
+      <td>20.862833</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0</td>
+      <td>25.8</td>
+      <td>1</td>
+      <td>0.3</td>
+      <td>7</td>
+      <td>230</td>
+      <td>4.750</td>
+      <td>16.093630</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0</td>
+      <td>25.8</td>
+      <td>1</td>
+      <td>0.3</td>
+      <td>7</td>
+      <td>230</td>
+      <td>5.625</td>
+      <td>6.274595</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0</td>
+      <td>25.8</td>
+      <td>1</td>
+      <td>0.3</td>
+      <td>7</td>
+      <td>230</td>
+      <td>6.500</td>
+      <td>-1.624625</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0</td>
+      <td>25.8</td>
+      <td>1</td>
+      <td>0.3</td>
+      <td>7</td>
+      <td>230</td>
+      <td>7.375</td>
+      <td>-10.939867</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0</td>
+      <td>25.8</td>
+      <td>1</td>
+      <td>0.3</td>
+      <td>7</td>
+      <td>230</td>
+      <td>8.250</td>
+      <td>-21.655858</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>0</td>
+      <td>25.8</td>
+      <td>1</td>
+      <td>0.3</td>
+      <td>7</td>
+      <td>230</td>
+      <td>9.125</td>
+      <td>-25.319174</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>0</td>
+      <td>25.8</td>
+      <td>1</td>
+      <td>0.3</td>
+      <td>7</td>
+      <td>230</td>
+      <td>10.000</td>
+      <td>-25.319174</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>可以看到，我们现在对每个模拟价格都有销售预测。价格越低，销售越高。有趣的是，这些预测的水平偏离实际，例如从约 24 到约 -24。这是因为模型预测的是残差化后的结果，其均值约为零。如果你只想得到销售曲线的斜率，即价格的处理效应，这没有问题。另外，如果你想修正预测水平，只需将降噪模型 <span class="math notranslate nohighlight">\(M_y\)</span> 的预测加回来即可。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y_hat_test</span> <span class="o">=</span> <span class="n">ensamble_pred</span><span class="p">(</span><span class="n">pred_test</span><span class="p">,</span> <span class="n">models_y</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+<span class="n">pred_test</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">_pred&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_hat_test</span> <span class="o">+</span> 
+                          <span class="n">model_final</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">pred_test</span><span class="p">[</span><span class="n">X</span><span class="p">]</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="n">T</span><span class="p">:</span> <span class="n">t_res_test</span><span class="p">})))</span>
+
+<span class="n">pred_test</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;index==0&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>index</th>
+      <th>temp</th>
+      <th>weekday</th>
+      <th>cost</th>
+      <th>factual_price</th>
+      <th>sales</th>
+      <th>price</th>
+      <th>sales_pred</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>25.8</td>
+      <td>1</td>
+      <td>0.3</td>
+      <td>7</td>
+      <td>230</td>
+      <td>3.000</td>
+      <td>254.208352</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>25.8</td>
+      <td>1</td>
+      <td>0.3</td>
+      <td>7</td>
+      <td>230</td>
+      <td>3.875</td>
+      <td>250.768336</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0</td>
+      <td>25.8</td>
+      <td>1</td>
+      <td>0.3</td>
+      <td>7</td>
+      <td>230</td>
+      <td>4.750</td>
+      <td>245.999133</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0</td>
+      <td>25.8</td>
+      <td>1</td>
+      <td>0.3</td>
+      <td>7</td>
+      <td>230</td>
+      <td>5.625</td>
+      <td>236.180099</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0</td>
+      <td>25.8</td>
+      <td>1</td>
+      <td>0.3</td>
+      <td>7</td>
+      <td>230</td>
+      <td>6.500</td>
+      <td>228.280878</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0</td>
+      <td>25.8</td>
+      <td>1</td>
+      <td>0.3</td>
+      <td>7</td>
+      <td>230</td>
+      <td>7.375</td>
+      <td>218.965636</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0</td>
+      <td>25.8</td>
+      <td>1</td>
+      <td>0.3</td>
+      <td>7</td>
+      <td>230</td>
+      <td>8.250</td>
+      <td>208.249645</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>0</td>
+      <td>25.8</td>
+      <td>1</td>
+      <td>0.3</td>
+      <td>7</td>
+      <td>230</td>
+      <td>9.125</td>
+      <td>204.586329</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>0</td>
+      <td>25.8</td>
+      <td>1</td>
+      <td>0.3</td>
+      <td>7</td>
+      <td>230</td>
+      <td>10.000</td>
+      <td>204.586329</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>我们还可以绘制单位级别的销售曲线。让我们抽样十个单位，看看它们在不同价格下的表现。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">sample_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">pred_test</span><span class="p">[</span><span class="s2">&quot;index&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">(),</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">pred_test</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;index in @sample_ids&quot;</span><span class="p">),</span>
+             <span class="n">x</span><span class="o">=</span><span class="s2">&quot;price&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;sales_pred&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/5fd4642d83724c097f57655135bb7837238840cf6ba9b36e6ce956c202398397.png" src="_images/5fd4642d83724c097f57655135bb7837238840cf6ba9b36e6ce956c202398397.png" />
+</div>
+</div>
+<p>有趣的是，一些单位对价格上涨非常敏感。在某些情况下，当价格从 3 增加到 10 时，我们预测销售会从 250 降至将近 200。另一方面，一些单位的价格弹性非常小：当价格从 3 增至 10 时，我们预计销售仅从大约 195 降到大约 185。</p>
+<p>这些价格敏感性的差异很难直接看出，所以我喜欢做的是让所有曲线从同一个起点（此处为平均销售量）开始。这能让我们更容易看到一些单位在价格提高时销售急剧下降，而其他单位下降不那么明显。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">sample_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">pred_test</span><span class="p">[</span><span class="s2">&quot;index&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">(),</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">(</span><span class="n">pred_test</span>
+                   <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;index in @sample_ids&quot;</span><span class="p">)</span>
+                   <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">max_sales</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)[[</span><span class="s2">&quot;sales_pred&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="s2">&quot;max&quot;</span><span class="p">))</span>
+                   <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">sales_pred</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;sales_pred&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;max_sales&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;sales_pred&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())),</span>
+             <span class="n">x</span><span class="o">=</span><span class="s2">&quot;price&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;sales_pred&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/fe22b64b3f3adc26188a9c4eca6dfa6249f3e82b83584c9fc5a97446c6334fff.png" src="_images/fe22b64b3f3adc26188a9c4eca6dfa6249f3e82b83584c9fc5a97446c6334fff.png" />
+</div>
+</div>
+</section>
+<section id="id4">
+<h3>可能需要更多计量经济学！<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<p><img alt="img" src="_images/more-metrics.png" /></p>
+<p>我想以一则提醒结束这一“非科学”的 Double-ML 部分。我称这种方法为非科学并非无故。它有点像一种获取非线性反事实预测的巧妙办法。既然是个巧妙的方法，我觉得有必要谈谈它的潜在弊端。</p>
+<p>首先，它有所有机器学习方法在因果推断中未经调整时面临的同样问题：偏差。由于最终模型是一个正则化的 ML 模型，这种正则化可能会把因果估计偏向零。</p>
+<p>第二个问题与您选择的 ML 算法有关。这里我们选择的是提升树。树不擅长生成平滑的预测，因此预测曲线可能会出现不连续的跳变，这在上面的图中可以看到：某些地方出现阶梯状行为。此外，树不擅长外推，因此该模型可能会对训练集中未出现过的价格输出奇怪的预测值。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pred_test</span> <span class="o">=</span> <span class="p">(</span><span class="n">test</span>
+             <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;price&quot;</span><span class="p">:</span><span class="s2">&quot;factual_price&quot;</span><span class="p">})</span>
+             <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">jk</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+             <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span> <span class="c1"># create day ID</span>
+             <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">jk</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">))),</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;jk&quot;</span><span class="p">)</span>
+             <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;jk&quot;</span><span class="p">]))</span>
+
+<span class="n">t_res_test</span> <span class="o">=</span> <span class="n">pred_test</span><span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="o">-</span> <span class="n">ensamble_pred</span><span class="p">(</span><span class="n">pred_test</span><span class="p">,</span> <span class="n">models_t</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+
+<span class="n">y_hat_test</span> <span class="o">=</span> <span class="n">ensamble_pred</span><span class="p">(</span><span class="n">pred_test</span><span class="p">,</span> <span class="n">models_y</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+<span class="n">pred_test</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">_pred&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_final</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">pred_test</span><span class="p">[</span><span class="n">X</span><span class="p">]</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="n">T</span><span class="p">:</span> <span class="n">t_res_test</span><span class="p">}))</span> <span class="o">+</span> <span class="n">y_hat_test</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">sample_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">pred_test</span><span class="p">[</span><span class="s2">&quot;index&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">(),</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">(</span><span class="n">pred_test</span>
+                   <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;index in @sample_ids&quot;</span><span class="p">)</span>
+                   <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">max_sales</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)[[</span><span class="s2">&quot;sales_pred&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="s2">&quot;max&quot;</span><span class="p">))</span>
+                   <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">sales_pred</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;sales_pred&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;max_sales&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;sales_pred&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())),</span>
+             <span class="n">x</span><span class="o">=</span><span class="s2">&quot;price&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;sales_pred&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/4dcec50cb71bbac36fcb8cfddc32be8319889fb7762755b8b39bca96f999a97e.png" src="_images/4dcec50cb71bbac36fcb8cfddc32be8319889fb7762755b8b39bca96f999a97e.png" />
+</div>
+</div>
+<p>总结来说，这种方法高度依赖于最终的 ML 模型。如果正则化太强，因果估计将会偏向零；使用某个具体的 ML 算法，也会将其所有局限性带入最终的反事实预测。尽管如此，如果你认为这种方法值得尝试，不妨一试！只要别忘了我在这里指出的缺点。</p>
+</section>
+</section>
+<section id="id5">
+<h2>关键观点<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<p>Double/Debiased/Orthogonal ML 提供了一种估计干扰参数的方法，使我们能够将注意力集中在感兴趣的因果参数上。它首先采用两步正交化过程：</p>
+<ol class="arabic simple">
+<li><p>拟合一个模型 <span class="math notranslate nohighlight">\(M_t(X)\)</span> 用协变量 <span class="math notranslate nohighlight">\(X\)</span> 预测处理 <span class="math notranslate nohighlight">\(T\)</span>，并获得折外残差 <span class="math notranslate nohighlight">\(\tilde{t} = t - M_t(X)\)</span>。我们称之为去偏模型，因为残差 <span class="math notranslate nohighlight">\(\tilde{t}\)</span> 按定义与用于构建它的特征正交。</p></li>
+<li><p>拟合一个模型 <span class="math notranslate nohighlight">\(M_y(X)\)</span> 用协变量 <span class="math notranslate nohighlight">\(X\)</span> 预测结果 <span class="math notranslate nohighlight">\(Y\)</span>，并获得折外残差 <span class="math notranslate nohighlight">\(\tilde{y} = y - M_y(X)\)</span>。我们称之为降噪模型，因为残差 <span class="math notranslate nohighlight">\(\tilde{y}\)</span> 可以看作是消除了特征方差的结果版本。</p></li>
+</ol>
+<p>一旦得到了这些残差，在不存在未观察混杂的情况下，我们可以将 <span class="math notranslate nohighlight">\(\tilde{y}\)</span> 回归于 <span class="math notranslate nohighlight">\(\tilde{t}\)</span> 得到 ATE 的线性近似。我们也可以将 <span class="math notranslate nohighlight">\(\tilde{t}\)</span> 与协变量相互作用来估计 CATE，或使用加权技巧让任何通用 ML 模型成为最终的 CATE 模型。</p>
+<p><img alt="img" src="_images/diagram.png" /></p>
+<p>最后，我认为正交化步骤是一种促进因果学习的通用工具。本着这种精神，我们尝试将处理和结果残差输入类似 S-learner 的 ML 算法。这样，我们便可以从模拟的处理中获取反事实预测。的确，正交机器学习在许多因果推断应用中充当预处理步骤。</p>
+</section>
+<section id="id6">
+<h2>参考说明<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<p>本章内容主要基于作者个人的经验总结，许多观点和方法源自实践中的体会。因此，无法提供严格意义上的学术参考文献。与正规科研工作不同，这些内容没有经过系统性的学术审查，也未经过同行评议与理论论证。读者或许会注意到，本文更多讨论的是“实践中有效的方法”，而非详细阐述其背后的理论基础。这种方法可以被视为“来自一线的经验科学”（a sort of science from the streets）。尽管如此，既然这些内容已公开发布，也非常欢迎批评与反馈——如果读者发现其中有明显错误或不妥之处，欢迎提出 issue，作者会尽力回应。</p>
+<p>撰写本章时，作者参考了 Chernozhukov 等 (2016) 《Double/Debiased Machine Learning for Treatment and Causal Parameters》、D. Foster 和 V. Syrgkanis (2019) 《Orthogonal Statistical Learning》以及 <em>econml</em> 库的文档。正交 ML 近期备受关注，因此有许多其他参考文献。例如，Nie 和 Wager (2020) 的草稿中对 R-loss 进行了讨论，Athey 等 (2019) 在因果决策树的背景下讨论了它，Chernozhukov 及其合作者还有许多后续论文进一步发展了该主题。</p>
+<p>另外，作者从 <a class="reference external" href="https://pedrohcgs.github.io/files/Callaway_SantAnna_2020_slides.pdf">Pedro Sant’Anna 的幻灯片</a> 中借用了一张图。</p>
+</section>
+<section id="id7">
+<h2>参与贡献<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
+<p><strong>《Causal Inference for the Brave and True》</strong> 是一本关于因果推断的开源教材，致力于以经济上可负担、认知上可理解的方式，普及这门“科学的统计基础”。全书基于 Python，仅使用自由开源软件编写，原始英文版本由 <a class="reference external" href="https://github.com/matheusfacure">Matheus Facure</a> 编写与维护。</p>
+<p>本书的中文版由黄文喆与许文立助理教授合作翻译，并托管在 <a class="reference external" href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh">GitHub 中文主页</a>。希望本地化的内容能帮助更多中文读者学习和掌握因果推断方法。</p>
+<p>如果你觉得这本书对你有帮助，并希望支持该项目，可以前往 <a class="reference external" href="https://www.patreon.com/causal_inference_for_the_brave_and_true">Patreon</a> 支持原作者。</p>
+<p>如果你暂时不方便进行经济支持，也可以通过以下方式参与贡献：</p>
+<ul class="simple">
+<li><p>修正错别字</p></li>
+<li><p>提出翻译或表达建议</p></li>
+<li><p>反馈你未能理解的部分内容</p></li>
+</ul>
+<p>欢迎前往英文版或中文版仓库点击 <a class="reference external" href="https://github.com/matheusfacure/python-causality-handbook/issues">issues 区</a> 或 <a class="reference external" href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh/issues">中文版 issues 区</a> 提出反馈。</p>
+<p>最后，如果你喜欢这本书的内容，也请将其分享给可能感兴趣的朋友，并为项目在 GitHub 上点亮一颗星：<a class="reference external" href="https://github.com/matheusfacure/python-causality-handbook">英文版仓库</a> / <a class="reference external" href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh">中文版仓库</a>。</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="21-Meta-Learners.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">21 - 元学习器</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="23-Challenges-with-Effect-Heterogeneity-and-Nonlinearity.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">23 - 处理效应异质性和非线性的挑战</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">对骚扰参数使用机器学习</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#frisch-waugh-lovell">Frisch-Waugh-Lovell 定理</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fwl-double-debiased-ml">加强版 FWL：Double/Debiased ML</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#double-ml-cate">使用 Double-ML 估计 CATE</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#double-debiased-ml">非参数 Double/Debiased ML</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">什么是“非参数”？</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">可能需要更多计量经济学！</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">关键观点</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">参考说明</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">参与贡献</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Matheus Facure
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

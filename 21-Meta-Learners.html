@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -62,6 +62,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '21-Meta-Learners';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="22 - 去偏/正交机器学习" href="22-Debiased-Orthogonal-Machine-Learning.html" />
     <link rel="prev" title="20 - 即插即用估计器" href="20-Plug-and-Play-Estimators.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -200,6 +201,19 @@
 <li class="toctree-l1"><a class="reference internal" href="19-Evaluating-Causal-Models.html">19 - 评估因果模型</a></li>
 <li class="toctree-l1"><a class="reference internal" href="20-Plug-and-Play-Estimators.html">20 - 即插即用估计器</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">21 - 元学习器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="22-Debiased-Orthogonal-Machine-Learning.html">22 - 去偏/正交机器学习</a></li>
+<li class="toctree-l1"><a class="reference internal" href="23-Challenges-with-Effect-Heterogeneity-and-Nonlinearity.html">23 - 处理效应异质性和非线性的挑战</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="24-The-Diff-in-Diff-Saga.html">24 - 双重差分传奇</a></li>
+<li class="toctree-l1"><a class="reference internal" href="25-Synthetic-Diff-in-Diff.html">25 - 合成双重差分</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">附录</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Debiasing-with-Orthogonalization.html">Debiasing with Orthogonalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Debiasing-with-Propensity-Score.html">Debiasing with Propensity Score</a></li>
+<li class="toctree-l1"><a class="reference internal" href="When-Prediction-Fails.html">When Prediction Fails</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Prediction-Metrics-For-Causal-Models.html">Why Prediction Metrics are Dangerous For Causal Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Conformal-Inference-for-Synthetic-Control.html">Conformal Inference for Synthetic Controls</a></li>
 </ul>
 
     </div>
@@ -806,8 +820,8 @@ document.write(`
 </section>
 <section id="id3">
 <h2>参考说明<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>在撰写本章时，我主要参考了 Uber 的 <code class="docutils literal notranslate"><span class="pre">causalml</span></code> 库以及其关于元学习器（meta learners）的官方文档。同时，我还借用了大量来自 Künzel 等人（2019）发表的论文《Meta-learners for Estimating Heterogeneous Treatment Effects using Machine Learning》中的图片和概念。最后，关于 S-Learner 倾向于将效应估计偏向零的讨论，来源于 Chernozhukov 等人（2017）的论文《Double/Debiased Machine Learning for Treatment and Causal Parameters》。</p>
 <p>本章内容主要基于作者个人的经验总结，许多观点和方法源自实践中的体会。因此，无法提供严格意义上的学术参考文献。与正规科研工作不同，这些内容没有经过系统性的学术审查，也未经过同行评议与理论论证。读者或许会注意到，本文更多讨论的是“实践中有效的方法”，而非详细阐述其背后的理论基础。这种方法可以被视为“来自一线的经验科学”（a sort of science from the streets）。尽管如此，既然这些内容已公开发布，也非常欢迎批评与反馈——如果读者发现其中有明显错误或不妥之处，欢迎提出 issue，作者会尽力回应。</p>
-<p>最后，对于那些希望系统学习机器学习的读者，作者也意识到本章的讲解可能过于简略。坦率地说，作者认为自己真正能够贡献价值的领域是因果推断的教学，而非机器学习。机器学习领域已有大量优质的公开资源，远超作者所能提供的内容。其中的经典之作，就是 <a class="reference external" href="https://www.coursera.org/learn/machine-learning">Andrew Ng 的机器学习课程</a>，如果读者是机器学习初学者，作者强烈推荐认真学习这门课程。</p>
 </section>
 <section id="id4">
 <h2>参与贡献<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
@@ -863,6 +877,15 @@ document.write(`
         <p class="prev-next-subtitle">previous</p>
         <p class="prev-next-title">20 - 即插即用估计器</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="22-Debiased-Orthogonal-Machine-Learning.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">22 - 去偏/正交机器学习</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>

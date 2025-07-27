@@ -201,6 +201,19 @@
 <li class="toctree-l1"><a class="reference internal" href="19-Evaluating-Causal-Models.html">19 - 评估因果模型</a></li>
 <li class="toctree-l1"><a class="reference internal" href="20-Plug-and-Play-Estimators.html">20 - 即插即用估计器</a></li>
 <li class="toctree-l1"><a class="reference internal" href="21-Meta-Learners.html">21 - 元学习器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="22-Debiased-Orthogonal-Machine-Learning.html">22 - 去偏/正交机器学习</a></li>
+<li class="toctree-l1"><a class="reference internal" href="23-Challenges-with-Effect-Heterogeneity-and-Nonlinearity.html">23 - 处理效应异质性和非线性的挑战</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="24-The-Diff-in-Diff-Saga.html">24 - 双重差分传奇</a></li>
+<li class="toctree-l1"><a class="reference internal" href="25-Synthetic-Diff-in-Diff.html">25 - 合成双重差分</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">附录</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Debiasing-with-Orthogonalization.html">Debiasing with Orthogonalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Debiasing-with-Propensity-Score.html">Debiasing with Propensity Score</a></li>
+<li class="toctree-l1"><a class="reference internal" href="When-Prediction-Fails.html">When Prediction Fails</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Prediction-Metrics-For-Causal-Models.html">Why Prediction Metrics are Dangerous For Causal Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Conformal-Inference-for-Synthetic-Control.html">Conformal Inference for Synthetic Controls</a></li>
 </ul>
 
     </div>
@@ -1067,7 +1080,7 @@ sales_i = \beta_0 + \beta_1 price_i + \pmb{\beta_2 X_i} \times price_i + \pmb{\b
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/247a700f3abdb3046c560f275923e7e78a0d418a17e672b6724a075d4b6d0720.png" src="_images/247a700f3abdb3046c560f275923e7e78a0d418a17e672b6724a075d4b6d0720.png" />
+<img alt="_images/5d2c63a716008406087d90f2e2b89ad4bb7d7f7830bf8c14f6d3277a91d4c38a.png" src="_images/5d2c63a716008406087d90f2e2b89ad4bb7d7f7830bf8c14f6d3277a91d4c38a.png" />
 </div>
 </div>
 <p>正如我们所看到的，这种划分方案似乎是有用的。在第一组中，价格敏感度很高。随着价格的上涨，销量大幅下降。然而在第二组中，随着价格上涨，销量大致保持不变。实际上，销量看起来甚至会随着价格的提高而上升，但这很可能是噪声。</p>
@@ -1081,7 +1094,7 @@ sales_i = \beta_0 + \beta_1 price_i + \pmb{\beta_2 X_i} \times price_i + \pmb{\b
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/0922e9ca84e593feead8c50486347acc6a12651175d50a0262e678638c3709fe.png" src="_images/0922e9ca84e593feead8c50486347acc6a12651175d50a0262e678638c3709fe.png" />
+<img alt="_images/5b410793656ceb51e8e8f8f7bce677b06182ea93bfb983fc1ab54552ee2793a0.png" src="_images/5b410793656ceb51e8e8f8f7bce677b06182ea93bfb983fc1ab54552ee2793a0.png" />
 </div>
 </div>
 <p>我非常喜欢这幅图，因为它传达了一个重要的观点。如你所见，预测模型的分区是在 y 轴上分割单位。在第一组那样的日子，我们卖出的冰淇淋不多，而在第二组那样的日子，我们卖得更多。我觉得这很神奇，因为预测模型正是在做它应该做的事情：预测销售量。它能区分冰淇淋销量低的日子和销量高的日子。</p>
@@ -1098,7 +1111,6 @@ sales_i = \beta_0 + \beta_1 price_i + \pmb{\beta_2 X_i} \times price_i + \pmb{\b
 <section id="id5">
 <h2>参考说明<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
 <p>本章内容主要基于作者个人的经验总结，许多观点和方法源自实践中的体会。因此，无法提供严格意义上的学术参考文献。与正规科研工作不同，这些内容没有经过系统性的学术审查，也未经过同行评议与理论论证。读者或许会注意到，本文更多讨论的是“实践中有效的方法”，而非详细阐述其背后的理论基础。这种方法可以被视为“来自一线的经验科学”（a sort of science from the streets）。尽管如此，既然这些内容已公开发布，也非常欢迎批评与反馈——如果读者发现其中有明显错误或不妥之处，欢迎提出 issue，作者会尽力回应。</p>
-<p>最后，对于那些希望系统学习机器学习的读者，作者也意识到本章的讲解可能过于简略。坦率地说，作者认为自己真正能够贡献价值的领域是因果推断的教学，而非机器学习。机器学习领域已有大量优质的公开资源，远超作者所能提供的内容。其中的经典之作，就是 <a class="reference external" href="https://www.coursera.org/learn/machine-learning">Andrew Ng 的机器学习课程</a>，如果读者是机器学习初学者，作者强烈推荐认真学习这门课程。</p>
 </section>
 <section id="id6">
 <h2>参与贡献<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
