@@ -1077,11 +1077,15 @@ dtype: float64
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Marketing Costs (in 1000)&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;In-app Purchase (in 1000)&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Simple OLS Model&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
 </pre></div>
 </div>
 </div>
 </details>
+<div class="cell_output docutils container">
+<img alt="_images/4b4fd9372ada79a84199cd8d276d639bfba5cba699bcc9447502bca001b85f77.png" src="_images/4b4fd9372ada79a84199cd8d276d639bfba5cba699bcc9447502bca001b85f77.png" />
+</div>
 </div>
 <p>鉴于你在因果推断方面的丰富知识，你决定运行一个固定效应模型，将城市指标作为虚拟变量加入模型中。该固定效应模型控制了那些随时间不变的城市特定特征，因此如果某座城市对你的产品接受度较低，模型将捕捉到这一信息。当您运行该模型后，最终能够观察到更高的营销成本确实带来了应用内购买收入的提升。</p>
 <div class="cell tag_hide-input docutils container">
@@ -1102,11 +1106,15 @@ dtype: float64
 
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Fixed Effect Model&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Marketing Costs (in 1000)&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;In-app Purchase (in 1000)&quot;</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;In-app Purchase (in 1000)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
 </pre></div>
 </div>
 </div>
 </details>
+<div class="cell_output docutils container">
+<img alt="_images/b51fdbe18334e3a9bf617220eca10bd828dd33996b7e7e85f06e0b1df2b4c1d2.png" src="_images/b51fdbe18334e3a9bf617220eca10bd828dd33996b7e7e85f06e0b1df2b4c1d2.png" />
+</div>
 </div>
 <p>花点时间理解上图向你展示的固定效应作用。你会发现，固定效应为每个城市拟合了一条回归线；而且这些线是平行的。线的斜率代表营销成本对应用内购买的影响。而固定效应模型假设因果效应在所有实体（本例中为城市）间是恒定的。这可以是一个优势，也可以是一个局限，取决于你的研究目的：</p>
 <ul class="simple">
