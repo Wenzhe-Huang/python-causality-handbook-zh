@@ -1,10 +1,4 @@
 name = "causality-handbook-zh"
 compatibility_date = "2025-11-22"
 
-[site]
-bucket = "./"
-exclude = [
-  ".git",
-  ".github",
-  "node_modules"
-]
+assets = { directory = "./" }
