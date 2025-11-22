@@ -546,41 +546,41 @@ y_i = \beta_0 + \pmb{\beta_1 X}_{1i} + \pmb{\beta_2 X}_{2i} + e_i
     <tr>
       <th>temp</th>
       <td>1.000000</td>
-      <td>-0.005584</td>
-      <td>-0.001478</td>
-      <td>-0.000511</td>
-      <td>0.378121</td>
+      <td>-0.000858</td>
+      <td>0.017758</td>
+      <td>0.010550</td>
+      <td>0.372301</td>
     </tr>
     <tr>
       <th>weekday</th>
-      <td>-0.005584</td>
+      <td>-0.000858</td>
       <td>1.000000</td>
-      <td>0.009018</td>
-      <td>0.014290</td>
-      <td>0.007198</td>
+      <td>0.028983</td>
+      <td>0.000947</td>
+      <td>-0.011046</td>
     </tr>
     <tr>
       <th>cost</th>
-      <td>-0.001478</td>
-      <td>0.009018</td>
+      <td>0.017758</td>
+      <td>0.028983</td>
       <td>1.000000</td>
-      <td>0.382397</td>
-      <td>-0.015218</td>
+      <td>0.391247</td>
+      <td>-0.000310</td>
     </tr>
     <tr>
       <th>price</th>
-      <td>-0.000511</td>
-      <td>0.014290</td>
-      <td>0.382397</td>
+      <td>0.010550</td>
+      <td>0.000947</td>
+      <td>0.391247</td>
       <td>1.000000</td>
-      <td>0.083900</td>
+      <td>0.082928</td>
     </tr>
     <tr>
       <th>sales</th>
-      <td>0.378121</td>
-      <td>0.007198</td>
-      <td>-0.015218</td>
-      <td>0.083900</td>
+      <td>0.372301</td>
+      <td>-0.011046</td>
+      <td>-0.000310</td>
+      <td>0.082928</td>
       <td>1.000000</td>
     </tr>
   </tbody>
@@ -603,7 +603,7 @@ y_i = \beta_0 + \pmb{\beta_1 X}_{1i} + \pmb{\beta_2 X}_{2i} + e_i
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="_images/578db6044be677bc2ba59f34ed772bde6be070389bd57f5cd740339655b66c0a.png" src="_images/578db6044be677bc2ba59f34ed772bde6be070389bd57f5cd740339655b66c0a.png" />
+<img alt="_images/4cff866ead4b750a94438a03b4576270b9cfe707d455266ce31c7bb8b4582139.png" src="_images/4cff866ead4b750a94438a03b4576270b9cfe707d455266ce31c7bb8b4582139.png" />
 </div>
 </div>
 <p>To debias this dataset we will need two models. The first model, let’s call it <span class="math notranslate nohighlight">\(M_t(X)\)</span>, predicts the treatment (price, in our case) using the confounders. It’s the one of the stages we’ve seen above, on the Frisch–Waugh–Lovell theorem.</p>
@@ -637,7 +637,7 @@ y_i = \beta_0 + \pmb{\beta_1 X}_{1i} + \pmb{\beta_2 X}_{2i} + e_i
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="_images/c2f549faea4900f856e982bbd732369a0946e75c516e9912b4aacadbd77890f5.png" src="_images/c2f549faea4900f856e982bbd732369a0946e75c516e9912b4aacadbd77890f5.png" />
+<img alt="_images/be9060421ec2a91833988edb4f1c8fca48b483ce7cb83f2fc5a9034f8b13bd1e.png" src="_images/be9060421ec2a91833988edb4f1c8fca48b483ce7cb83f2fc5a9034f8b13bd1e.png" />
 </div>
 </div>
 <p>We can see that the weekends are no longer to the upper right corner. They got pushed to the center. Moreover, we can no longer differentiate between different price levels (the treatment) using the weekdays. We can say that the residual <span class="math notranslate nohighlight">\(price-M_t(X)\)</span>, plotted on the x-axis, is a “random” or debiased version of the original treatment.</p>
@@ -674,7 +674,7 @@ y_i = \beta_0 + \pmb{\beta_1 X}_{1i} + \pmb{\beta_2 X}_{2i} + e_i
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="_images/2472dc301052065d9532e0b047de4790abca8c4ce2e3d4de3396ab5897e3d298.png" src="_images/2472dc301052065d9532e0b047de4790abca8c4ce2e3d4de3396ab5897e3d298.png" />
+<img alt="_images/144d20b08e51a764c15c04879bb9bb107b4d52b9e9798c8c70c30ae5fb4339a1.png" src="_images/144d20b08e51a764c15c04879bb9bb107b4d52b9e9798c8c70c30ae5fb4339a1.png" />
 </div>
 </div>
 <p>One small disadvantage of this debiased data is that the residuals have been shifted to a different scale. As a result, it’s hard to interpret what they mean (what is a price residual of -3?). Still, I think this is a small price to pay for the convenience of building random data from data that was not initially random.</p>
@@ -733,59 +733,59 @@ y_i = \beta_0 + \pmb{\beta_1 X}_{1i} + \pmb{\beta_2 X}_{2i} + e_i
   </thead>
   <tbody>
     <tr>
-      <th>5177</th>
-      <td>23.8</td>
-      <td>7</td>
-      <td>0.3</td>
-      <td>7.0</td>
-      <td>224</td>
-      <td>0.709676</td>
-      <td>2.089699</td>
-      <td>-12.800981</td>
-    </tr>
-    <tr>
-      <th>2042</th>
-      <td>22.7</td>
-      <td>1</td>
+      <th>55</th>
+      <td>27.3</td>
+      <td>2</td>
       <td>1.5</td>
-      <td>7.5</td>
-      <td>206</td>
-      <td>0.037202</td>
-      <td>-12.912505</td>
-      <td>-13.712227</td>
+      <td>5.1</td>
+      <td>200</td>
+      <td>-1.401735</td>
+      <td>3.200381</td>
+      <td>-2.487670</td>
     </tr>
     <tr>
-      <th>4429</th>
+      <th>2184</th>
+      <td>22.9</td>
+      <td>3</td>
+      <td>1.0</td>
+      <td>5.5</td>
+      <td>183</td>
+      <td>-0.522637</td>
+      <td>-6.449879</td>
+      <td>-0.056134</td>
+    </tr>
+    <tr>
+      <th>3249</th>
       <td>18.5</td>
       <td>1</td>
-      <td>0.5</td>
-      <td>5.0</td>
-      <td>240</td>
-      <td>-1.480382</td>
-      <td>28.193905</td>
-      <td>-10.394587</td>
+      <td>1.5</td>
+      <td>7.6</td>
+      <td>207</td>
+      <td>0.088435</td>
+      <td>-3.629959</td>
+      <td>-11.995581</td>
     </tr>
     <tr>
-      <th>9692</th>
-      <td>23.9</td>
-      <td>2</td>
+      <th>8983</th>
+      <td>21.4</td>
+      <td>3</td>
       <td>0.3</td>
-      <td>3.3</td>
-      <td>195</td>
-      <td>-1.949055</td>
-      <td>3.671370</td>
-      <td>1.144858</td>
+      <td>5.2</td>
+      <td>175</td>
+      <td>-0.126104</td>
+      <td>-12.232997</td>
+      <td>1.510995</td>
     </tr>
     <tr>
-      <th>7218</th>
-      <td>22.3</td>
-      <td>5</td>
-      <td>0.3</td>
-      <td>5.6</td>
-      <td>172</td>
-      <td>0.246309</td>
-      <td>-16.550152</td>
-      <td>2.049110</td>
+      <th>8659</th>
+      <td>15.0</td>
+      <td>1</td>
+      <td>1.5</td>
+      <td>6.9</td>
+      <td>222</td>
+      <td>-0.606797</td>
+      <td>17.761636</td>
+      <td>-10.782396</td>
     </tr>
   </tbody>
 </table>
@@ -820,7 +820,7 @@ y_i = \beta_0 + \pmb{\beta_1 X}_{1i} + \pmb{\beta_2 X}_{2i} + e_i
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="_images/2c706d966faa599966bc8d4569d6945e0dc4fb92f987364f1b7e01c8123b034d.png" src="_images/2c706d966faa599966bc8d4569d6945e0dc4fb92f987364f1b7e01c8123b034d.png" />
+<img alt="_images/54b181e4843e891864ce48f5008c7d2ad165a1058e91a92ed13ab3d2f962d906.png" src="_images/54b181e4843e891864ce48f5008c7d2ad165a1058e91a92ed13ab3d2f962d906.png" />
 </div>
 </div>
 <p>We can do the same thing for the cumulative gain curve, of course.</p>
@@ -848,7 +848,7 @@ y_i = \beta_0 + \pmb{\beta_1 X}_{1i} + \pmb{\beta_2 X}_{2i} + e_i
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="_images/f260126f61c94780266c380b13ddea1526e4ec1700a8dc5400c89a4e56f61c4e.png" src="_images/f260126f61c94780266c380b13ddea1526e4ec1700a8dc5400c89a4e56f61c4e.png" />
+<img alt="_images/8c4f34f60a594120cbf233235426ce67f931b7148e241d2e78d550c4b39d8f46.png" src="_images/8c4f34f60a594120cbf233235426ce67f931b7148e241d2e78d550c4b39d8f46.png" />
 </div>
 </div>
 <p>Notice how similar these plots are to the ones in the previous chapter. This is some indication that the debiasing worked wonders here.</p>
@@ -877,7 +877,7 @@ y_i = \beta_0 + \pmb{\beta_1 X}_{1i} + \pmb{\beta_2 X}_{2i} + e_i
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="_images/90683c9dcdb9ac1499311ff8d8f2a0a5e212fe49ceffef91ab07e016c6082a5b.png" src="_images/90683c9dcdb9ac1499311ff8d8f2a0a5e212fe49ceffef91ab07e016c6082a5b.png" />
+<img alt="_images/75c48fcce22e59a886efa1bd65e81cd77aba34a8ae1e0b8fa19786f84566d9a4.png" src="_images/75c48fcce22e59a886efa1bd65e81cd77aba34a8ae1e0b8fa19786f84566d9a4.png" />
 </div>
 </div>
 <p>First thing you should notice is that the average elasticity goes up, instead of down. We’ve seen this before. In the biased data, it looks like sales goes up as price increases. As a result, the final point in the cumulative gain plot is positive. This makes little sense, since we now people don’t buy more as we increase ice cream prices. If the average price elasticity is already messed up, any ordering in it also makes little sense. The bottom line being that this data should not be used for model evaluation.</p>
@@ -960,54 +960,54 @@ y_i = \beta_0 + \pmb{\beta_1 X}_{1i} + \pmb{\beta_2 X}_{2i} + e_i
   </thead>
   <tbody>
     <tr>
-      <th>5177</th>
-      <td>23.8</td>
-      <td>7</td>
-      <td>0.3</td>
-      <td>7.0</td>
-      <td>224</td>
-      <td>-4.681167</td>
-      <td>0.039833</td>
-    </tr>
-    <tr>
-      <th>2042</th>
-      <td>22.7</td>
-      <td>1</td>
+      <th>55</th>
+      <td>27.3</td>
+      <td>2</td>
       <td>1.5</td>
-      <td>7.5</td>
-      <td>206</td>
-      <td>-2.024675</td>
-      <td>-0.089707</td>
+      <td>5.1</td>
+      <td>200</td>
+      <td>-13.643333</td>
+      <td>-2.140667</td>
     </tr>
     <tr>
-      <th>4429</th>
+      <th>2184</th>
+      <td>22.9</td>
+      <td>3</td>
+      <td>1.0</td>
+      <td>5.5</td>
+      <td>183</td>
+      <td>-7.028040</td>
+      <td>0.127746</td>
+    </tr>
+    <tr>
+      <th>3249</th>
       <td>18.5</td>
       <td>1</td>
-      <td>0.5</td>
-      <td>5.0</td>
-      <td>240</td>
-      <td>13.760000</td>
-      <td>-1.643783</td>
+      <td>1.5</td>
+      <td>7.6</td>
+      <td>207</td>
+      <td>2.008500</td>
+      <td>-0.497000</td>
     </tr>
     <tr>
-      <th>9692</th>
-      <td>23.9</td>
-      <td>2</td>
+      <th>8983</th>
+      <td>21.4</td>
+      <td>3</td>
       <td>0.3</td>
-      <td>3.3</td>
-      <td>195</td>
-      <td>10.555000</td>
-      <td>-2.324283</td>
+      <td>5.2</td>
+      <td>175</td>
+      <td>-1.707833</td>
+      <td>-0.398750</td>
     </tr>
     <tr>
-      <th>7218</th>
-      <td>22.3</td>
-      <td>5</td>
-      <td>0.3</td>
-      <td>5.6</td>
-      <td>172</td>
-      <td>-13.359810</td>
-      <td>0.213167</td>
+      <th>8659</th>
+      <td>15.0</td>
+      <td>1</td>
+      <td>1.5</td>
+      <td>6.9</td>
+      <td>222</td>
+      <td>10.570000</td>
+      <td>-0.904000</td>
     </tr>
   </tbody>
 </table>
@@ -1029,7 +1029,7 @@ y_i = \beta_0 + \pmb{\beta_1 X}_{1i} + \pmb{\beta_2 X}_{2i} + e_i
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="_images/fbde1e2d0af6f0f3fe165fa1dec8d7608ca936fb833256e96ac91607d44879b4.png" src="_images/fbde1e2d0af6f0f3fe165fa1dec8d7608ca936fb833256e96ac91607d44879b4.png" />
+<img alt="_images/3c0873cff594a6c8f8e22228d44a2ffa79e7ef90f25a66727befa3f4967a0b53.png" src="_images/3c0873cff594a6c8f8e22228d44a2ffa79e7ef90f25a66727befa3f4967a0b53.png" />
 </div>
 </div>
 </section>
@@ -1131,7 +1131,7 @@ y_i = \beta_0 + \pmb{\beta_1 X}_{1i} + \pmb{\beta_2 X}_{2i} + e_i
   <div class="footer-item">
     
 <p class="component-author">
-By Matheus Facure
+By Matheus Facure (original work) and Wenzhe Huang & Wenli Xu (Chinese translation)
 </p>
 
   </div>
