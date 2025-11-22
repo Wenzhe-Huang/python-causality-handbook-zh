@@ -1,6 +1,11 @@
 {
   "compatibility_date": "2025-11-22",
   "assets": {
-    "directory": "./"
+    "directory": "./",
+    "exclude": [
+      ".git",
+      ".github",
+      "node_modules"
+    ]
   }
 }
