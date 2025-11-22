@@ -413,7 +413,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">数据科学今非昔比（或终成其是）</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">回答另一类的问题</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">当“相关性”就是“因果性”</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">偏差</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">偏误</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">核心要点</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">参考文献</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">参与贡献</a></li>
@@ -871,8 +871,8 @@ T_i=\begin{cases}
 <p>你或许会说，这显然不够理想，但我难道不能计算处理组的均值并与未处理组的均值进行比较吗？换言之，难道不能直接进行 <span class="math notranslate nohighlight">\(ATE=(600+750)/2  - (500 + 600)/2  = 125\)</span> 操作吗？答案是不行！请注意结果差异之大。你已犯下将相关误认为因果的最严重错误。要理解其中缘由，让我们深入探究因果推断的主要敌人。</p>
 </section>
 <section id="id6">
-<h2>偏差<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
-<p>偏差正是使“相关性 ≠ 因果性”的关键原因。</p>
+<h2>偏误<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<p>偏误正是使“相关性 ≠ 因果性”的关键原因。</p>
 <p>幸运的是，凭借直觉我们就能轻松理解它。让我们回顾课堂平板电脑的案例。当面对”提供平板电脑的学校学生成绩更优异”这一论断时，我们可以反驳说，这些学校即便没有平板电脑，成绩可能依然更高。因为它们很可能比其他学校资金更充裕，从而能聘请更优秀的教师、提供更好的教室设施等。换言之，问题在于接受处理（配备平板电脑）的学校与未接受处理的学校根本不具备可比性。</p>
 <p>如果我们用“潜在结果”的符号来表达这一点：<strong>接受处理的学校的 <span class="math notranslate nohighlight">\(Y_0\)</span></strong>（即如果它们没发平板时的成绩）与 <strong>未接受处理学校的<span class="math notranslate nohighlight">\(Y_0\)</span></strong>（真实的无平板成绩）是不同的。要记住，处理组的 <span class="math notranslate nohighlight">\(Y_0\)</span> 是反事实（counterfactual），我们无法观察到它，只能推理它。在这个特定案例中，我们可以依靠现实经验进一步推理。我们有理由相信，处理组的<span class="math notranslate nohighlight">\(Y_0\)</span>本来就比未处理组的<span class="math notranslate nohighlight">\(Y_0\)</span>更高。因为能给学生配平板的学校，也往往有其他资源，这些都会促成更高的成绩。让我们停下来消化一下这点，理解“潜在结果”概念需要时间。请重读本段并确保理解其含义。</p>
 <p>有了这个基础，我们可以用一个基本的数学公式来展示为何相关不等于因果。相关性的计算方式是 <span class="math notranslate nohighlight">\(E[Y|T=1] - E[Y|T=0]\)</span>，在我们的例子中，这表示拥有平板电脑的学校平均测试分数减去没有平板电脑的学校平均测试分数。而因果关系的正确计算方式是 <span class="math notranslate nohighlight">\(E[Y_1 - Y_0]\)</span>。</p>
@@ -888,8 +888,8 @@ E[Y|T=1] - E[Y|T=0] = E[Y_1|T=1] - E[Y_0|T=0] + E[Y_0|T=1] - E[Y_0|T=1]
 <p><span class="math notranslate nohighlight">\(
 E[Y|T=1] - E[Y|T=0] = \underbrace{E[Y_1 - Y_0|T=1]}_{ATT} + \underbrace{\{ E[Y_0|T=1] - E[Y_0|T=0] \}}_{BIAS}
 \)</span></p>
-<p>这段简单的数学涵盖了我们在因果问题中遇到的所有难题。我无法强调你理解它的每一个方面有多么重要。如果你被迫要在手臂上纹点什么，这个方程应该是个不错的选择。它值得你珍视并理解其传达的信息，就像可以百般解读的圣典。事实上，让我们更深入地探讨一下。我们将其分解，看看其中的一些含义。首先，这个方程说明了为什么相关不等于因果。如我们所见，相关性等于处理组效应加上一个偏差项。偏差来源于处理组和对照组在处理前就存在的差异，假设两者均未接受处理。现在，当有人告诉我们课堂上的平板电脑能提高学业成绩时，我们可以明确指出为何持怀疑态度。我们认为，在这个例子中，<span class="math notranslate nohighlight">\(E[Y_0|T=0] &lt; E[Y_0|T=1]\)</span>，即那些有能力为孩子提供平板电脑的学校本身就比无力提供的学校更好，与是否使用平板电脑无关。</p>
-<p>为何会出现这种情况？待我们深入讨论混杂因素时将进一步阐述，但此刻你可以理解为偏差的产生源于许多我们无法控制的因素与处理同时发生变化。因此，接受与未接受平板电脑教学的学校不仅在设备配置上存在差异，还在学费成本、地理位置、师资力量等方面有所不同。要断言课堂平板电脑能提升学业表现，我们需要确保这两类学校在其他条件上平均而言是相似的。</p>
+<p>这段简单的数学涵盖了我们在因果问题中遇到的所有难题。我无法强调你理解它的每一个方面有多么重要。如果你被迫要在手臂上纹点什么，这个方程应该是个不错的选择。它值得你珍视并理解其传达的信息，就像可以百般解读的圣典。事实上，让我们更深入地探讨一下。我们将其分解，看看其中的一些含义。首先，这个方程说明了为什么相关不等于因果。如我们所见，相关性等于处理组效应加上一个偏误项。偏误来源于处理组和对照组在处理前就存在的差异，假设两者均未接受处理。现在，当有人告诉我们课堂上的平板电脑能提高学业成绩时，我们可以明确指出为何持怀疑态度。我们认为，在这个例子中，<span class="math notranslate nohighlight">\(E[Y_0|T=0] &lt; E[Y_0|T=1]\)</span>，即那些有能力为孩子提供平板电脑的学校本身就比无力提供的学校更好，与是否使用平板电脑无关。</p>
+<p>为何会出现这种情况？待我们深入讨论混杂因素时将进一步阐述，但此刻你可以理解为偏误的产生源于许多我们无法控制的因素与处理同时发生变化。因此，接受与未接受平板电脑教学的学校不仅在设备配置上存在差异，还在学费成本、地理位置、师资力量等方面有所不同。要断言课堂平板电脑能提升学业表现，我们需要确保这两类学校在其他条件上平均而言是相似的。</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -908,7 +908,7 @@ E[Y|T=1] - E[Y|T=0] = \underbrace{E[Y_1 - Y_0|T=1]}_{ATT} + \underbrace{\{ E[Y_0
 <img alt="_images/02cfdff4f5e509ec798cfd4797f6f334d6ed17b7ce2aa040368b38d59280586e.png" src="_images/02cfdff4f5e509ec798cfd4797f6f334d6ed17b7ce2aa040368b38d59280586e.png" />
 </div>
 </div>
-<p>既然我们已经理解了问题所在，现在让我们来看看解决方案。我们还可以探讨要使相关等同于因果所需满足的条件。<strong>若 <span class="math notranslate nohighlight">\(E[Y_0|T=0] = E[Y_0|T=1]\)</span>，那么相关即等同于因果！</strong> 理解这一点不仅仅是记住这个等式，其背后还有着强有力的直观论证。称 <span class="math notranslate nohighlight">\(E[Y_0|T=0] = E[Y_0|T=1]\)</span> 意味着处理组与对照组在处理前具有可比性。或者说，当被处理者未接受处理时，若能观测到其 <span class="math notranslate nohighlight">\(Y_0\)</span>，其结果将与未处理者相同。从数学上看，偏差项将因此消失：</p>
+<p>既然我们已经理解了问题所在，现在让我们来看看解决方案。我们还可以探讨要使相关等同于因果所需满足的条件。<strong>若 <span class="math notranslate nohighlight">\(E[Y_0|T=0] = E[Y_0|T=1]\)</span>，那么相关即等同于因果！</strong> 理解这一点不仅仅是记住这个等式，其背后还有着强有力的直观论证。称 <span class="math notranslate nohighlight">\(E[Y_0|T=0] = E[Y_0|T=1]\)</span> 意味着处理组与对照组在处理前具有可比性。或者说，当被处理者未接受处理时，若能观测到其 <span class="math notranslate nohighlight">\(Y_0\)</span>，其结果将与未处理者相同。从数学上看，偏误项将因此消失：</p>
 <p><span class="math notranslate nohighlight">\(
 E[Y|T=1] - E[Y|T=0] = E[Y_1 - Y_0|T=1] = ATT
 \)</span></p>
@@ -937,13 +937,13 @@ E[Y|T=1] - E[Y|T=0] = ATT = ATE
 </ol>
 <p>个体处理效应是指某单元的实际结果与其在假设接受另一种处理时可能产生的理论结果之间的差异。唯有具备如神明般观测潜在结果的能力（如下方左图所示），我们才能获知真实的处理效应。这些反事实结果以浅色标识。</p>
 <p><img alt="img" src="_images/anatomy2.png" /></p>
-<p>右图中展示了先前讨论的偏差现象。当强制所有个体不接受处理时，我们仅能观察到 <span class="math notranslate nohighlight">\(T_0\)</span> 潜在结果，此时偏差便显现出来。通过比较处理组与对照组的差异可以发现：若二者存在系统性差异，则说明存在非处理因素导致两组分化。这种干扰因素即为偏差，它会掩盖真实的处理效应。</p>
-<p>现在，将此与一个无偏差的假设情境进行对比。假设平板电脑是随机分配给学校的。在这种情况下，富裕学校和贫困学校获得干预的机会均等。干预措施将在学费分布范围内得到良好分配。</p>
+<p>右图中展示了先前讨论的偏误现象。当强制所有个体不接受处理时，我们仅能观察到 <span class="math notranslate nohighlight">\(T_0\)</span> 潜在结果，此时偏误便显现出来。通过比较处理组与对照组的差异可以发现：若二者存在系统性差异，则说明存在非处理因素导致两组分化。这种干扰因素即为偏误，它会掩盖真实的处理效应。</p>
+<p>现在，将此与一个无偏误的假设情境进行对比。假设平板电脑是随机分配给学校的。在这种情况下，富裕学校和贫困学校获得干预的机会均等。干预措施将在学费分布范围内得到良好分配。</p>
 <p><img alt="img" src="_images/anatomy3.png" /></p>
-<p>在此情形下，接受干预与未接受干预群体间的结果差异即为平均因果效应。这是因为除了干预本身外，干预组与对照组之间不存在其他差异来源。我们观察到的所有差异都必须归因于此。换言之，这种情况下不存在偏差。</p>
+<p>在此情形下，接受干预与未接受干预群体间的结果差异即为平均因果效应。这是因为除了干预本身外，干预组与对照组之间不存在其他差异来源。我们观察到的所有差异都必须归因于此。换言之，这种情况下不存在偏误。</p>
 <p><img alt="img" src="_images/anatomy4.png" /></p>
 <p>若设定所有人均不接收干预，仅观察 <span class="math notranslate nohighlight">\(Y_0\)</span>状态，我们将发现干预组与对照组之间不存在差异。</p>
-<p>这正是因果推断所致力于解决的艰巨任务。其核心在于寻找巧妙方法消除偏差，使处理组与未处理组具有可比性，从而确保我们所观察到的差异仅反映平均处理效应。归根结底，因果推断旨在拨开所有错觉与误读的迷雾，揭示世界运行的真相。既然我们已经理解这一点，现在就可以继续掌握那些消除偏差的最有力方法——这些”求真敢为者”的武器，来识别因果效应。</p>
+<p>这正是因果推断所致力于解决的艰巨任务。其核心在于寻找巧妙方法消除偏误，使处理组与未处理组具有可比性，从而确保我们所观察到的差异仅反映平均处理效应。归根结底，因果推断旨在拨开所有错觉与误读的迷雾，揭示世界运行的真相。既然我们已经理解这一点，现在就可以继续掌握那些消除偏误的最有力方法——这些”求真敢为者”的武器，来识别因果效应。</p>
 </section>
 <section id="id7">
 <h2>核心要点<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
@@ -1061,7 +1061,7 @@ E[Y|T=1] - E[Y|T=0] = ATT = ATE
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">数据科学今非昔比（或终成其是）</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">回答另一类的问题</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">当“相关性”就是“因果性”</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">偏差</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">偏误</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">核心要点</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">参考文献</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">参与贡献</a></li>

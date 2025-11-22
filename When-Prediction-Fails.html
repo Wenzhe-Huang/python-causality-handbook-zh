@@ -939,7 +939,7 @@ Name: customer_id, dtype: int64
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/5dbe29d1dfa5762422e3c4a883c06046a56d2bc9f6dee5abe10052036fe60b50.png" src="_images/5dbe29d1dfa5762422e3c4a883c06046a56d2bc9f6dee5abe10052036fe60b50.png" />
+<img alt="_images/343058d46414cdd42bb8f1d99a80f1778d008c2e13aa3cd879e94c2e66c38615.png" src="_images/343058d46414cdd42bb8f1d99a80f1778d008c2e13aa3cd879e94c2e66c38615.png" />
 </div>
 </div>
 <p>Doing that analysis, we can see that, on average, we lose money when the coupon value is 0 or 15 and we gain money for coupons of 5 and 10 BRL. The highest average <code class="docutils literal notranslate"><span class="pre">net_income</span></code> appears when we have 5 BRL coupons, yielding us about 250 BRL in <code class="docutils literal notranslate"><span class="pre">net_value</span></code> per customer. Naturally then, the simplest thing we can try is to give everyone 5 BRL in coupons and see how that would play out. This completely disregards the possibility of bias but hey, we are talking simplicity here!</p>
@@ -1232,7 +1232,7 @@ Test Score:,  0.504563847410434
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/8eba4e55e35eb2c1cd17100fa9b4e425149c108dde32c8fdf26e059c84884b66.png" src="_images/8eba4e55e35eb2c1cd17100fa9b4e425149c108dde32c8fdf26e059c84884b66.png" />
+<img alt="_images/3ca016662fed20cd7a7c10228383c80938cbca4cdd7288038b70807a18489020.png" src="_images/3ca016662fed20cd7a7c10228383c80938cbca4cdd7288038b70807a18489020.png" />
 </div>
 </div>
 <p>This plot is very interesting. Notice how the optimal decision changes across prediction bands. For instance, on bands like 1, 7 and 8, the best thing to do is to give 10 BRL in coupons. For bands like 3, 5 and 10, the best thing is 5 BRL in coupons. This means that this policy is very much like the simple one, except for the last band. This is evidence that personalisation might be possible, since the optimal decision changes across subpopulations.</p>
