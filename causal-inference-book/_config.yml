@@ -2,8 +2,7 @@
 # Learn more at https://jupyterbook.org/customize/config.html
 
 title: 因果推断：献给求真敢为者
-author: Matheus Facure
-translator: 黄文喆
+author: Matheus Facure (original work) and Wenzhe Huang & Wenli Xu (Chinese translation)
 
 # Force re-execution of notebooks on each build.
 # See https://jupyterbook.org/content/execute.html
