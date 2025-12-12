@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+Disallow: /_static/
+Disallow: /_sources/
+Disallow: /_modules/
+Disallow: /_images/
+
+Sitemap: https://ci-book.huangwz.com/sitemap.xml

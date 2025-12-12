@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- 首页 / Intro -->
+  <url>
+    <loc>https://ci-book.huangwz.com/intro.html</loc>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- 第一部分 - 阳 -->
+  <url><loc>https://ci-book.huangwz.com/01-Introduction-To-Causality.html</loc></url>
+  <url><loc>https://ci-book.huangwz.com/02-Randomised-Experiments.html</loc></url>
+  <url><loc>https://ci-book.huangwz.com/03-Stats-Review-The-Most-Dangerous-Equation.html</loc></url>
+  <url><loc>https://ci-book.huangwz.com/04-Graphical-Causal-Models.html</loc></url>
+  <url><loc>https://ci-book.huangwz.com/05-The-Unreasonable-Effectiveness-of-Linear-Regression.html</loc></url>
+  <url><loc>https://ci-book.huangwz.com/06-Grouped-and-Dummy-Regression.html</loc></url>
+  <url><loc>https://ci-book.huangwz.com/07-Beyond-Confounders.html</loc></url>
+  <url><loc>https://ci-book.huangwz.com/08-Instrumental-Variables.html</loc></url>
+  <url><loc>https://ci-book.huangwz.com/09-Non-Compliance-and-LATE.html</loc></url>
+  <url><loc>https://ci-book.huangwz.com/10-Matching.html</loc></url>
+  <url><loc>https://ci-book.huangwz.com/11-Propensity-Score.html</loc></url>
+  <url><loc>https://ci-book.huangwz.com/12-Doubly-Robust-Estimation.html</loc></url>
+  <url><loc>https://ci-book.huangwz.com/13-Difference-in-Differences.html</loc></url>
+  <url><loc>https://ci-book.huangwz.com/14-Panel-Data-and-Fixed-Effects.html</loc></url>
+  <url><loc>https://ci-book.huangwz.com/15-Synthetic-Control.html</loc></url>
+  <url><loc>https://ci-book.huangwz.com/16-Regression-Discontinuity-Design.html</loc></url>
+
+  <!-- 第二部分 - 阴 -->
+  <url><loc>https://ci-book.huangwz.com/17-Predictive-Models-101.html</loc></url>
+  <url><loc>https://ci-book.huangwz.com/18-Heterogeneous-Treatment-Effects-and-Personalization.html</loc></url>
+  <url><loc>https://ci-book.huangwz.com/19-Evaluating-Causal-Models.html</loc></url>
+  <url><loc>https://ci-book.huangwz.com/20-Plug-and-Play-Estimators.html</loc></url>
+  <url><loc>https://ci-book.huangwz.com/21-Meta-Learners.html</loc></url>
+  <url><loc>https://ci-book.huangwz.com/22-Debiased-Orthogonal-Machine-Learning.html</loc></url>
+  <url><loc>https://ci-book.huangwz.com/23-Challenges-with-Effect-Heterogeneity-and-Nonlinearity.html</loc></url>
+  <url><loc>https://ci-book.huangwz.com/24-The-Diff-in-Diff-Saga.html</loc></url>
+  <url><loc>https://ci-book.huangwz.com/25-Synthetic-Diff-in-Diff.html</loc></url>
+
+  <!-- 附录 -->
+  <url><loc>https://ci-book.huangwz.com/Debiasing-with-Orthogonalization.html</loc></url>
+  <url><loc>https://ci-book.huangwz.com/Debiasing-with-Propensity-Score.html</loc></url>
+  <url><loc>https://ci-book.huangwz.com/When-Prediction-Fails.html</loc></url>
+  <url><loc>https://ci-book.huangwz.com/Prediction-Metrics-For-Causal-Models.html</loc></url>
+  <url><loc>https://ci-book.huangwz.com/Conformal-Inference-for-Synthetic-Control.html</loc></url>
+
+</urlset>
+
