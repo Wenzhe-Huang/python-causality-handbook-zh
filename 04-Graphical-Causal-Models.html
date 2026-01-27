@@ -8,12 +8,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>图形因果模型（DAG）｜因果识别的可视化工具</title>
-    <meta name="description" content="介绍图形因果模型（DAG），解释混杂、碰撞变量以及因果识别条件。">
-    <link rel="canonical" href="https://ci-book.huangwz.com/04-Graphical-Causal-Models">
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Book","@id":"https://ci-book.huangwz.com/#book","name":"因果推断：献给求真敢为者","inLanguage":"zh-CN","author":[{"@type":"Person","name":"Matheus Facure"},{"@type":"Person","name":"黄文喆"},{"@type":"Person","name":"许文立"}],"url":"https://ci-book.huangwz.com/intro.html","image":"https://ci-book.huangwz.com/_images/brave-and-true.png"}</script>
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Chapter","name":"04 图形因果模型","url":"https://ci-book.huangwz.com/04-Graphical-Causal-Models.html","isPartOf":{"@id":"https://ci-book.huangwz.com/#book"},"author":[{"@type":"Person","name":"Matheus Facure"},{"@type":"Person","name":"黄文喆"},{"@type":"Person","name":"许文立"}],"inLanguage":"zh-CN"}</script>
-
+    <title>04 - 图形因果模型 &#8212; 因果推断：献给求真敢为者</title>
+  
+  
   
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
@@ -649,7 +646,7 @@ A \not \perp B | C
 </ol>
 <p>了解因果图模型能让我们认识到因果推断中出现的问题。正如所见，这些问题归根结底都源于偏误。</p>
 <p><span class="math notranslate nohighlight">\(
-E[Y|T=1] - E[Y|T=0] = \underbrace{E[Y_1 - Y_0|T=1]}_{ATET} + \underbrace{\{ E[Y_0|T=1] - E[Y_0|T=0] \}}_{BIAS}
+E[Y|T=1] - E[Y|T=0] = \underbrace{E[Y_1 - Y_0|T=1]}_{ATT} + \underbrace{\{ E[Y_0|T=1] - E[Y_0|T=0] \}}_{BIAS}
 \)</span></p>
 <p>图形模型帮助我们诊断所面临的偏误类型，并确定纠正这些偏误所需的工具。</p>
 </section>
