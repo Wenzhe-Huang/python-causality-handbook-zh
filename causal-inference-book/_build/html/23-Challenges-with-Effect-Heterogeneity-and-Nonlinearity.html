@@ -1,0 +1,1065 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>23 - 处理效应异质性和非线性的挑战 &#8212; 因果推断：献给求真敢为者</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '23-Challenges-with-Effect-Heterogeneity-and-Nonlinearity';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="24 - 双重差分传奇" href="24-The-Diff-in-Diff-Saga.html" />
+    <link rel="prev" title="22 - 去偏/正交机器学习" href="22-Debiased-Orthogonal-Machine-Learning.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">因果推断：献给求真敢为者</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    因果推断：献给求真敢为者
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">第一部分 - 阳</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01-Introduction-To-Causality.html">01 - 因果性导论</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-Randomised-Experiments.html">02 - 随机实验</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03-Stats-Review-The-Most-Dangerous-Equation.html">03 - 统计回顾：最危险的方程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04-Graphical-Causal-Models.html">04 - 图形因果模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05-The-Unreasonable-Effectiveness-of-Linear-Regression.html">05 - 线性回归的惊人有效性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06-Grouped-and-Dummy-Regression.html">06 - 分组与虚拟变量回归</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07-Beyond-Confounders.html">07 - 超越混杂因素</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-Instrumental-Variables.html">08 - 工具变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-Non-Compliance-and-LATE.html">09 - 不依从性与局部平均处理效应</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10-Matching.html">10 - 匹配法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11-Propensity-Score.html">11 - 倾向得分</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12-Doubly-Robust-Estimation.html">12 - 双重稳健估计</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13-Difference-in-Differences.html">13 - 双重差分法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="14-Panel-Data-and-Fixed-Effects.html">14 - 面板数据与固定效应</a></li>
+<li class="toctree-l1"><a class="reference internal" href="15-Synthetic-Control.html">15 - 合成控制法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="16-Regression-Discontinuity-Design.html">16 - 断点回归设计</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">第二部分 - 阴</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="17-Predictive-Models-101.html">17 - 预测模型入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="18-Heterogeneous-Treatment-Effects-and-Personalization.html">18 - 异质性处理效应与个性化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="19-Evaluating-Causal-Models.html">19 - 评估因果模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="20-Plug-and-Play-Estimators.html">20 - 即插即用估计器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="21-Meta-Learners.html">21 - 元学习器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="22-Debiased-Orthogonal-Machine-Learning.html">22 - 去偏/正交机器学习</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">23 - 处理效应异质性和非线性的挑战</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="24-The-Diff-in-Diff-Saga.html">24 - 双重差分传奇</a></li>
+<li class="toctree-l1"><a class="reference internal" href="25-Synthetic-Diff-in-Diff.html">25 - 合成双重差分</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">附录</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Debiasing-with-Orthogonalization.html">Debiasing with Orthogonalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Debiasing-with-Propensity-Score.html">Debiasing with Propensity Score</a></li>
+<li class="toctree-l1"><a class="reference internal" href="When-Prediction-Fails.html">When Prediction Fails</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Prediction-Metrics-For-Causal-Models.html">Why Prediction Metrics are Dangerous For Causal Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Conformal-Inference-for-Synthetic-Control.html">Conformal Inference for Synthetic Controls</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh/issues/new?title=Issue%20on%20page%20%2F23-Challenges-with-Effect-Heterogeneity-and-Nonlinearity.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/23-Challenges-with-Effect-Heterogeneity-and-Nonlinearity.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>23 - 处理效应异质性和非线性的挑战</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">23 - 处理效应异质性和非线性的挑战</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">二元结局上的处理效应</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">模拟一些数据</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">连续处理与非线性</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">关键观点</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">参考说明</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">参与贡献</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1>23 - 处理效应异质性和非线性的挑战<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<p>由于缺乏真实的反事实，预测单个单位的处理效应极其困难。因为我们只能观察到一个潜在结果 <span class="math notranslate nohighlight">\(T(t)\)</span>，无法直接估计个体处理效应。相反，我们只能依靠目标变换（也可视为巧妙设计的损失函数）来在期望意义下估计条件处理效应。然而，这并不是唯一的挑战。由于处理效应本身非常难以捉摸，其估计量通常非常嘈杂。这对需要根据处理效应对个体进行分段的应用有很大的现实影响，比如我们希望进行个性化处理分配时。</p>
+<p>我们接下来会看到，在某些情况下，如果我们不直接去估计 CATE，而是关注另一个方差更小的代理目标，我们可以获得更好的处理效应分段。这种情况常见于结局变量 <span class="math notranslate nohighlight">\(Y\)</span> 为二元变量时。</p>
+<section id="id2">
+<h2>二元结局上的处理效应<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.formula.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">smf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">style</span>
+<span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;ggplot&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">toolz</span><span class="w"> </span><span class="kn">import</span> <span class="n">curry</span><span class="p">,</span> <span class="n">partial</span>
+
+<span class="nd">@curry</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">avg_treatment_effect</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">treatment</span><span class="p">,</span> <span class="n">outcome</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">treatment</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">][</span><span class="n">outcome</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">treatment</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">][</span><span class="n">outcome</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    
+    
+
+<span class="nd">@curry</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">cumulative_effect_curve</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+                            <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                            <span class="n">outcome</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                            <span class="n">prediction</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                            <span class="n">min_rows</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
+                            <span class="n">steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+                            <span class="n">effect_fn</span> <span class="o">=</span> <span class="n">avg_treatment_effect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    
+    <span class="n">size</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ordered_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">n_rows</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">min_rows</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">size</span> <span class="o">//</span> <span class="n">steps</span><span class="p">))</span> <span class="o">+</span> <span class="p">[</span><span class="n">size</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">effect_fn</span><span class="p">(</span><span class="n">ordered_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">rows</span><span class="p">),</span> <span class="n">treatment</span><span class="p">,</span> <span class="n">outcome</span><span class="p">)</span> <span class="k">for</span> <span class="n">rows</span> <span class="ow">in</span> <span class="n">n_rows</span><span class="p">])</span>
+
+
+<span class="nd">@curry</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">cumulative_gain_curve</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+                          <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                          <span class="n">outcome</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                          <span class="n">prediction</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                          <span class="n">min_rows</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
+                          <span class="n">steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+                          <span class="n">effect_fn</span> <span class="o">=</span> <span class="n">avg_treatment_effect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    
+
+    <span class="n">size</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">n_rows</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">min_rows</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">size</span> <span class="o">//</span> <span class="n">steps</span><span class="p">))</span> <span class="o">+</span> <span class="p">[</span><span class="n">size</span><span class="p">]</span>
+
+    <span class="n">cum_effect</span> <span class="o">=</span> <span class="n">cumulative_effect_curve</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">treatment</span><span class="o">=</span><span class="n">treatment</span><span class="p">,</span> <span class="n">outcome</span><span class="o">=</span><span class="n">outcome</span><span class="p">,</span> <span class="n">prediction</span><span class="o">=</span><span class="n">prediction</span><span class="p">,</span>
+                                         <span class="n">min_rows</span><span class="o">=</span><span class="n">min_rows</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="n">steps</span><span class="p">,</span> <span class="n">effect_fn</span><span class="o">=</span><span class="n">effect_fn</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">effect</span> <span class="o">*</span> <span class="p">(</span><span class="n">rows</span> <span class="o">/</span> <span class="n">size</span><span class="p">)</span> <span class="k">for</span> <span class="n">rows</span><span class="p">,</span> <span class="n">effect</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">n_rows</span><span class="p">,</span> <span class="n">cum_effect</span><span class="p">)])</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>这里有一个你在科技公司工作时极有可能遇到的常见问题：管理层希望通过某种“助推”来提高客户对产品的转化率。例如，他们可能通过向客户提供 10 巴西雷亚尔的代金券来促进应用安装后的内购，或在客户第一次使用叫车应用时提供一次免费乘车，或者在投资平台的前 3 个月降低交易费用。由于助推通常成本较高，他们不愿意对每个人都这样做。更理想的是，我们能把助推仅用于那些对其最敏感的客户。</p>
+<p>用因果推断的术语来说，这类业务问题属于“处理效应异质性”（TEH）范畴。具体地，你有一个昂贵的助推作为处理 <span class="math notranslate nohighlight">\(T\)</span>，转化率作为二元结局 <span class="math notranslate nohighlight">\(Y\)</span>，以及客户特定的处理前特征 <span class="math notranslate nohighlight">\(X\)</span>。你可以像使用 Double/Debiased ML 那样估计条件平均处理效应 <span class="math notranslate nohighlight">\(E[Y_1 - Y_0 \mid X]\)</span>（如果处理是连续的，则是 <span class="math notranslate nohighlight">\(E[Y'(T)\mid X]\)</span>），最终只对估计的处理效应最高的客户实施助推。用业务术语说，你就是在个性化你的转化策略，找到那些转化增量高的客户群体，并只在他们身上使用助推。</p>
+<p>然而，这里有一个使 TEH 方法不那么显而易见的复杂因素——结局是二元的。这大大增加了难度。因为这一点有些违反直觉，所以我先展示会发生什么，再解释其原因。</p>
+</section>
+<section id="id3">
+<h2>模拟一些数据<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>让我们保持简单，但仍然贴近实际。我们将模拟完全随机的处理 <code class="docutils literal notranslate"><span class="pre">nudge</span></code>，它服从参数 <span class="math notranslate nohighlight">\(p=0.5\)</span> 的伯努利分布。这意味着助推的分配就像抛硬币一样，而且不存在需要关注的混杂因素。</p>
+<p><span class="math notranslate nohighlight">\( nudge \sim \mathcal{B}(0.5) \)</span></p>
+<p>接下来，我们模拟客户的协变量 <code class="docutils literal notranslate"><span class="pre">age</span></code> 和 <code class="docutils literal notranslate"><span class="pre">income</span></code>，它们分别服从伽马分布。这些是你对客户已知的信息，因此你希望根据这些变量进行个性化。换言之，你希望根据年龄和收入将客户分组，使得其中一组对 <code class="docutils literal notranslate"><span class="pre">nudge</span></code> 处理高度响应。</p>
+<p><span class="math notranslate nohighlight">\( age \sim G(10, 4) \)</span></p>
+<p><span class="math notranslate nohighlight">\( income \sim G(20, 2) \)</span></p>
+<p>最后，我们模拟转化率。为此，我们首先<strong>构建一个服从线性模型的潜在变量</strong>并加入随机噪声。重要的是要注意，<code class="docutils literal notranslate"><span class="pre">income</span></code> 对 <span class="math notranslate nohighlight">\(Y_{latent}\)</span> 有很高的预测力，但<strong>它并不改变处理效应</strong>。简单来说，助推对所有收入水平的 <span class="math notranslate nohighlight">\(Y_{latent}\)</span> 的影响是相同的。相反，<code class="docutils literal notranslate"><span class="pre">age</span></code> 只通过与 <code class="docutils literal notranslate"><span class="pre">nudge</span></code> 的交互影响 <span class="math notranslate nohighlight">\(Y_{latent}\)</span>。</p>
+<p><span class="math notranslate nohighlight">\(Y_{latent} \sim N(-4.5 + 0.001 \ income + nudge + 0.01 \ nudge \ age, 1)\)</span></p>
+<p>一旦我们有了 <span class="math notranslate nohighlight">\(Y_{latent}\)</span>，我们通过设置 <span class="math notranslate nohighlight">\(Y_{latent} &gt; x\)</span> 来模拟 <code class="docutils literal notranslate"><span class="pre">conversion</span></code>。首先令 <code class="docutils literal notranslate"><span class="pre">x=0</span></code>，这样转化率大约是 50%。即平均有 50% 的客户会选择我们的产品。</p>
+<p><span class="math notranslate nohighlight">\(conversion = 1\{Y_{latent} &gt; 0\}\)</span></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="mi">100000</span>
+<span class="n">nudge</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">binomial</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">age</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">gamma</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">estimated_income</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">gamma</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span>
+
+<span class="n">latent_outcome</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="o">-</span><span class="mf">4.5</span> <span class="o">+</span> <span class="n">estimated_income</span><span class="o">*</span><span class="mf">0.001</span> <span class="o">+</span> <span class="n">nudge</span> <span class="o">+</span> <span class="n">nudge</span><span class="o">*</span><span class="n">age</span><span class="o">*</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="n">conversion</span> <span class="o">=</span> <span class="p">(</span><span class="n">latent_outcome</span> <span class="o">&gt;</span> <span class="mf">.1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>我们还将所有数据存入一个 DataFrame 以便处理。同时检查一下平均转化率确实接近 50%。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">conversion</span><span class="o">=</span><span class="n">conversion</span><span class="p">,</span>
+                       <span class="n">nudge</span><span class="o">=</span><span class="n">nudge</span><span class="p">,</span>
+                       <span class="n">age</span><span class="o">=</span><span class="n">age</span><span class="p">,</span>
+                       <span class="n">estimated_income</span><span class="o">=</span><span class="n">estimated_income</span><span class="p">,</span>
+                       <span class="n">latent_outcome</span><span class="o">=</span><span class="n">latent_outcome</span><span class="p">))</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>conversion             0.518260
+nudge                  0.500940
+age                   40.013487
+estimated_income    3995.489527
+latent_outcome         0.197076
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<p>至于平均处理效应，由于处理是随机的，我们可以将其估计为处理组和对照组的平均值差：<span class="math notranslate nohighlight">\(E[Y\mid T=1] - E[Y\mid T=0]\)</span>。让我们看看这些处理组平均值是什么样的。我们将同时考察潜在结果和实际转化两个角度。有一些重要的现象值得注意。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;nudge&quot;</span><span class="p">)[[</span><span class="s2">&quot;latent_outcome&quot;</span><span class="p">,</span> <span class="s2">&quot;conversion&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>latent_outcome</th>
+      <th>conversion</th>
+    </tr>
+    <tr>
+      <th>nudge</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>-0.505400</td>
+      <td>0.320503</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.896916</td>
+      <td>0.715275</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">avg_treatment_effect</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;nudge&quot;</span><span class="p">,</span> <span class="s2">&quot;latent_outcome&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.4023163965477659
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">avg_treatment_effect</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;nudge&quot;</span><span class="p">,</span> <span class="s2">&quot;conversion&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.39477273768476406
+</pre></div>
+</div>
+</div>
+</div>
+<p>对潜在结果而言，ATE 很容易计算。根据我们的数据生成模型，该效应应为 <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">+</span> <span class="pre">avg(age)*0.01</span></code>。由于平均年龄约为 40，这给我们一个大约为 1.4 的平均处理效应。事情在转化率的 ATE 上变得更有趣（也更复杂）。<strong>由于转化率被限制在 0 到 1 之间，其 ATE 将不是线性的</strong>。因此，我们不能像对潜在结果那样通过简单的公式推断它（虽然有公式，但非常复杂）。我们姑且认为该效应较小。这是有道理的，对吧？处理不可能将转化率提高 1.4 个百分点，因为转化率不能超过 100%。我希望你记住这一点，这对理解我们接下来将看到的内容至关重要。</p>
+<p>现在来谈谈条件平均处理效应 (CATE)。观察我们的数据生成过程，我们知道 <code class="docutils literal notranslate"><span class="pre">estimated_income</span></code> 可以预测转化率，但并不改变助推对转化的影响。因此，基于 <code class="docutils literal notranslate"><span class="pre">estimated_income</span></code> 对客户进行分段将产生具有相同处理效应的组。相反，<code class="docutils literal notranslate"><span class="pre">age</span></code> 只通过与助推的交互影响转化。不同的年龄分段对处理的反应会非常不同，而不同的收入分段不会。换句话说，<code class="docutils literal notranslate"><span class="pre">estimated_income</span></code> 不是一个好的个性化变量，而 <code class="docutils literal notranslate"><span class="pre">age</span></code> 是。</p>
+<p>一个认识这一点的方法是通过累积效应曲线。<code class="docutils literal notranslate"><span class="pre">age</span></code> 的曲线应该从远离 ATE 的地方开始，并缓慢趋近于它，而 <code class="docutils literal notranslate"><span class="pre">estimated_income</span></code> 的曲线应该只是围绕 ATE 上下波动。对助推作用在潜在结果上的累积效应曲线，正是我们看到的这种情形。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cumulative_effect_fn</span> <span class="o">=</span> <span class="n">cumulative_effect_curve</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;nudge&quot;</span><span class="p">,</span> <span class="s2">&quot;latent_outcome&quot;</span><span class="p">,</span> <span class="n">min_rows</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+
+<span class="n">age_cumm_effect_latent</span> <span class="o">=</span> <span class="n">cumulative_effect_fn</span><span class="p">(</span><span class="n">prediction</span><span class="o">=</span><span class="s2">&quot;age&quot;</span><span class="p">)</span>
+<span class="n">inc_cumm_effect_latent</span> <span class="o">=</span> <span class="n">cumulative_effect_fn</span><span class="p">(</span><span class="n">prediction</span><span class="o">=</span><span class="s2">&quot;estimated_income&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">age_cumm_effect_latent</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;age&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">inc_cumm_effect_latent</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;est. income&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Percentile&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Effect on Latet Outcome&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/2dfcd84bb8a6f0376da24fb9c360557b93c93e57aa9f92aafc8f845eb8f3f65d.png" src="_images/2dfcd84bb8a6f0376da24fb9c360557b93c93e57aa9f92aafc8f845eb8f3f65d.png" />
+</div>
+</div>
+<p>再次强调，潜在结果的情况非常理想。由于其线性特性，我们的预期与现实非常吻合。但在现实生活中，我们既不关心也无法观测潜在结果。我们拥有的只有转化率。而对于转化率来说，情形要复杂得多。如果我们绘制累积效应曲线，<code class="docutils literal notranslate"><span class="pre">age</span></code> 仍然展示出一些处理效应异质性：曲线从高于 ATE 的位置开始，并缓慢收敛到 ATE。这意味着年龄越大，处理效应越高。目前为止，一切如我们所预期。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cumulative_effect_fn</span> <span class="o">=</span> <span class="n">cumulative_effect_curve</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;nudge&quot;</span><span class="p">,</span> <span class="s2">&quot;conversion&quot;</span><span class="p">,</span> <span class="n">min_rows</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+
+<span class="n">age_cumm_effect_latent</span> <span class="o">=</span> <span class="n">cumulative_effect_fn</span><span class="p">(</span><span class="n">prediction</span><span class="o">=</span><span class="s2">&quot;age&quot;</span><span class="p">)</span>
+<span class="n">inc_cumm_effect_latent</span> <span class="o">=</span> <span class="n">cumulative_effect_fn</span><span class="p">(</span><span class="n">prediction</span><span class="o">=</span><span class="s2">&quot;estimated_income&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">age_cumm_effect_latent</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;age&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">inc_cumm_effect_latent</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;est. income&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Percentile&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Effect on Conversion&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/8b3dbb310448bc7e498952e37a4c89ff371998a67efeb1d9499ab2553bff4bf9.png" src="_images/8b3dbb310448bc7e498952e37a4c89ff371998a67efeb1d9499ab2553bff4bf9.png" />
+</div>
+</div>
+<p>然而，<code class="docutils literal notranslate"><span class="pre">estimated_income</span></code> 展现出了非常大的处理效应异质性。收入较高的客户具有更低的处理效应，这使得累积效应曲线从零开始，然后超过 ATE，最后才收敛到 ATE。这告诉我们，就个性化而言，按 <code class="docutils literal notranslate"><span class="pre">estimated_income</span></code> 分组所产生的处理效应异质性比按 <code class="docutils literal notranslate"><span class="pre">age</span></code> 分组更大。</p>
+<p>这是不是很令人困惑？为什么我们明知 <code class="docutils literal notranslate"><span class="pre">age</span></code> 会驱动效应异质性，却发现在个性化上，按 <code class="docutils literal notranslate"><span class="pre">age</span></code> 分组竟然不如按 <code class="docutils literal notranslate"><span class="pre">estimated_income</span></code> 分组有效？答案在于<strong>结局函数的非线性</strong>。虽然 <code class="docutils literal notranslate"><span class="pre">estimated_income</span></code> 不改变助推对潜在结果的影响，但在将潜在结果转换为转化率时（至少间接地）它会改变处理效应。转化率不是线性的，这意味着<strong>它的导数取决于你所在的位置</strong>。由于转化率上界为 1，如果已经很高，再想提升就很难。换句话说，高转化率区间的导数非常小。低端同样如此：由于转化率有下界 0，如果已经很低，其导数也很小。转化率呈 S 形曲线，在两端导数都很低，我们可以通过绘制按 <code class="docutils literal notranslate"><span class="pre">estimated_income</span></code> 分箱（箱宽 100）的平均转化率来看出这一点。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">df</span>
+ <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">estimated_income_bins</span><span class="o">=</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;estimated_income&quot;</span><span class="p">]</span><span class="o">/</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span>
+ <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;estimated_income_bins&quot;</span><span class="p">)</span>
+ <span class="p">[[</span><span class="s2">&quot;conversion&quot;</span><span class="p">]]</span>
+ <span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+ <span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/a152dc27645136533613e0e1bf148b499406d73b3d3611b02d18da1bec34a4d4.png" src="_images/a152dc27645136533613e0e1bf148b499406d73b3d3611b02d18da1bec34a4d4.png" />
+</div>
+</div>
+<p>注意，当转化率很高时，这条曲线的斜率（导数）非常小。当转化率很低时，斜率也很小（虽然由于这一区域样本较少，这一点不易观察）。有了这条信息，我们可以解释为什么 <code class="docutils literal notranslate"><span class="pre">estimated_income</span></code> 会产生高的处理效应异质性。</p>
+<p>由于 <code class="docutils literal notranslate"><span class="pre">estimated_income</span></code> 对转化率的预测力很强，我们可以说不同 <code class="docutils literal notranslate"><span class="pre">estimated_income</span></code> 的客户位于 S 形转化曲线的不同位置。<code class="docutils literal notranslate"><span class="pre">estimated_income</span></code> 非常高或非常低的客户落在曲线的两端，在那里导数较小，这意味着提高转化率更加困难，也意味着处理效应可能较小。另一方面，中等收入范围的客户位于转化曲线的中间地带，在那里导数较大，因此处理效应可能也较大。我说“可能”是因为，理论上，一个变量可能有如此强的效应修改力量，以至于它主导了我们沿着转换曲线看到的导数变化。然而，至少从我的经验来看，S 形转化曲率往往主导其他任何效应修改。</p>
+<p>当然，这不仅是我的观点。下面这张图来自 Susan Athey 在哥伦比亚数据科学研究院的演讲幻灯片。她在讨论通过助推让学生申请联邦助学金以支付大学费用的效果。这也是一个转化问题。她发现最佳策略是针对那些已经有较高转换可能性的学生。她还表示，针对那些转换概率低的学生通常不是好主意。</p>
+<p><img alt="img" src="_images/slide-susan-athey.png" /></p>
+<p>等等！这与你上面说的矛盾！你不是说在曲线的低端和高端，处理效应都很小吗？</p>
+<p>没错。然而在现实中，转化率很少覆盖整个 S 形曲线。通常所有人都挤在曲线的一端。在商业实践中，你的平均转化率很少是 50%，更常见的是 70% 到 90%，或者 1% 到 20% 这样的水平。在这些更常见的情形下，针对高基线概率人群可能是好主意，也可能不是。</p>
+<p>我的意思是：我们沿用之前的潜在结果，但现在生成一个平均转化率较低的情形，将转化率设定为 <code class="docutils literal notranslate"><span class="pre">latent_outcome</span> <span class="pre">&gt;</span> <span class="pre">2</span></code>；接着，再构造一个平均转化率较高的情形，将转化率设定为 <code class="docutils literal notranslate"><span class="pre">latent_outcome</span> <span class="pre">&gt;</span> <span class="pre">-2</span></code>。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;conversion_low&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">conversion</span> <span class="o">=</span> <span class="p">(</span><span class="n">latent_outcome</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;conversion_high&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">conversion</span> <span class="o">=</span> <span class="p">(</span><span class="n">latent_outcome</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Avg. Low Conversion: &quot;</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;conversion_low&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Avg. High Conversion: &quot;</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;conversion_high&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Avg. Low Conversion:  0.12119
+Avg. High Conversion:  0.9275
+</pre></div>
+</div>
+</div>
+</div>
+<p>根据我们对转化率非线性的理解，我们已经可以预测接下来会发生什么。在低转化率的情况下，针对那些具有高基准转化率（高 <code class="docutils literal notranslate"><span class="pre">estimated_income</span></code>）的群体将更为有效。这是因为我们处于S形转化曲线的左侧，在这个区域，基准转化率越低，导数会越小。在这个区域，<strong>高基准转化率将转化为更高的处理效应</strong>。因此，我们应该对高基准转化率的群体进行干预，而这些群体的特征就是拥有更高的 <code class="docutils literal notranslate"><span class="pre">estimated_income</span></code>。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cumulative_effect_fn</span> <span class="o">=</span> <span class="n">cumulative_effect_curve</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;nudge&quot;</span><span class="p">,</span> <span class="s2">&quot;conversion_low&quot;</span><span class="p">,</span> <span class="n">min_rows</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+
+<span class="n">age_cumm_effect_latent</span> <span class="o">=</span> <span class="n">cumulative_effect_fn</span><span class="p">(</span><span class="n">prediction</span><span class="o">=</span><span class="s2">&quot;age&quot;</span><span class="p">)</span>
+<span class="n">inc_cumm_effect_latent</span> <span class="o">=</span> <span class="n">cumulative_effect_fn</span><span class="p">(</span><span class="n">prediction</span><span class="o">=</span><span class="s2">&quot;estimated_income&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">age_cumm_effect_latent</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;age&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">inc_cumm_effect_latent</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;est. income&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Percentile&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Effect on Conversion&quot;</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/a6b9efff497872dabc2981da1e06f1b42caf48f8ac8d304453473b82714ac1ff.png" src="_images/a6b9efff497872dabc2981da1e06f1b42caf48f8ac8d304453473b82714ac1ff.png" />
+</div>
+</div>
+<p>正如我们所预测的，具有高 <code class="docutils literal notranslate"><span class="pre">estimated_income</span></code>（即高基准转化率）的群体，确实表现出了更高的处理效应。</p>
+<p>现在，对于转化率较高的另一种情况，平均而言，<strong>高基准转化率的群体会有较低的处理效应</strong>。因此，针对那些具有高 <code class="docutils literal notranslate"><span class="pre">estimated_income</span></code> 的群体并不是一个好主意。我们可以通过倒置的累计效应曲线看到这一点，曲线显示了高 <code class="docutils literal notranslate"><span class="pre">estimated_income</span></code> 群体的处理效应较低。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cumulative_effect_fn</span> <span class="o">=</span> <span class="n">cumulative_effect_curve</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;nudge&quot;</span><span class="p">,</span> <span class="s2">&quot;conversion_high&quot;</span><span class="p">,</span> <span class="n">min_rows</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+
+<span class="n">age_cumm_effect_latent</span> <span class="o">=</span> <span class="n">cumulative_effect_fn</span><span class="p">(</span><span class="n">prediction</span><span class="o">=</span><span class="s2">&quot;age&quot;</span><span class="p">)</span>
+<span class="n">inc_cumm_effect_latent</span> <span class="o">=</span> <span class="n">cumulative_effect_fn</span><span class="p">(</span><span class="n">prediction</span><span class="o">=</span><span class="s2">&quot;estimated_income&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">age_cumm_effect_latent</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;age&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">inc_cumm_effect_latent</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;est. income&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Percentile&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Effect on Conversion&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/b3c3a0a632beaa036a3d2ab2667d615f10c9014a934304a7739ea45d5e2cc03c.png" src="_images/b3c3a0a632beaa036a3d2ab2667d615f10c9014a934304a7739ea45d5e2cc03c.png" />
+</div>
+</div>
+<p>总结一下，我们看到当结局是二元变量时，处理效应往往受到 S 形函数曲率（导数）的支配。</p>
+<p><img alt="img" src="_images/logistic.png" /></p>
+<p>例如，在我们的转化问题中，如果<strong>平均转化率较低</strong>，我们位于逻辑曲线的左侧，<strong>处理效应会在高基线转化率时更大</strong>。这意味着助推策略应该优先针对那些已有较高转化概率的客户。另一方面，如果<strong>平均转化率较高</strong>，我们位于逻辑曲线的右侧，此时导数（因此处理效应）会<strong>在较低基线转化率的客户身上更大</strong>。</p>
+<p>这确实有点复杂，但可以简化为：<strong>就去处理那些基线转化率接近 50% 的人</strong>。数学上的依据很可靠：逻辑函数的导数在 50% 时达到峰值，所以只需针对那些接近这一点的单位。</p>
+<p>更妙的是，这是为数不多的经验法则与数学一致的情况。在营销领域，转化问题非常常见，人们普遍认为不应该将资源浪费在“必输无疑”的客户（转化概率非常低）或“稳操胜券”的客户（转化概率非常高）身上，而应集中于中间地带。这很有意思，因为这与我们通过更正式的因果推理得出的结论完全一致。</p>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="id4">
+<h1>连续处理与非线性<a class="headerlink" href="#id4" title="Link to this heading">#</a></h1>
+<p>我们详细探讨了一个二元结局使处理效应异质性分析更加困难的例子。但这种现象远不止营销中的转化问题。例如，在 2021 年，全球首次向公众大规模提供获批的 COVID‑19 疫苗。当时，一个关键问题是谁应该优先接种疫苗。这显然也是一个处理效应异质性问题。决策者希望首先给那些受益最大的人接种。在这种情况下，处理效应是预防死亡或住院。那么，接种后谁的死亡或住院风险下降最多？在大多数国家，是老年人和有基础疾病（共病）的群体。这些人<strong>感染 COVID‑19 时死亡的可能性更高</strong>。另外，COVID 的死亡率（谢天谢地！）远低于 50%，这使得我们处于逻辑函数的左侧。在这一区域，按照我们在营销案例中所用的同一理由，优先接种那些基线死亡概率高的人是有道理的，这正是上述群体。是否只是巧合？也许吧。请记住我不是卫生专家，所以可能理解有误，但这个逻辑对我来说很有道理。</p>
+<p>在营销助推和 COVID‑19 疫苗这两个例子中，<strong>导致处理效应异质性复杂化的关键因素是结局函数 <span class="math notranslate nohighlight">\(Y(0)\)</span> 的非线性</strong>。这种非线性意味着当我们从 <span class="math notranslate nohighlight">\(Y(0)\)</span> 转移到 <span class="math notranslate nohighlight">\(Y(1)\)</span> 时，结局的增加主要是由于结局函数的曲率。我们看到在二元结局中 <span class="math notranslate nohighlight">\(E[Y\mid X]\)</span> 遵循逻辑曲线，这种非线性造成了问题。但这种现象更具普遍性。事实上，它在商业中反复出现，尤其是当处理是连续变量时。为了更清楚地说明这一点，让我们再看最后一个例子。</p>
+<p>考虑一个经典的定价问题。你为一家流媒体公司如 Netflix 或 HBO 工作。公司想知道对客户应收取什么价格。为回答这一问题，他们设计了一项实验，随机将客户分配到不同价格的套餐：5 巴西雷亚尔/月、10 巴西雷亚尔/月、15 巴西雷亚尔/月或 20 巴西雷亚尔/月。这样做不仅希望了解客户对价格上涨的敏感性，还希望了解不同类型的客户是否有不同的敏感程度。下图显示了该实验按两个客户群的结果：<code class="docutils literal notranslate"><span class="pre">A</span></code> 是收入估计较高的客户，<code class="docutils literal notranslate"><span class="pre">B</span></code> 是收入估计较低的客户。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
+    <span class="n">segment</span><span class="o">=</span> <span class="p">[</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span>  <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">,],</span>
+    <span class="n">price</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="p">]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="n">sales</span><span class="o">=</span><span class="p">[</span><span class="mi">5100</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="mi">4500</span><span class="p">,</span> <span class="mi">3000</span><span class="p">,</span>  <span class="mi">5350</span><span class="p">,</span> <span class="mi">5300</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="mi">4500</span><span class="p">]</span>
+<span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;price&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;sales&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;segment&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Avg. Sales by Price (%) by Customer Segment&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/2b07cf15fa70a65f38d1bb5251d406479c398e9eaeab5df3bb06f9878a2594e1.png" src="_images/2b07cf15fa70a65f38d1bb5251d406479c398e9eaeab5df3bb06f9878a2594e1.png" />
+</div>
+</div>
+<p>有了这份数据，公司希望回答如下问题：谁对折扣更敏感？换句话说，我们如何<strong>根据价格敏感度（销售对价格的弹性）对客户进行排序</strong>？观察曲线，我们感觉 <code class="docutils literal notranslate"><span class="pre">A</span></code> 组整体上对折扣不那么敏感，尽管它产生的收入更高。不过，我们也注意到曲线存在一定的弯曲。如果考虑这种曲率，处理效应的排序不仅仅是 <code class="docutils literal notranslate"><span class="pre">A</span></code> 与 <code class="docutils literal notranslate"><span class="pre">B</span></code> 之间的比较。处理效应还取决于他们在处理曲线上的位置。例如，对于 <code class="docutils literal notranslate"><span class="pre">A</span></code> 组客户，从 15 巴西雷亚尔降到 10 巴西雷亚尔的处理效应要高于 <code class="docutils literal notranslate"><span class="pre">B</span></code> 组客户从 5 巴西雷亚尔升至 10 巴西雷亚尔的处理效应：</p>
+<div class="math notranslate nohighlight">
+\[
+E[Y(10) - Y(5) \mid Seg=B] &lt; E[Y(15) - Y(10) \mid Seg=A]
+\]</div>
+<p>如果我们对这些处理效应进行排序，结果大概如下：</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;price&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;sales&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;segment&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5350</span><span class="p">),</span> <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">boxstyle</span><span class="o">=</span><span class="s2">&quot;round&quot;</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5000</span><span class="p">),</span> <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">boxstyle</span><span class="o">=</span><span class="s2">&quot;round&quot;</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s2">&quot;3&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">5100</span><span class="p">),</span> <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">boxstyle</span><span class="o">=</span><span class="s2">&quot;round&quot;</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s2">&quot;4&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">4700</span><span class="p">),</span> <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">boxstyle</span><span class="o">=</span><span class="s2">&quot;round&quot;</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s2">&quot;4&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">17</span><span class="p">,</span> <span class="mi">4800</span><span class="p">),</span> <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">boxstyle</span><span class="o">=</span><span class="s2">&quot;round&quot;</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s2">&quot;5&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">17</span><span class="p">,</span> <span class="mi">3900</span><span class="p">),</span> <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">boxstyle</span><span class="o">=</span><span class="s2">&quot;round&quot;</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Ordering of the Effect of Increasing Price&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/aa2cc900a8710f32c9a70a30afaef1b76d235c37456dd27c0cf3236c9c713dc8.png" src="_images/aa2cc900a8710f32c9a70a30afaef1b76d235c37456dd27c0cf3236c9c713dc8.png" />
+</div>
+</div>
+<p>正如结局为二元变量时的情形一样，在这个例子中，<strong>处理效应与结果相关</strong>。销售越高（价格越低），绝对处理效应越小；销售越低（价格越高），绝对处理效应越小。但在这里，情况更复杂，因为<strong>效应不仅与结果相关，还与处理水平相关</strong>。这使得回答反事实问题更加棘手。例如，假设你的实验数据实际长成了下面的样子：对于 <code class="docutils literal notranslate"><span class="pre">A</span></code> 组（富裕人群），你测试了较高的价格，而对于 <code class="docutils literal notranslate"><span class="pre">B</span></code> 组，你只测试了较低的价格。这种情况非常常见，因为公司通常只想在他们认为合理的处理范围内进行实验。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
+    <span class="n">segment</span><span class="o">=</span> <span class="p">[</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span>  <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">,],</span>
+    <span class="n">price</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="p">]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="n">sales</span><span class="o">=</span><span class="p">[</span><span class="mi">5100</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="mi">4500</span><span class="p">,</span> <span class="mi">3000</span><span class="p">,</span>  <span class="mi">5350</span><span class="p">,</span> <span class="mi">5300</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="mi">4500</span><span class="p">]</span>
+<span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;segment&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">12</span><span class="p">)</span> <span class="p">],</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;price&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;sales&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;segment&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Avg. Sales by Price (%) by Customer Segment&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/4ef5b2fb71773afef1ba33ac6c36661e4080f5d6654735b6f172225d69e6dd1f.png" src="_images/4ef5b2fb71773afef1ba33ac6c36661e4080f5d6654735b6f172225d69e6dd1f.png" />
+</div>
+</div>
+<p>如果你天真地将处理效应结果简单汇总，可能会得出 <code class="docutils literal notranslate"><span class="pre">A</span></code> 组对提价的价格弹性远高于 <code class="docutils literal notranslate"><span class="pre">B</span></code> 组的结论。但那只是因为对于 <code class="docutils literal notranslate"><span class="pre">B</span></code> 组，你只探索了低处理效应区域。</p>
+<p>那么，当处理效应随着处理水平和结果水平而变化时，你可以做什么？说实话，这仍是一个活跃的研究领域。在实践中，你能做的最好的事情是在回答“哪类客户对处理更敏感”时<strong>非常谨慎</strong>。确保比较的客户类型有相同的处理分布。如果没有，就要对外推处理效应持高度怀疑态度。例如，在上面的例子中，尽管 <code class="docutils literal notranslate"><span class="pre">B</span></code> 组客户对提价似乎不那么敏感，但如果你对该组客户实行高于 10 巴西雷亚尔的价格，你并不知道这一结论是否仍然成立。</p>
+<p>你还可以尝试做的一件事是对反应曲线进行线性化。这里的想法是，通过变换处理或结局（或两者），使它们之间的关系看起来像一条直线。由于直线的导数是恒定的，这可以消除处理效应随曲线位置而变化的问题。例如，如果我们将价格变量取负，对其进行四次方运算然后再反转符号，我们得到的是一种大致线性的关系。在这份变换后的数据中，<code class="docutils literal notranslate"><span class="pre">A</span></code> 对提价的敏感度低于 <code class="docutils literal notranslate"><span class="pre">B</span></code> 的说法更加合理，因为它不再取决于我们处于曲线的哪一部分。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">price</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">]</span><span class="o">**</span><span class="mi">4</span><span class="p">)),</span>
+             <span class="n">x</span><span class="o">=</span><span class="s2">&quot;price&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;sales&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;segment&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Avg. Sales by -(-price^4)&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/1421c44f36994824c8dc2235c8e63de2f140235b49bf3319b5845da78981b800.png" src="_images/1421c44f36994824c8dc2235c8e63de2f140235b49bf3319b5845da78981b800.png" />
+</div>
+</div>
+<p>然而，这种做法有很多缺点。首先，并非总能线性化一条曲线。在我们的例子中，你可以清楚地看到这种线性化并不完美。但更重要的是，有时放弃曲率在业务上毫无意义。在我们的定价例子中，完全有可能我们认为以 15 巴西雷亚尔的价格对 <code class="docutils literal notranslate"><span class="pre">A</span></code> 组客户提价比对 5 巴西雷亚尔的 <code class="docutils literal notranslate"><span class="pre">B</span></code> 组客户提价更为敏感。这会导致一个合理的决策，即将 <code class="docutils literal notranslate"><span class="pre">A</span></code> 组客户的价格从 15 调整到 10，但不对 <code class="docutils literal notranslate"><span class="pre">B</span></code> 组的价格做任何改变。</p>
+<section id="id5">
+<h2>关键观点<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<p>我意识到我提出的问题可能比提供的答案还多。不过，有时对一个问题最好的做法就是充分意识到它的存在。在本章中，我希望我能让你意识到，当我们关心的结局是非线性时会出现的各种复杂性。</p>
+<p>对于二元结局，这是一个常见且研究较多的问题。在这种情况下，处理效应在平均结局接近 0.5 时往往较高。由于结局被限制在 0 和 1 之间，如果我们太接近 0 或 1，效应往往非常小。</p>
+<p>当非线性出现在连续结局中时，情况就更为复杂了。在这种情况下，你能做的最好事情就是非常仔细地思考问题。试着回答，你究竟更关心不受基线影响的处理效应，还是基线本身也很重要。仅仅这个问题就能为你提供宝贵的指导原则。</p>
+</section>
+<section id="id6">
+<h2>参考说明<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<p>这里写的大部分内容都来自作者对这个问题的个人经验。不过，作者确实找到了一篇涉及这个主题的学术文章：《Causal Classification: Treatment Effect Estimation vs. Outcome Prediction》由 Fernández‑Loría 和 Provost 撰写，其中讨论了处理效应与结果变量相关的情况。</p>
+</section>
+<section id="id7">
+<h2>参与贡献<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
+<p><strong>《Causal Inference for the Brave and True》</strong> 是一本关于因果推断的开源教材，致力于以经济上可负担、认知上可理解的方式，普及这门“科学的统计基础”。全书基于 Python，仅使用自由开源软件编写，原始英文版本由 <a class="reference external" href="https://github.com/matheusfacure">Matheus Facure</a> 编写与维护。</p>
+<p>本书的中文版由黄文喆与许文立助理教授合作翻译，并托管在 <a class="reference external" href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh">GitHub 中文主页</a>。希望本地化的内容能帮助更多中文读者学习和掌握因果推断方法。</p>
+<p>如果你觉得这本书对你有帮助，并希望支持该项目，可以前往 <a class="reference external" href="https://www.patreon.com/causal_inference_for_the_brave_and_true">Patreon</a> 支持原作者。</p>
+<p>如果你暂时不方便进行经济支持，也可以通过以下方式参与贡献：</p>
+<ul class="simple">
+<li><p>修正错别字</p></li>
+<li><p>提出翻译或表达建议</p></li>
+<li><p>反馈你未能理解的部分内容</p></li>
+</ul>
+<p>欢迎前往英文版或中文版仓库点击 <a class="reference external" href="https://github.com/matheusfacure/python-causality-handbook/issues">issues 区</a> 或 <a class="reference external" href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh/issues">中文版 issues 区</a> 提出反馈。</p>
+<p>最后，如果你喜欢这本书的内容，也请将其分享给可能感兴趣的朋友，并为项目在 GitHub 上点亮一颗星：<a class="reference external" href="https://github.com/matheusfacure/python-causality-handbook">英文版仓库</a> / <a class="reference external" href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh">中文版仓库</a>。</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="22-Debiased-Orthogonal-Machine-Learning.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">22 - 去偏/正交机器学习</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="24-The-Diff-in-Diff-Saga.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">24 - 双重差分传奇</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">23 - 处理效应异质性和非线性的挑战</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">二元结局上的处理效应</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">模拟一些数据</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">连续处理与非线性</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">关键观点</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">参考说明</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">参与贡献</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Matheus Facure (original work) and Wenzhe Huang & Wenli Xu (Chinese translation)
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

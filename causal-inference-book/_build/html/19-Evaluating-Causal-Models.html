@@ -1,0 +1,1163 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>19 - 评估因果模型 &#8212; 因果推断：献给求真敢为者</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '19-Evaluating-Causal-Models';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="20 - 即插即用估计器" href="20-Plug-and-Play-Estimators.html" />
+    <link rel="prev" title="18 - 异质性处理效应与个性化" href="18-Heterogeneous-Treatment-Effects-and-Personalization.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">因果推断：献给求真敢为者</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    因果推断：献给求真敢为者
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">第一部分 - 阳</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01-Introduction-To-Causality.html">01 - 因果性导论</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-Randomised-Experiments.html">02 - 随机实验</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03-Stats-Review-The-Most-Dangerous-Equation.html">03 - 统计回顾：最危险的方程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04-Graphical-Causal-Models.html">04 - 图形因果模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05-The-Unreasonable-Effectiveness-of-Linear-Regression.html">05 - 线性回归的惊人有效性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06-Grouped-and-Dummy-Regression.html">06 - 分组与虚拟变量回归</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07-Beyond-Confounders.html">07 - 超越混杂因素</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-Instrumental-Variables.html">08 - 工具变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-Non-Compliance-and-LATE.html">09 - 不依从性与局部平均处理效应</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10-Matching.html">10 - 匹配法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11-Propensity-Score.html">11 - 倾向得分</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12-Doubly-Robust-Estimation.html">12 - 双重稳健估计</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13-Difference-in-Differences.html">13 - 双重差分法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="14-Panel-Data-and-Fixed-Effects.html">14 - 面板数据与固定效应</a></li>
+<li class="toctree-l1"><a class="reference internal" href="15-Synthetic-Control.html">15 - 合成控制法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="16-Regression-Discontinuity-Design.html">16 - 断点回归设计</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">第二部分 - 阴</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="17-Predictive-Models-101.html">17 - 预测模型入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="18-Heterogeneous-Treatment-Effects-and-Personalization.html">18 - 异质性处理效应与个性化</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">19 - 评估因果模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="20-Plug-and-Play-Estimators.html">20 - 即插即用估计器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="21-Meta-Learners.html">21 - 元学习器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="22-Debiased-Orthogonal-Machine-Learning.html">22 - 去偏/正交机器学习</a></li>
+<li class="toctree-l1"><a class="reference internal" href="23-Challenges-with-Effect-Heterogeneity-and-Nonlinearity.html">23 - 处理效应异质性和非线性的挑战</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="24-The-Diff-in-Diff-Saga.html">24 - 双重差分传奇</a></li>
+<li class="toctree-l1"><a class="reference internal" href="25-Synthetic-Diff-in-Diff.html">25 - 合成双重差分</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">附录</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Debiasing-with-Orthogonalization.html">Debiasing with Orthogonalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Debiasing-with-Propensity-Score.html">Debiasing with Propensity Score</a></li>
+<li class="toctree-l1"><a class="reference internal" href="When-Prediction-Fails.html">When Prediction Fails</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Prediction-Metrics-For-Causal-Models.html">Why Prediction Metrics are Dangerous For Causal Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Conformal-Inference-for-Synthetic-Control.html">Conformal Inference for Synthetic Controls</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh/issues/new?title=Issue%20on%20page%20%2F19-Evaluating-Causal-Models.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/19-Evaluating-Causal-Models.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>19 - 评估因果模型</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">按模型分段的敏感度</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">累积敏感度曲线</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">累积增益曲线</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">考虑方差</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">关键观点</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">参考说明</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">参与贡献</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1>19 - 评估因果模型<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<p>在绝大多数关于因果性的资料中，研究者使用合成数据来检验他们的方法是否有效。就像我们在《When Prediction Fails》那一章中所做的那样，他们同时生成 <span class="math notranslate nohighlight">\(Y_{0i}\)</span> 和 <span class="math notranslate nohighlight">\(Y_{1i}\)</span> 的数据，以便检查他们的模型是否正确捕捉到了处理效应 <span class="math notranslate nohighlight">\(Y_{1i} - Y_{0i}\)</span>。这在学术研究中完全可以，但在现实世界中我们没有这样的奢侈。当在工业界应用这些技术时，我们会一次又一次地被要求证明为什么我们的模型更好、为什么它应该替换生产环境中的现有模型，或者为什么它不会惨败。这一点如此关键，以至于我难以理解为什么几乎看不到任何材料解释我们应该如何用真实数据评估因果推断模型。</p>
+<p>其结果是，想要应用因果推断模型的数据科学家很难说服管理层信任他们。他们采取的方式是展示理论多么严谨，以及在训练模型时多么谨慎。不幸的是，在以训练/测试划分范式为常态的世界里，这样的方式是远远不够的。模型的质量必须基于比精美理论更为具体的东西。想想看，机器学习之所以取得巨大成功，正是因为预测模型的验证非常直接。看到预测与实际发生的情况相符令人安心。</p>
+<p>然而，在因果推断中，要实现类似训练/测试范式并不明显。这是因为因果推断关注的是估计一个不可观察的量，<span class="math notranslate nohighlight">\(\frac{\delta y}{ \delta t}\)</span>。既然我们看不见它，我们怎么知道模型在估计它方面是否表现良好？请记住，这就好像每个实体都有一个内在的响应度，由从处理到结果的直线斜率表示，但我们无法测量它。</p>
+<p><img alt="img" src="_images/sneak.png" /></p>
+<p>这一点非常非常难以理解，我花了多年才找到一种接近答案的东西。它不是终极答案，但在实践中有效，并且具有那种具体性，我希望它能把因果推断带向类似于我们在机器学习中拥有的训练/测试范式。这一技巧是使用敏感度的聚合测度。即使你不能逐一估计敏感度，你也可以对一组单位估计它，这正是我们将在这里利用的。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">toolz</span><span class="w"> </span><span class="kn">import</span> <span class="n">curry</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.formula.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">smf</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">GradientBoostingRegressor</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>在本章中，我们将使用非随机数据来估计我们的因果模型，并用随机数据来评估它。我们仍然讨论价格如何影响冰淇淋销量。正如我们将看到的，随机数据对于评估非常宝贵。然而在现实中，收集随机数据往往代价高昂（如果你知道某些价格并不好，只会让你亏钱，为什么还要随机定价呢？）。结果就是我们经常拥有大量处理<strong>非随机</strong>的数据，而随机数据则少之又少。如果有任何随机数据，由于使用非随机数据来评估模型极其棘手，我们通常会把这些随机数据留作评估用途。</p>
+<p>如果你忘记了，下面是数据的样子。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">prices</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./data/ice_cream_sales.csv&quot;</span><span class="p">)</span> <span class="c1"># loads non-random data</span>
+<span class="n">prices_rnd</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./data/ice_cream_sales_rnd.csv&quot;</span><span class="p">)</span> <span class="c1"># loads random data</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">prices_rnd</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">prices</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(5000, 5)
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>temp</th>
+      <th>weekday</th>
+      <th>cost</th>
+      <th>price</th>
+      <th>sales</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>17.3</td>
+      <td>6</td>
+      <td>1.5</td>
+      <td>5.6</td>
+      <td>173</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>25.4</td>
+      <td>3</td>
+      <td>0.3</td>
+      <td>4.9</td>
+      <td>196</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>23.3</td>
+      <td>5</td>
+      <td>1.5</td>
+      <td>7.6</td>
+      <td>207</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>26.9</td>
+      <td>1</td>
+      <td>0.3</td>
+      <td>5.3</td>
+      <td>241</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>20.2</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>7.2</td>
+      <td>227</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>为了有可比较的对象，让我们训练两个模型。第一个将是带有交互项的线性回归，这样就允许不同单位之间的敏感度变化。</p>
+<div class="math notranslate nohighlight">
+\[
+sales_i = \beta_0 + \beta_1 price_i + \pmb{\beta_2 X}_i + \pmb{\beta_3 X}_i \, price_i + e_i
+\]</div>
+<p>一旦我们拟合了这个模型，我们就能够做出敏感度预测</p>
+<div class="math notranslate nohighlight">
+\[
+\widehat{\frac{\delta sales}{ \delta price}} = \hat{\beta_1} + \pmb{\hat{\beta_3} X}_i
+\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">m1</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;sales ~ price*cost + price*C(weekday) + price*temp&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">prices</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>第二个模型将是完全非参数的机器学习预测模型</p>
+<div class="math notranslate nohighlight">
+\[
+sales_i = G(X_i, price_i) + e_i
+\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;temp&quot;</span><span class="p">,</span> <span class="s2">&quot;weekday&quot;</span><span class="p">,</span> <span class="s2">&quot;cost&quot;</span><span class="p">,</span> <span class="s2">&quot;price&quot;</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;sales&quot;</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">m2</span> <span class="o">=</span> <span class="n">GradientBoostingRegressor</span><span class="p">()</span>
+<span class="n">m2</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">prices</span><span class="p">[</span><span class="n">X</span><span class="p">],</span> <span class="n">prices</span><span class="p">[</span><span class="n">y</span><span class="p">]);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>为了确保模型没有严重过拟合，我们可以检查在训练数据和新的未见数据上的 <span class="math notranslate nohighlight">\(R^2\)</span>。（对于那些熟悉机器学习的人，请注意，由于存在概念漂移，性能下降是预期的。模型是在价格非随机的数据上训练的，但测试集只包含随机化价格。）</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Train Score:&quot;</span><span class="p">,</span> <span class="n">m2</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">prices</span><span class="p">[</span><span class="n">X</span><span class="p">],</span> <span class="n">prices</span><span class="p">[</span><span class="n">y</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test Score:&quot;</span><span class="p">,</span> <span class="n">m2</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">prices_rnd</span><span class="p">[</span><span class="n">X</span><span class="p">],</span> <span class="n">prices_rnd</span><span class="p">[</span><span class="n">y</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Train Score: 0.9251704824568053
+Test Score: 0.7711074163447709
+</pre></div>
+</div>
+</div>
+</div>
+<p>在训练好我们的模型之后，我们将从回归模型中得到敏感度。同样，我们将采用数值近似</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\delta y(t)}{\delta t} \approx \frac{y(t+h) - y(t)}{h}
+\]</div>
+<p>我们的模型是在非随机数据上训练的。现在我们转向随机数据进行预测。为了方便，我们将机器学习模型的预测和因果模型的敏感度预测添加到一个单一的数据框 <code class="docutils literal notranslate"><span class="pre">prices_rnd_pred</span></code> 中。</p>
+<p>此外，让我们还包括一个随机模型。这个模型的思想是它仅输出随机数作为预测。它显然不是很有用，但可以作为一个基准。当我们谈论新的评估方法时，我总喜欢想一想一个随机（无用）模型的表现。如果随机模型在评估指标上表现良好，这说明评估方法本身的有效性值得怀疑。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">predict_sensitivity</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">price_df</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">0.01</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">price_df</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">price</span><span class="o">=</span><span class="n">price_df</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">]</span><span class="o">+</span><span class="n">h</span><span class="p">))</span>
+            <span class="o">-</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">price_df</span><span class="p">))</span> <span class="o">/</span> <span class="n">h</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="n">prices_rnd_pred</span> <span class="o">=</span> <span class="n">prices_rnd</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
+    <span class="s2">&quot;sensitivity_m_pred&quot;</span><span class="p">:</span> <span class="n">predict_sensitivity</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="n">prices_rnd</span><span class="p">),</span> <span class="c1">## sensitivity model</span>
+    <span class="s2">&quot;pred_m_pred&quot;</span><span class="p">:</span> <span class="n">m2</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">prices_rnd</span><span class="p">[</span><span class="n">X</span><span class="p">]),</span> <span class="c1">## predictive model</span>
+    <span class="s2">&quot;rand_m_pred&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">prices_rnd</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="c1">## random model</span>
+<span class="p">})</span>
+
+<span class="n">prices_rnd_pred</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>temp</th>
+      <th>weekday</th>
+      <th>cost</th>
+      <th>price</th>
+      <th>sales</th>
+      <th>sensitivity_m_pred</th>
+      <th>pred_m_pred</th>
+      <th>rand_m_pred</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>25.8</td>
+      <td>1</td>
+      <td>0.3</td>
+      <td>7</td>
+      <td>230</td>
+      <td>-13.096964</td>
+      <td>224.067406</td>
+      <td>0.696469</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>22.7</td>
+      <td>3</td>
+      <td>0.5</td>
+      <td>4</td>
+      <td>190</td>
+      <td>1.054695</td>
+      <td>189.889147</td>
+      <td>0.286139</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>33.7</td>
+      <td>7</td>
+      <td>1.0</td>
+      <td>5</td>
+      <td>237</td>
+      <td>-17.362642</td>
+      <td>237.255157</td>
+      <td>0.226851</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>23.0</td>
+      <td>4</td>
+      <td>0.5</td>
+      <td>5</td>
+      <td>193</td>
+      <td>0.564985</td>
+      <td>186.688619</td>
+      <td>0.551315</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>24.4</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>3</td>
+      <td>252</td>
+      <td>-13.717946</td>
+      <td>250.342203</td>
+      <td>0.719469</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<section id="id2">
+<h2>按模型分段的敏感度<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>现在我们已经有了预测，需要评估它们有多好。请记住，我们无法观察敏感度，因此没有简单的真实值可以比较。相反，让我们回想一下我们期望从敏感度模型中获得什么。也许这能为我们提供关于如何评估它们的一些洞见。</p>
+<p>构建处理敏感度模型的想法源于寻找哪些单位对处理更敏感、哪些单位对处理不那么敏感的需求。这源于个性化的愿望。也许某个营销活动只对某一个人口细分极为有效；也许折扣只对某类客户奏效。一个好的因果模型应该帮助我们发现哪些客户对拟议的处理反应更好，哪些更差。它们应能根据单位对处理的弹性或敏感度将其分开。在我们的冰淇淋例子中，该模型应当能够判断哪些天人们愿意在冰淇淋上花更多钱，或者说哪些天价格敏感度不那么负。</p>
+<p>如果这是我们的目标，那么如果我们能以某种方式按敏感度高到低对单位排序将非常有用。既然我们有预测的敏感度，我们可以用该预测对单位进行排序，并希望它也按照真实敏感度排序。遗憾的是，我们不能在单个单位层面评估这种排序。但如果我们不需要这样做呢？如果我们转而评估由排序定义的群组呢？如果我们的处理是随机分配的（这就是随机性的作用所在），估计一组单位的敏感度就很容易。我们所需要的只是比较处理组和未处理组之间的结果。</p>
+<p>为了更好地理解这一点，把情形想象成二元处理案例更容易。继续用定价的例子，不过现在处理是折扣。换句话说，价格要么高（未处理），要么低（处理）。我们在 Y 轴上绘制销售量，在 X 轴上绘制我们的每个模型，并用颜色表示价格。然后，我们可以在模型轴上将数据分成三个等大小的组。<strong>如果处理是随机分配的</strong>，我们可以很容易地为每个组估计平均处理效应 <span class="math notranslate nohighlight">\(E[Y|T=1] - E[Y|T=0]\)</span>。</p>
+<p><img alt="img" src="_images/ate_bins.png" /></p>
+<p>在图中，我们可以看到第一个模型在预测销售方面还不错（与销售高度相关），但它产生的分组具有大致相同的处理效应，如底部的图所示。三个分段中的两个具有相同的敏感度，只有最后一个不同，敏感度较低。</p>
+<p>另一方面，第二个模型产生的每个组都有不同的因果效应。这表明该模型的确可以用于个性化。最后，随机模型产生的组具有完全相同的敏感度。这并不十分有用，但也是预料之中的。如果模型是随机的，它产生的每个分段都将是数据的随机代表性样本。所以其组内的敏感度应该和整个数据集的平均处理效应大致相同。</p>
+<p>仅通过观察这些图，你就可以对哪个模型更好形成直观印象。敏感度看起来越有序、不同分段之间差异越大，模型越好。在这里，模型2可能优于模型1，而模型1又优于随机模型。</p>
+<p>为了推广到连续处理的情况，我们可以使用单变量线性回归模型来估计敏感度：</p>
+<div class="math notranslate nohighlight">
+\[
+y_i = \beta_0 + \beta_1 t_i + e_i
+\]</div>
+<p>如果我们在某个组的样本上运行该模型，我们将估计该组内的敏感度。</p>
+<p>根据简单线性回归理论，我们知道</p>
+<div class="math notranslate nohighlight">
+\[
+\hat{\beta_1}=\dfrac{\sum (t_i - \bar{t}) (y_i - \bar{y})}{\sum(t_i - \bar{t})^2}
+\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(\bar{t}\)</span> 是处理的样本均值，<span class="math notranslate nohighlight">\(\bar{y}\)</span> 是结果的样本均值。下面是其在代码中的样子</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@curry</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sensitivity</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="c1"># line coeficient for the one variable linear regression </span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">data</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">-</span> <span class="n">data</span><span class="p">[</span><span class="n">t</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span><span class="o">*</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">y</span><span class="p">]</span> <span class="o">-</span> <span class="n">data</span><span class="p">[</span><span class="n">y</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()))</span> <span class="o">/</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">data</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">-</span> <span class="n">data</span><span class="p">[</span><span class="n">t</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>现在让我们将这应用于我们的冰淇淋价格数据。为此，我们还需要一个函数将数据集划分为等大小的区间，并对每个区间应用敏感度函数。下面的代码可以处理这一点。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">sensitivity_by_band</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">pred</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">bands</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">df</span>
+            <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">pred</span><span class="si">}</span><span class="s2">_band&quot;</span><span class="p">:</span><span class="n">pd</span><span class="o">.</span><span class="n">qcut</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">pred</span><span class="p">],</span> <span class="n">q</span><span class="o">=</span><span class="n">bands</span><span class="p">)})</span> <span class="c1"># makes quantile partitions</span>
+            <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">pred</span><span class="si">}</span><span class="s2">_band&quot;</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sensitivity</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">)))</span> <span class="c1"># estimate the sensitivity on each partition</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>最后，让我们使用之前的预测绘制按区间划分的敏感度。这里，我们将使用每个模型来构建分区，然后在每个分区上估计敏感度。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="s2">&quot;sensitivity_m_pred&quot;</span><span class="p">,</span> <span class="s2">&quot;pred_m_pred&quot;</span><span class="p">,</span> <span class="s2">&quot;rand_m_pred&quot;</span><span class="p">],</span> <span class="n">axs</span><span class="p">):</span>
+    <span class="n">sensitivity_by_band</span><span class="p">(</span><span class="n">prices_rnd_pred</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="s2">&quot;sales&quot;</span><span class="p">,</span> <span class="s2">&quot;price&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/e6d0b8549c0ab83b4715202fe1ed7605378622786a0d9fd856dd56114f753b9c.png" src="_images/e6d0b8549c0ab83b4715202fe1ed7605378622786a0d9fd856dd56114f753b9c.png" />
+</div>
+</div>
+<p>首先看随机模型（<code class="docutils literal notranslate"><span class="pre">rand_m</span></code>）。在它的每个分区中，估计的敏感度大致相同。从图上我们已经可以看到，它对个性化没有太大帮助，因为它无法区分高价格敏感日和低价格敏感日。接下来考虑预测模型 <code class="docutils literal notranslate"><span class="pre">pred_m</span></code>。这个模型实际上很有希望！它能构建一些敏感度高的组和一些敏感度低的组。这正是我们需要的。</p>
+<p>最后，因果模型 <code class="docutils literal notranslate"><span class="pre">sensitivity_m</span></code> 看起来有些奇怪。它识别出一些极低敏感度的组，这里的“低”实际上意味着高价格敏感度（当我们提高价格时销售会大幅下降）。识别这些高价格敏感的日子对我们非常有用。如果我们知道它们是哪些日子，就可以避免在这类日子上调价。该因果模型也能识别出一些较不敏感的区域，因此它可以成功地区分高敏感和低敏感，但其排序并不如预测模型那样好。</p>
+<p>那么我们应该如何决定？哪个更有用？预测模型还是因果模型？预测模型的排序更好，但因果模型可以更好地识别极端情况。按区间绘制敏感度是一个好的初步检查，但它无法精确回答哪个模型更好。我们需要转向更复杂的东西。</p>
+</section>
+<section id="id3">
+<h2>累积敏感度曲线<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>再次考虑将价格转换为二元处理的示例。我们从之前停下的地方开始，因此我们得到了按区间的处理敏感度。接下来我们可以做的是根据区间的敏感度对它们重新排序。也就是说，我们把最敏感的组放在第一位，第二敏感的放在第二位，如此类推。对于模型1和3，不需要重新排序，因为它们已经是按序排列的。对于模型2，我们需要反向排序。</p>
+<p>一旦我们有了这些有序的分组，我们就可以构建所谓的累积敏感度曲线。我们首先计算第一组的敏感度；然后计算第一组和第二组的合并敏感度，以此类推，直到包含所有组。最终，我们将得到整个数据集的敏感度。下面是在示例中的样子。</p>
+<p><img alt="img" src="_images/cumm_elast.png" /></p>
+<p>注意，累积敏感度曲线的第一个区间只是该模型认为最敏感组的平均处理效应。同时，对于所有模型，累积敏感度最终都会收敛到同一点，即整个数据集的平均处理效应。</p>
+<p>在数学上，我们可以将累积敏感度定义为到第 <span class="math notranslate nohighlight">\(k\)</span> 个单位为止估计的敏感度：</p>
+<div class="math notranslate nohighlight">
+\[
+\widehat{y'(t)}_k = \hat{\beta_1}_k=\dfrac{\sum_{i=1}^k (t_i - \bar{t})(y_i - \bar{y})}{\sum_{i=1}^k (t_i - \bar{t})^2}
+\]</div>
+<p>为了绘制累积敏感度曲线，我们在数据集上迭代运行上述函数，以产生以下序列：</p>
+<div class="math notranslate nohighlight">
+\[
+(\widehat{y'(t)}_1, \widehat{y'(t)}_2, \widehat{y'(t)}_3,..., \widehat{y'(t)}_N)
+\]</div>
+<p>这一序列在模型评估方面非常有趣，因为我们可以对其做出偏好判断。首先，一个模型越好，满足</p>
+<p><span class="math notranslate nohighlight">\(\hat{y}'(t)_k &gt; \hat{y}'(t)_{k+a}\)</span></p>
+<p>的程度越高，对于任意的 <span class="math notranslate nohighlight">\(k\)</span> 和 <span class="math notranslate nohighlight">\(a&gt;0\)</span>。用通俗的话说，如果一个模型善于对敏感度排序，那么在前 <span class="math notranslate nohighlight">\(k\)</span> 个样本中观察到的敏感度应高于在前 <span class="math notranslate nohighlight">\(k+a\)</span> 个样本中观察到的敏感度。换句话说，如果我看排名靠前的单位，它们应该比下面的单位有更高的敏感度。</p>
+<p>其次，一个模型越好，满足</p>
+<p><span class="math notranslate nohighlight">\(\hat{y}'(t)_k - \hat{y}'(t)_{k+a}\)</span></p>
+<p>尽可能大的程度越高，对于任意 <span class="math notranslate nohighlight">\(k\)</span> 和 <span class="math notranslate nohighlight">\(a&gt;0\)</span>。直觉是，我们不仅希望前 <span class="math notranslate nohighlight">\(k\)</span> 个单位的敏感度高于它们下面的单位，而且希望这种差异尽可能大。</p>
+<p>为了使这更具体，下面用代码表示这一思想。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">cumulative_sensitivity_curve</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">prediction</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">min_periods</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="c1"># orders the dataset by the `prediction` column</span>
+    <span class="n">ordered_df</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="c1"># create a sequence of row numbers that will define our Ks</span>
+    <span class="c1"># The last item is the sequence is all the rows (the size of the dataset)</span>
+    <span class="n">n_rows</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">min_periods</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">size</span> <span class="o">//</span> <span class="n">steps</span><span class="p">))</span> <span class="o">+</span> <span class="p">[</span><span class="n">size</span><span class="p">]</span>
+    
+    <span class="c1"># cumulative computes the sensitivity. First for the top min_periods units.</span>
+    <span class="c1"># then for the top (min_periods + step*1), then (min_periods + step*2) and so on</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">sensitivity</span><span class="p">(</span><span class="n">ordered_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">rows</span><span class="p">),</span> <span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">rows</span> <span class="ow">in</span> <span class="n">n_rows</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>关于这个函数，需要注意几点。它假设用于排序敏感度的指标存储在 <code class="docutils literal notranslate"><span class="pre">prediction</span></code> 参数所指定的列中。此外，第一个分组包含 <code class="docutils literal notranslate"><span class="pre">min_periods</span></code> 个单位，因此它可以与其他分组不同。原因是由于样本量小，曲线开头的敏感度可能太噪声。为了解决这个问题，我们可以选择一个足够大的初始分组。最后，<code class="docutils literal notranslate"><span class="pre">steps</span></code> 参数定义了每个后续分组中包含的额外单位数量。</p>
+<p>有了这个函数，我们就可以根据每个模型产生的排序绘制累积敏感度曲线。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;sensitivity_m_pred&quot;</span><span class="p">,</span> <span class="s2">&quot;pred_m_pred&quot;</span><span class="p">,</span> <span class="s2">&quot;rand_m_pred&quot;</span><span class="p">]:</span>
+    <span class="n">cumu_sens</span> <span class="o">=</span> <span class="n">cumulative_sensitivity_curve</span><span class="p">(</span><span class="n">prices_rnd_pred</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="s2">&quot;sales&quot;</span><span class="p">,</span> <span class="s2">&quot;price&quot;</span><span class="p">,</span> <span class="n">min_periods</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cumu_sens</span><span class="p">)))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="o">/</span><span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">cumu_sens</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">m</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">hlines</span><span class="p">(</span><span class="n">sensitivity</span><span class="p">(</span><span class="n">prices_rnd_pred</span><span class="p">,</span> <span class="s2">&quot;sales&quot;</span><span class="p">,</span> <span class="s2">&quot;price&quot;</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">linestyles</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Avg. Sens.&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">% o</span><span class="s2">f Top Sensitivity. Days&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Cumulative Sensitivity&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Cumulative Sensitivity Curve&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/6db440b2389de51121efca3a4e7dd2bc155771cb3cbc34fdc902ddcb1664ccfa.png" src="_images/6db440b2389de51121efca3a4e7dd2bc155771cb3cbc34fdc902ddcb1664ccfa.png" />
+</div>
+</div>
+<p>解释累积敏感度曲线可能有点挑战，不过我是这样理解的。再次说，考虑二元处理的情况可能更容易。曲线的 X 轴表示我们处理的样本比例。这里，我把这一轴规范化为数据集的比例，所以 0.4 表示我们正在处理 40% 的样本。Y 轴是我们在这么多样本上应期望的敏感度。因此，如果曲线在 40% 处的值为 -1，意味着排名前 40% 单位的敏感度是 -1。理想情况下，我们希望在最大的样本比例上具有最高的敏感度。于是，理想的曲线应从 Y 轴高处开始，并非常缓慢地下降到平均敏感度，表示我们可以处理很大比例的单位，同时仍保持高于平均的敏感度。</p>
+<p>不用说，我们的任何模型都没有接近理想的敏感度曲线。随机模型 <code class="docutils literal notranslate"><span class="pre">rand_m</span></code> 在平均敏感度附近震荡，且从不远离它。这意味着该模型无法找到敏感度不同于平均值的组。至于预测模型 <code class="docutils literal notranslate"><span class="pre">pred_m</span></code>，它似乎以相反的顺序排列敏感度，因为曲线从低于平均敏感度开始。不仅如此，它还很快（大约在50%的样本处）收敛到平均敏感度。最后，因果模型 <code class="docutils literal notranslate"><span class="pre">sensitivity_m</span></code> 看起来更有趣。起初它有一种奇怪的行为，累积敏感度先远离平均值增加，但随后达到一个点，我们可以处理大约 75% 的单位，同时保持相当不错的敏感度（接近 0）。这很可能是因为该模型能够识别出非常低敏感度（高价格敏感度）的日子。因此，只要我们在这些日子不提价，我们就可以在大多数样本（约 75%）中提价，同时仍保持低价格敏感度。</p>
+<p>在模型评估方面，累积敏感度曲线已经比单纯的按区间敏感度概念好得多。在这里，我们能够更精确地给出对模型的偏好陈述。但这仍然是一条难以理解的曲线。因此，我们可以做进一步的改进。</p>
+</section>
+<section id="id4">
+<h2>累积增益曲线<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<p>接下来的想法是在累积敏感度之上进行一种非常简单但强大的改进。我们将累积敏感度乘以样本比例。例如，如果在 40% 的位置上累积敏感度是 -0.5，那么在那里我们会得到 -0.2（-0.5 * 0.4）。然后，我们将其与随机模型产生的理论曲线进行比较。这条曲线实际上是从 0 到平均处理效应的一条直线。可以这样理解：随机模型的每一个累积敏感度点都是平均处理效应，因为模型只是产生数据的随机代表性分割。如果我们沿 (0,1) 线的每个点将平均处理效应乘以该点，我们就会得到一条从零到平均处理效应的直线。</p>
+<p><img alt="img" src="_images/cumm_gain.png" /></p>
+<p>一旦我们有了理论随机曲线，我们就可以将其作为基准，与其他模型进行比较。所有曲线都从同一点开始并结束于同一点。然而，模型越善于排序敏感度，其曲线在 0 到 1 之间的部分就会越偏离随机直线。例如，在上图中，模型 M2 比 M1 更好，因为它在接近平均处理效应的终点之前偏离得更多。对于熟悉 ROC 曲线的人来说，可以把累积增益看作因果模型的 ROC。</p>
+<p>从数学上说，</p>
+<div class="math notranslate nohighlight">
+\[
+\widehat{F(t)}_k = \hat{\beta_1}_k \times \frac{k}{N} = \dfrac{\sum_{i=1}^k (t_i - \bar{t})(y_i - \bar{y})}{\sum_{i=1}^k (t_i - \bar{t})^2} \times \frac{k}{N}
+\]</div>
+<p>在代码中实现它，我们所需做的只是加入样本比例的归一化。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">cumulative_gain</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">prediction</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">min_periods</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ordered_df</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">n_rows</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">min_periods</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">size</span> <span class="o">//</span> <span class="n">steps</span><span class="p">))</span> <span class="o">+</span> <span class="p">[</span><span class="n">size</span><span class="p">]</span>
+    
+    <span class="c1">## add (rows/size) as a normalizer. </span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">sensitivity</span><span class="p">(</span><span class="n">ordered_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">rows</span><span class="p">),</span> <span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">rows</span><span class="o">/</span><span class="n">size</span><span class="p">)</span> <span class="k">for</span> <span class="n">rows</span> <span class="ow">in</span> <span class="n">n_rows</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>对于我们的冰淇淋数据，我们将得到以下曲线。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;sensitivity_m_pred&quot;</span><span class="p">,</span> <span class="s2">&quot;pred_m_pred&quot;</span><span class="p">,</span> <span class="s2">&quot;rand_m_pred&quot;</span><span class="p">]:</span>
+    <span class="n">cumu_gain</span> <span class="o">=</span> <span class="n">cumulative_gain</span><span class="p">(</span><span class="n">prices_rnd_pred</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="s2">&quot;sales&quot;</span><span class="p">,</span> <span class="s2">&quot;price&quot;</span><span class="p">,</span> <span class="n">min_periods</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cumu_gain</span><span class="p">)))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="o">/</span><span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">cumu_gain</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">m</span><span class="p">)</span>
+    
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">sensitivity</span><span class="p">(</span><span class="n">prices_rnd_pred</span><span class="p">,</span> <span class="s2">&quot;sales&quot;</span><span class="p">,</span> <span class="s2">&quot;price&quot;</span><span class="p">)],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Random Model&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">% o</span><span class="s2">f Top Sensitivity Days&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Cumulative Gain&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Cumulative Gain&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/2055cf5c931aa29c44f66227b419be5d3742bdbe7d73ca064acfcd2eaccbf417.png" src="_images/2055cf5c931aa29c44f66227b419be5d3742bdbe7d73ca064acfcd2eaccbf417.png" />
+</div>
+</div>
+<p>现在很明显，因果模型（<code class="docutils literal notranslate"><span class="pre">sensitivity_m</span></code>）比另外两个模型好得多。它与随机曲线的偏离程度远大于 <code class="docutils literal notranslate"><span class="pre">rand_m</span></code> 和 <code class="docutils literal notranslate"><span class="pre">pred_m</span></code>。还要注意实际的随机模型是如何非常贴近理论随机模型的，它们之间的差异很可能只是随机噪声。</p>
+<p>至此，我们涵盖了一些关于如何评估因果模型的很好的想法。仅此一点就意义重大。我们成功地评估了模型在排序敏感度方面的优劣，即便没有真实的敏感度可供比较。还有唯一缺失的一点是，在这些测量周围加上置信区间。毕竟，我们总不能这么野蛮吧？</p>
+<p><img alt="img" src="_images/uncivilised.png" /></p>
+</section>
+<section id="id5">
+<h2>考虑方差<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<p>当我们处理敏感度曲线时，不考虑方差显得有些不对劲。尤其是因为所有这些曲线都使用了线性回归理论，因此在它们周围加入置信区间应该相当容易。</p>
+<p>为此，我们首先创建一个函数，用于返回线性回归参数的置信区间。我这里使用的是简单线性回归的公式，但你完全可以按你喜欢的方式计算置信区间。</p>
+<div class="math notranslate nohighlight">
+\[
+s_{\hat\beta_1}=\sqrt{\frac{\sum_i\hat\epsilon_i^2}{(n-2)\sum_i(t_i-\bar t)^2}}
+\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">sensitivity_ci</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mf">1.96</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">t_bar</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">t</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">beta1</span> <span class="o">=</span> <span class="n">sensitivity</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+    <span class="n">beta0</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">y</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="n">beta1</span> <span class="o">*</span> <span class="n">t_bar</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">y</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="n">beta0</span> <span class="o">+</span> <span class="n">beta1</span><span class="o">*</span><span class="n">df</span><span class="p">[</span><span class="n">t</span><span class="p">])</span>
+    <span class="n">se</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(((</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">))</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">e</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">df</span><span class="p">[</span><span class="n">t</span><span class="p">]</span><span class="o">-</span><span class="n">t_bar</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">beta1</span> <span class="o">-</span> <span class="n">z</span><span class="o">*</span><span class="n">se</span><span class="p">,</span> <span class="n">beta1</span> <span class="o">+</span> <span class="n">z</span><span class="o">*</span><span class="n">se</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>通过对我们的 <code class="docutils literal notranslate"><span class="pre">cumulative_sensitivity_curve</span></code> 函数做一些小的修改，我们可以输出敏感度的置信区间。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">cumulative_sensitivity_curve_ci</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">prediction</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">min_periods</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ordered_df</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">n_rows</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">min_periods</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">size</span> <span class="o">//</span> <span class="n">steps</span><span class="p">))</span> <span class="o">+</span> <span class="p">[</span><span class="n">size</span><span class="p">]</span>
+    
+    <span class="c1"># just replacing a call to `sensitivity` by a call to `sensitivity_ci`</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">sensitivity_ci</span><span class="p">(</span><span class="n">ordered_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">rows</span><span class="p">),</span> <span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>  <span class="k">for</span> <span class="n">rows</span> <span class="ow">in</span> <span class="n">n_rows</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>最后，这里是因果模型的 95% 置信区间的累积敏感度曲线。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+
+<span class="n">cumu_gain_ci</span> <span class="o">=</span> <span class="n">cumulative_sensitivity_curve_ci</span><span class="p">(</span><span class="n">prices_rnd_pred</span><span class="p">,</span> <span class="s2">&quot;sensitivity_m_pred&quot;</span><span class="p">,</span> <span class="s2">&quot;sales&quot;</span><span class="p">,</span> <span class="s2">&quot;price&quot;</span><span class="p">,</span> <span class="n">min_periods</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cumu_gain_ci</span><span class="p">)))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="o">/</span><span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">cumu_gain_ci</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C0&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">hlines</span><span class="p">(</span><span class="n">sensitivity</span><span class="p">(</span><span class="n">prices_rnd_pred</span><span class="p">,</span> <span class="s2">&quot;sales&quot;</span><span class="p">,</span> <span class="s2">&quot;price&quot;</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">linestyles</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Avg. Sens.&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">% o</span><span class="s2">f Top Sens. Days&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Cumulative Sensitivity&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Cumulative Sensitivity for sensitivity_m_pred with 95% CI&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/44f125b529fce5595709ce46c764ebc3275a13e688ac2bb087266434e6f1bd3c.png" src="_images/44f125b529fce5595709ce46c764ebc3275a13e688ac2bb087266434e6f1bd3c.png" />
+</div>
+</div>
+<p>注意，随着我们累积更多的数据集，置信区间变得越来越小。这是因为样本量在增加。</p>
+<p>至于累积增益曲线，得到其置信区间也同样简单。同样，我们只需将调用 <code class="docutils literal notranslate"><span class="pre">sensitivity</span></code> 函数替换为调用 <code class="docutils literal notranslate"><span class="pre">sensitivity_ci</span></code> 函数即可。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">cumulative_gain_ci</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">prediction</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">min_periods</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ordered_df</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">n_rows</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">min_periods</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">size</span> <span class="o">//</span> <span class="n">steps</span><span class="p">))</span> <span class="o">+</span> <span class="p">[</span><span class="n">size</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">sensitivity_ci</span><span class="p">(</span><span class="n">ordered_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">rows</span><span class="p">),</span> <span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">rows</span><span class="o">/</span><span class="n">size</span><span class="p">)</span> <span class="k">for</span> <span class="n">rows</span> <span class="ow">in</span> <span class="n">n_rows</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>下面是因果模型的情况。请注意，现在即便在曲线开始时样本量较小，置信区间也从较小值开始。这是因为归一化因子 <span class="math notranslate nohighlight">\(\frac{k}{N}\)</span> 会缩小平均处理效应及其置信区间。由于这条曲线用于比较模型，这不应成为问题，因为这一缩小因子将同等地作用于所有被评估的模型。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+
+<span class="n">cumu_gain</span> <span class="o">=</span> <span class="n">cumulative_gain_ci</span><span class="p">(</span><span class="n">prices_rnd_pred</span><span class="p">,</span> <span class="s2">&quot;sensitivity_m_pred&quot;</span><span class="p">,</span> <span class="s2">&quot;sales&quot;</span><span class="p">,</span> <span class="s2">&quot;price&quot;</span><span class="p">,</span> <span class="n">min_periods</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cumu_gain</span><span class="p">)))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="o">/</span><span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">cumu_gain</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C0&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">sensitivity</span><span class="p">(</span><span class="n">prices_rnd_pred</span><span class="p">,</span> <span class="s2">&quot;sales&quot;</span><span class="p">,</span> <span class="s2">&quot;price&quot;</span><span class="p">)],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Random Model&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">% o</span><span class="s2">f Top Sensitivity Days&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Cumulative Gain&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Cumulative Gain for sensitivity_m_pred with 95% CI&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/57b6de0363e6225367fb2a0fd259755a887c5b363ab7e2c7c535025e4ecc73be.png" src="_images/57b6de0363e6225367fb2a0fd259755a887c5b363ab7e2c7c535025e4ecc73be.png" />
+</div>
+</div>
+</section>
+<section id="id6">
+<h2>关键观点<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<p>在这里我们看到了三种检查模型在排序敏感度方面优劣的方法。我们利用这些方法来比较具有因果目的的模型并进行选择。这是一件大事。即使看不到真正的敏感度，我们也设法评估了模型在识别不同敏感度群体方面的好坏！</p>
+<p>在这里，我们高度依赖随机数据。我们在非随机数据上训练模型，但所有评估都是在处理已被随机化的样本上完成的。这是因为我们需要某种可信赖的方法来估计敏感度。如果没有随机数据，我们这里使用的简单公式将不起作用。我们现在很清楚，简单线性回归在存在混杂变量时会有遗漏变量偏差。</p>
+<p>不过，如果我们能拿到一些随机数据，我们已经知道如何比较随机模型。在下一章中，我们将解决非随机数据的问题，但在此之前，我想在模型评估方面再说几句。</p>
+<p>让我们重申可信模型评估的重要性。有了累积增益曲线，我们终于有了一个很好的方法来比较用于因果推断的模型。我们现在可以决定哪个模型更适合用于处理个性化。这是一个重大进步。你会发现，大多数关于因果推断的资料并没有提供一种好的模型评估方法。在我看来，这是让因果推断像机器学习一样流行所缺失的那一块。有了好的评估，我们可以让因果推断更接近已经在预测模型中如此有用的训练/测试范式。这是一个大胆的说法。我在说这话时很谨慎，但目前为止我还没有发现对它的有力批评。如果你有，请告知。</p>
+</section>
+<section id="id7">
+<h2>参考说明<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
+<p>我在本章中的一些想法来自 Pierre Gutierrez 和 Jean-Yves Gérardy 的文章《Causal Inference and Uplift Modeling: A Review of the Literature》。作者在文中解释了 Qini 曲线（Qini curve）的概念。如果你搜索这个术语，会发现它是一种用于提升建模（uplift modeling）的方法，而提升建模可以被看作是针对二元处理（binary treatment）情况下的因果推断。在这里，我借鉴了 Qini 曲线的思想，并将其推广到了连续处理变量（continuous treatment）的情形。我认为这里提出的方法适用于连续和二元处理两种情况，但话说回来，我从未在其他地方见过类似的做法，所以请读者自行斟酌。</p>
+<p>我也强烈推荐阅读 Leo Breiman（2001）关于训练-测试范式的文章：《Statistical Modeling: The Two Cultures》。如果你想理解一个统计技术为何能取得成功，这篇文章是非常有价值的参考资料。</p>
+<p>本章内容主要基于作者个人的经验总结，许多观点和方法源自实践中的体会。因此，无法提供严格意义上的学术参考文献。与正规科研工作不同，这些内容没有经过系统性的学术审查，也未经过同行评议与理论论证。读者或许会注意到，本文更多讨论的是“实践中有效的方法”，而非详细阐述其背后的理论基础。这种方法可以被视为“来自一线的经验科学”（a sort of science from the streets）。尽管如此，既然这些内容已公开发布，也非常欢迎批评与反馈——如果读者发现其中有明显错误或不妥之处，欢迎提出 issue，作者会尽力回应。</p>
+</section>
+<section id="id8">
+<h2>参与贡献<a class="headerlink" href="#id8" title="Link to this heading">#</a></h2>
+<p><strong>《Causal Inference for the Brave and True》</strong> 是一本关于因果推断的开源教材，致力于以经济上可负担、认知上可理解的方式，普及这门“科学的统计基础”。全书基于 Python，仅使用自由开源软件编写，原始英文版本由 <a class="reference external" href="https://github.com/matheusfacure">Matheus Facure</a> 编写与维护。</p>
+<p>本书的中文版由黄文喆与许文立助理教授合作翻译，并托管在 <a class="reference external" href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh">GitHub 中文主页</a>。希望本地化的内容能帮助更多中文读者学习和掌握因果推断方法。</p>
+<p>如果你觉得这本书对你有帮助，并希望支持该项目，可以前往 <a class="reference external" href="https://www.patreon.com/causal_inference_for_the_brave_and_true">Patreon</a> 支持原作者。</p>
+<p>如果你暂时不方便进行经济支持，也可以通过以下方式参与贡献：</p>
+<ul class="simple">
+<li><p>修正错别字</p></li>
+<li><p>提出翻译或表达建议</p></li>
+<li><p>反馈你未能理解的部分内容</p></li>
+</ul>
+<p>欢迎前往英文版或中文版仓库点击 <a class="reference external" href="https://github.com/matheusfacure/python-causality-handbook/issues">issues 区</a> 或 <a class="reference external" href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh/issues">中文版 issues 区</a> 提出反馈。</p>
+<p>最后，如果你喜欢这本书的内容，也请将其分享给可能感兴趣的朋友，并为项目在 GitHub 上点亮一颗星：<a class="reference external" href="https://github.com/matheusfacure/python-causality-handbook">英文版仓库</a> / <a class="reference external" href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh">中文版仓库</a>。</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="18-Heterogeneous-Treatment-Effects-and-Personalization.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">18 - 异质性处理效应与个性化</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="20-Plug-and-Play-Estimators.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">20 - 即插即用估计器</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">按模型分段的敏感度</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">累积敏感度曲线</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">累积增益曲线</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">考虑方差</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">关键观点</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">参考说明</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">参与贡献</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Matheus Facure (original work) and Wenzhe Huang & Wenli Xu (Chinese translation)
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,1255 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>18 - 异质性处理效应与个性化 &#8212; 因果推断：献给求真敢为者</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '18-Heterogeneous-Treatment-Effects-and-Personalization';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="19 - 评估因果模型" href="19-Evaluating-Causal-Models.html" />
+    <link rel="prev" title="17 - 预测模型入门" href="17-Predictive-Models-101.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">因果推断：献给求真敢为者</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    因果推断：献给求真敢为者
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">第一部分 - 阳</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01-Introduction-To-Causality.html">01 - 因果性导论</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-Randomised-Experiments.html">02 - 随机实验</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03-Stats-Review-The-Most-Dangerous-Equation.html">03 - 统计回顾：最危险的方程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04-Graphical-Causal-Models.html">04 - 图形因果模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05-The-Unreasonable-Effectiveness-of-Linear-Regression.html">05 - 线性回归的惊人有效性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06-Grouped-and-Dummy-Regression.html">06 - 分组与虚拟变量回归</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07-Beyond-Confounders.html">07 - 超越混杂因素</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-Instrumental-Variables.html">08 - 工具变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-Non-Compliance-and-LATE.html">09 - 不依从性与局部平均处理效应</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10-Matching.html">10 - 匹配法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11-Propensity-Score.html">11 - 倾向得分</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12-Doubly-Robust-Estimation.html">12 - 双重稳健估计</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13-Difference-in-Differences.html">13 - 双重差分法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="14-Panel-Data-and-Fixed-Effects.html">14 - 面板数据与固定效应</a></li>
+<li class="toctree-l1"><a class="reference internal" href="15-Synthetic-Control.html">15 - 合成控制法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="16-Regression-Discontinuity-Design.html">16 - 断点回归设计</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">第二部分 - 阴</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="17-Predictive-Models-101.html">17 - 预测模型入门</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">18 - 异质性处理效应与个性化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="19-Evaluating-Causal-Models.html">19 - 评估因果模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="20-Plug-and-Play-Estimators.html">20 - 即插即用估计器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="21-Meta-Learners.html">21 - 元学习器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="22-Debiased-Orthogonal-Machine-Learning.html">22 - 去偏/正交机器学习</a></li>
+<li class="toctree-l1"><a class="reference internal" href="23-Challenges-with-Effect-Heterogeneity-and-Nonlinearity.html">23 - 处理效应异质性和非线性的挑战</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="24-The-Diff-in-Diff-Saga.html">24 - 双重差分传奇</a></li>
+<li class="toctree-l1"><a class="reference internal" href="25-Synthetic-Diff-in-Diff.html">25 - 合成双重差分</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">附录</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Debiasing-with-Orthogonalization.html">Debiasing with Orthogonalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Debiasing-with-Propensity-Score.html">Debiasing with Propensity Score</a></li>
+<li class="toctree-l1"><a class="reference internal" href="When-Prediction-Fails.html">When Prediction Fails</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Prediction-Metrics-For-Causal-Models.html">Why Prediction Metrics are Dangerous For Causal Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Conformal-Inference-for-Synthetic-Control.html">Conformal Inference for Synthetic Controls</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh/issues/new?title=Issue%20on%20page%20%2F18-Heterogeneous-Treatment-Effects-and-Personalization.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/18-Heterogeneous-Treatment-Effects-and-Personalization.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>18 - 异质性处理效应与个性化</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">从预测到因果推断</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cate">从平均处理效应到条件平均处理效应（CATE）</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">预测敏感度</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">关键观点</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">参考说明</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">参与贡献</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1>18 - 异质性处理效应与个性化<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<section id="id2">
+<h2>从预测到因果推断<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>在上一章中，我们简要地介绍了机器学习模型。机器学习模型是一种用于“预测”的工具，或者更技术化地说，是用于估计条件期望函数 <span class="math notranslate nohighlight">\(E[Y|X]\)</span>。换句话说，当你想将已知的输入 <span class="math notranslate nohighlight">\(X\)</span>（例如一句英文句子、本月的销售额、脑部扫描图像）映射到一个最初未知但定义明确的输出 <span class="math notranslate nohighlight">\(Y\)</span>（如日文句子、下月销售额或者癌症诊断）时，机器学习非常有用。因此，既然机器学习处理的是预测或估计 <span class="math notranslate nohighlight">\(E[Y|X]\)</span>，要让它发挥作用，你就必须把你想用机器学习解决的问题表述为预测问题——一个以估计 <span class="math notranslate nohighlight">\(E[Y|X]\)</span> 为关键的问题。上一章中我们走过这样一个例子：我们要根据客户的特征预测客户盈利能力，即 <span class="math notranslate nohighlight">\(E[NetValue|Age, Income, Region]\)</span>。这一信息非常有用，因为它让我们能够把精力集中在与盈利客户互动上，同时不与不盈利的客户做生意。在这里，准确预测盈利能力是关键。</p>
+<p>请注意，这是一种被动估计方式，意味着你把自己从数据生成过程剥离出来。在我们的例子中，我们假定客户盈利能力 <code class="docutils literal notranslate"><span class="pre">NetValue</span></code> 是既定的，我们所要做的只是估计它。换句话说，我们假设除了预测客户的盈利能力外，我们没有办法去提高或降低它。但这并不总是正确的。事实上，很多时候公司可以通过某些杠杆来提高客户盈利能力。这些杠杆可以是更高端或更低廉的客户服务、折扣、定价或市场营销。在行业界，我们往往参与在数据生成过程中，我们能够影响它。因此，作为在行业中工作的数据科学家，我们经常要回答什么是最佳行动方案或应做出什么干预才能优化某些业务指标，通常是盈利或某些中间指标，如转化率、成本或销售额。</p>
+<p>在这个我们不再是被动观察者的世界里，仅仅估计 <span class="math notranslate nohighlight">\(E[Y|X]\)</span> 并不完整。这就是我们进入因果推断的地方。我们需要在条件期望函数中再加入一项，这一项正是用来刻画我们对数据生成过程的影响。这一项就是处理变量：</p>
+<div class="math notranslate nohighlight">
+\[
+E[Y|X, T]
+\]</div>
+<p>现在我们必须区分情境或外生特征 <span class="math notranslate nohighlight">\(X\)</span> 和处理变量 <span class="math notranslate nohighlight">\(T\)</span>。两者都会影响结果 <span class="math notranslate nohighlight">\(Y\)</span>，但我们无法控制 <span class="math notranslate nohighlight">\(X\)</span>，却可以决定 <span class="math notranslate nohighlight">\(T\)</span> 的取值或至少对其进行干预。举个具体的例子，<span class="math notranslate nohighlight">\(Y\)</span> 可以是某一天的销售额，<span class="math notranslate nohighlight">\(X\)</span> 可以是我们不能控制但能提供关于销售信息的背景特征，如前几日的平均销售额，而 <span class="math notranslate nohighlight">\(T\)</span> 是我们可以干预以提高销售的处理变量，如价格、库存水平或市场营销。因果推断就是在给定情境 <span class="math notranslate nohighlight">\(X\)</span> 下，估计 <span class="math notranslate nohighlight">\(T\)</span> 与 <span class="math notranslate nohighlight">\(Y\)</span> 之间因果关系的过程。一旦我们完成了这一步，优化 <span class="math notranslate nohighlight">\(Y\)</span> 就只是选择一个最优的处理值 <span class="math notranslate nohighlight">\(T\)</span>：</p>
+<div class="math notranslate nohighlight">
+\[
+\underset{T}{argmax} \ E[Y|X, T]
+\]</div>
+<p>从这个意义上讲，除了因果推断的积极方面，我们还有规范性的动机。</p>
+<p>在第一部分中，我们试图回答的问题包括：接受教育的价值是多少？法律改革能否降低吸烟率？保持积极心态能否提升学术成就？酒精对死亡率的影响如何？所有这些问题从纯科学的角度看都很有趣，因为它们帮助我们理解世界是如何运作的。但这些问题背后也有实践动机。如果我们知道教育对收入的影响，我们就能理解为教育付出多少代价是合理的。从数学上看，我们所做的是估计教育的因果效应并对其进行优化：<span class="math notranslate nohighlight">\(\underset{Educ}{argmax} \ E[Income|X, Educ]\)</span>。</p>
+<p>第一部分的重点是回答某种处理总体上是正的、强的还是为零。例如，我们想知道投资教育通常是否值得。同时在第一部分中，<span class="math notranslate nohighlight">\(X\)</span> 的作用有两个方面。首先，<span class="math notranslate nohighlight">\(X\)</span> 可能包含混杂变量，在这种情况下，只有当我们考虑或调整 <span class="math notranslate nohighlight">\(X\)</span> 时，因果效应才是可识别的；或者，<span class="math notranslate nohighlight">\(X\)</span> 可以用来减小因果估计的方差。如果 <span class="math notranslate nohighlight">\(X\)</span> 是 <span class="math notranslate nohighlight">\(Y\)</span> 的良好预测变量，我们可以用它来解释掉 <span class="math notranslate nohighlight">\(Y\)</span> 的变异，使得因果效应更加明显。</p>
+<p>现在，事情不再是非黑即白的了。我们想要的不仅仅是平均处理效应。我们将允许处理对某些人有积极影响，对另一些人却没有。情境特征 <span class="math notranslate nohighlight">\(X\)</span> 将在定义不同单元的不同特征组合上发挥作用，而每种特征组合可能对处理有不同的反应。我们现在希望实现处理的个性化，只把处理给予对其反应最好的人群。我们从一个只关心平均处理效应的世界，走向了一个我们想要异质性处理效应的世界。</p>
+</section>
+<section id="cate">
+<h2>从平均处理效应到条件平均处理效应（CATE）<a class="headerlink" href="#cate" title="Link to this heading">#</a></h2>
+<p>到目前为止，每次我们估计某一处理的因果影响时，得到的都是平均处理效应（有时是局部平均处理效应）：</p>
+<div class="math notranslate nohighlight">
+\[
+E[Y_1 - Y_0]
+\]</div>
+<p>或其对应的连续处理形式</p>
+<div class="math notranslate nohighlight">
+\[
+E[y'(t)]
+\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(y'(t)\)</span> 是响应函数或结果的处理导数。我们学习了若干技术来揭示处理的整体有效性。平均处理效应估计是因果推断的基石，它是一个非常有用的工具，用于我们称之为项目评价的决策问题——我们想知道是否应该将某项干预推向整个总体。不要被公共政策的术语迷惑，同样的技术也可以用来评估推出新产品对企业盈利的影响。这里关键要注意的是，我们要支持的决策是是否应当对所有人实施处理。</p>
+<p>现在，我们要考虑另一种类型的决策：<strong>应该对谁实施处理？</strong> 现在，决策可以在不同个体之间变化。对某个个体施加处理可能是有利的，但对另一个则未必。我们希望个性化处理。更技术地说，我们要估计条件平均处理效应（CATE）</p>
+<div class="math notranslate nohighlight">
+\[
+E[Y_1 - Y_0 \ |\ X] \quad\text{或}\quad E[y'(t)\,|\,X]
+\]</div>
+<p>在 <span class="math notranslate nohighlight">\(X\)</span> 上条件意味着我们现在允许处理效应根据每个单位的特征而不同。同样在这里，我们认为并非所有个体对处理反应相同，我们想利用这种异质性。我们希望只对正确的单位施加处理（在二元处理的情况下），或者确定每个单位的最优处理剂量（在连续处理的情况下）。</p>
+<p>举个例子，如果你是一家银行，需要决定每个客户能够获得多大的贷款，你可以肯定地说盲目给每个人大量贷款不是好主意——虽然对于某些人可能合理。你必须聪明地设计你的处理（贷款金额）。或许，根据客户的信用评分（<span class="math notranslate nohighlight">\(X\)</span>），你可以找出合适的贷款额度。当然，你不必是大型机构才能利用个性化。此类例子不胜枚举：一年中的哪些天应该打折促销？某个产品应该定价多少？每个人应该运动多长时间才适合？</p>
+<p>换个角度思考。你有一堆客户和一个处理变量（价格、折扣、贷款等）。你希望个性化处理，例如给不同的客户不同的折扣。</p>
+<p><img alt="img" src="_images/customers.png" /></p>
+<p>为此，你必须对客户进行分组。你创建了对处理反应不同的群组。例如，你要找出对折扣反应好的客户和反应差的客户。客户对处理的反应由条件处理效应 <span class="math notranslate nohighlight">\(\frac{\delta Y}{ \delta T}\)</span> 给出。因此，我们可以设法为每个客户估计这一效应，然后把那些对处理反应强烈的（高处理效应）和那些反应不那么强烈的分到一起。如果这么做，我们将像下图那样划分客户空间。</p>
+<p><img alt="img" src="_images/elast-partition.png" /></p>
+<p>这非常棒，因为我们可以在每个分区中估计不同的处理效应或敏感度。注意，敏感度正是从 <span class="math notranslate nohighlight">\(T\)</span> 到 <span class="math notranslate nohighlight">\(Y\)</span> 的曲线或函数的斜率。因此，如果我们能够产生斜率或敏感度不同的分区，就意味着这些分区中的实体对处理的反应不同。</p>
+<p><img alt="img" src="_images/elast-split.png" /></p>
+<p>换言之，你想做的是不再预测 <span class="math notranslate nohighlight">\(Y\)</span> 的原始值，而是开始为每个单位预测 <span class="math notranslate nohighlight">\(Y\)</span> 对 <span class="math notranslate nohighlight">\(T\)</span> 的导数，即 <span class="math notranslate nohighlight">\(\frac{\delta Y}{ \delta T}\)</span>。例如，假设 <span class="math notranslate nohighlight">\(Y\)</span> 是冰淇淋销售量，<span class="math notranslate nohighlight">\(T\)</span> 是冰淇淋价格，每个单位 <span class="math notranslate nohighlight">\(i\)</span> 是一天。撇开道德问题不谈，假设你可以每天改变冰淇淋的价格。如果你能找出那些 <span class="math notranslate nohighlight">\(\frac{\delta Sales}{ \delta Price}\)</span> <strong>很低</strong>的日子，那么在那些日子里你就可以<strong>提高价格</strong>而不会损失太多销量。也许你已经在这么做，比如在假日季提价。关键是，按价格敏感度区分不同的日子很有用，因为它为你如何设定最优价格提供了依据。</p>
+<p>你可能会说，这有点棘手。如果我看不到 <span class="math notranslate nohighlight">\(\frac{\delta Sales}{ \delta Price}\)</span>，如何预测敏感度？这是个很好的问题。敏感度在单个单位层面上实际上是不可观察的。不仅如此，这还是一个陌生的概念。我们更习惯于按原始数量思考，而不是按这些数量的变化率来思考。为了更好地概念化敏感度，这里有个小技巧。你可以把每个个体看成既有一个 <span class="math notranslate nohighlight">\(Y_i\)</span> 值（在我们的例子中是销售量），又有一个个体敏感度 <span class="math notranslate nohighlight">\(\frac{\delta Y_i}{\delta T_i}\)</span>。敏感度就是 <span class="math notranslate nohighlight">\(Y\)</span> 随 <span class="math notranslate nohighlight">\(T\)</span> 的变化量，所以你可以把每个个体看成还有一个斜率系数 <span class="math notranslate nohighlight">\(\frac{\delta Y}{ \delta T}_i\)</span>。在我们的例子中，我们会说每一天都有一个价格对销量的斜率系数。</p>
+<p><img alt="img" src="_images/elasticity.png" /></p>
+<p>当然，我们无法看到这些个体的斜率系数。若要看到个体的斜率，我们必须观察每一天在两个不同价格下的销售量，并计算销售量在这两个价格下的变化：</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\delta Y_i}{ \delta T_i} \approx \frac{Y(T_i) - Y(T_i + \epsilon)}{T_i - (T_i + \epsilon)}
+\]</div>
+<p>这正是因果推断的基本问题的重现：我们永远无法看到同一单位在不同处理条件下的表现。那么，我们该怎么办呢？</p>
+</section>
+<section id="id3">
+<h2>预测敏感度<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>我们又遇到了一个棘手问题。我们已经同意需要预测 <span class="math notranslate nohighlight">\(\frac{\delta Y_i}{ \delta T_i}\)</span>，然而遗憾的是它不可观测。因此我们无法将其作为目标直接交给机器学习算法去学习。但也许，预测它并不需要直接观测 <span class="math notranslate nohighlight">\(\frac{\delta Y_i}{ \delta T_i}\)</span>。</p>
+<p>这里有一个想法：假如我们使用线性回归呢？</p>
+<p><img alt="img" src="_images/linear-fix.png" /></p>
+<p>假设你对数据拟合如下线性模型：</p>
+<div class="math notranslate nohighlight">
+\[
+y_i = \beta_0 + \beta_1 t_i + \beta_2 X_i + e_i
+\]</div>
+<p>如果对该模型对处理变量求导，将会得到</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\delta y_i}{\delta t_i} = \beta_1 
+\]</div>
+<p>既然我们可以估计上述模型并得到 <span class="math notranslate nohighlight">\(\hat{\beta_1}\)</span>，我们甚至可以大胆地说，<strong>即使不能观察敏感度，也能预测它</strong>。在上述情形中，预测非常简单——我们为每个人预测相同的常数值 <span class="math notranslate nohighlight">\(\hat{\beta_1}\)</span>。这当然是有用的，但还不是我们想要的。这只是平均处理效应，而不是条件平均处理效应。由于每个人得到的敏感度预测相同，这并不利于按照对处理的响应程度来对个体进行分组。为了解决这一点，我们可以做如下简单的修改：</p>
+<div class="math notranslate nohighlight">
+\[
+y_i = \beta_0 + \beta_1 t_i + \beta_2 X_i + \beta_3 \, t_i X_i \, + e_i
+\]</div>
+<p>这将产生如下的敏感度预测：</p>
+<div class="math notranslate nohighlight">
+\[
+\widehat{\frac{\delta y_i}{\delta t_i}} = \hat{\beta_1} + \hat{\beta_3}X_i
+\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(\beta_3\)</span> 是 <span class="math notranslate nohighlight">\(X\)</span> 中特征的向量系数。</p>
+<p>现在，由不同的 <span class="math notranslate nohighlight">\(X_i\)</span> 所定义的每个实体都会有不同的敏感度预测。换言之，敏感度预测随着 <span class="math notranslate nohighlight">\(X\)</span> 的变化而变化。因此，回归为我们提供了一种估计 CATE <span class="math notranslate nohighlight">\(E[y'(t)|X]\)</span> 的方法。</p>
+<p>我们终于走出了一步。上述模型使得我们能够为每个实体做出敏感度预测。有了这些预测，我们就可以构建更有用的分组：把预测敏感度高的单位归为一组，把预测敏感度低的单位归为另一组。总之，凭借敏感度预测，我们可以按照我们认为各实体对处理的响应程度来对其进行分组。</p>
+<p>理论讲得够多了。现在是时候通过一个例子来展示如何构建这类敏感度模型。考虑我们的冰淇淋例子。每个单位 <span class="math notranslate nohighlight">\(i\)</span> 是一天。对于每一天，我们知道它是否是工作日、制作冰淇淋的成本（你可以把成本视为质量的一个代理），以及当天的平均温度。这些构成了我们的特征空间 <span class="math notranslate nohighlight">\(X\)</span>。然后我们有处理变量——价格，以及结果变量——售出的冰淇淋数量。在此例中，我们假定处理是随机的，这样暂且不用担心偏倚。</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.formula.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">smf</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">GradientBoostingRegressor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">prices_rnd</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./data/ice_cream_sales_rnd.csv&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">prices_rnd</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">prices_rnd</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(5000, 5)
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>temp</th>
+      <th>weekday</th>
+      <th>cost</th>
+      <th>price</th>
+      <th>sales</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>25.8</td>
+      <td>1</td>
+      <td>0.3</td>
+      <td>7</td>
+      <td>230</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>22.7</td>
+      <td>3</td>
+      <td>0.5</td>
+      <td>4</td>
+      <td>190</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>33.7</td>
+      <td>7</td>
+      <td>1.0</td>
+      <td>5</td>
+      <td>237</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>23.0</td>
+      <td>4</td>
+      <td>0.5</td>
+      <td>5</td>
+      <td>193</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>24.4</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>3</td>
+      <td>252</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>请记住我们的目标：根据每日的特征 <code class="docutils literal notranslate"><span class="pre">temp</span></code>（温度）、<code class="docutils literal notranslate"><span class="pre">weekday</span></code>（是否工作日）和 <code class="docutils literal notranslate"><span class="pre">cost</span></code>（成本）决定何时提高价格、何时降低价格。如果这就是目标，那么处理效应异质性模型必须按照其在实现该目标中的效用来评估。我们马上会讨论这一点（并将在下一章详细展开）。眼下，我们先将数据集划分为训练集和测试集。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">prices_rnd</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>现在我们有了训练数据，需要构建一个模型，使我们能够区分对价格高度敏感的日子和对价格不敏感的日子。我们的做法很简单：直接预测价格敏感度。具体怎么做呢？首先，让我们考虑使用如下线性模型：</p>
+<div class="math notranslate nohighlight">
+\[
+sales_i = \beta_0 + \beta_1 price_i + \pmb{\beta_2} X_i + e_i
+\]</div>
+<p>通过查看该模型的参数，我们可以看到预测的敏感度会是什么样子。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">m1</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;sales ~ price + temp+C(weekday)+cost&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">train</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">m1</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span><span class="o">.</span><span class="n">tables</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><table class="simpletable">
+<tr>
+         <td></td>            <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th>       <td>  186.7113</td> <td>    1.770</td> <td>  105.499</td> <td> 0.000</td> <td>  183.241</td> <td>  190.181</td>
+</tr>
+<tr>
+  <th>C(weekday)[T.2]</th> <td>  -25.0512</td> <td>    0.924</td> <td>  -27.114</td> <td> 0.000</td> <td>  -26.863</td> <td>  -23.240</td>
+</tr>
+<tr>
+  <th>C(weekday)[T.3]</th> <td>  -24.5834</td> <td>    0.901</td> <td>  -27.282</td> <td> 0.000</td> <td>  -26.350</td> <td>  -22.817</td>
+</tr>
+<tr>
+  <th>C(weekday)[T.4]</th> <td>  -24.3807</td> <td>    0.897</td> <td>  -27.195</td> <td> 0.000</td> <td>  -26.138</td> <td>  -22.623</td>
+</tr>
+<tr>
+  <th>C(weekday)[T.5]</th> <td>  -24.9036</td> <td>    0.894</td> <td>  -27.850</td> <td> 0.000</td> <td>  -26.657</td> <td>  -23.150</td>
+</tr>
+<tr>
+  <th>C(weekday)[T.6]</th> <td>  -24.0921</td> <td>    0.903</td> <td>  -26.693</td> <td> 0.000</td> <td>  -25.862</td> <td>  -22.323</td>
+</tr>
+<tr>
+  <th>C(weekday)[T.7]</th> <td>   -0.8635</td> <td>    0.888</td> <td>   -0.972</td> <td> 0.331</td> <td>   -2.605</td> <td>    0.878</td>
+</tr>
+<tr>
+  <th>price</th>           <td>   -2.7515</td> <td>    0.106</td> <td>  -25.970</td> <td> 0.000</td> <td>   -2.959</td> <td>   -2.544</td>
+</tr>
+<tr>
+  <th>temp</th>            <td>    1.9848</td> <td>    0.060</td> <td>   33.117</td> <td> 0.000</td> <td>    1.867</td> <td>    2.102</td>
+</tr>
+<tr>
+  <th>cost</th>            <td>    4.4718</td> <td>    0.528</td> <td>    8.462</td> <td> 0.000</td> <td>    3.436</td> <td>    5.508</td>
+</tr>
+</table></div></div>
+</div>
+<p>对于模型 <span class="math notranslate nohighlight">\(m1\)</span>，预测的价格敏感度 <span class="math notranslate nohighlight">\(\widehat{\dfrac{\delta y_i}{\delta t_i}}\)</span> 等于 <span class="math notranslate nohighlight">\(\hat{\beta_1}\)</span>，在我们的例子中为 -2.75。这意味着冰淇淋价格每上涨 1 巴西雷亚尔，预计销量将下降约 3 单位。</p>
+<p>注意，<span class="math notranslate nohighlight">\(m1\)</span> 为每个人预测的敏感度完全相同。因此，如果我们想知道哪些日子人们对冰淇淋价格不那么敏感，它就不是一个很好的模型。它估计的是平均处理效应，而我们这里需要的是条件平均处理效应。记住，我们的目标是将实体划分成不同的组，以便为每个分组个性化并优化我们的处理（价格）。如果所有预测都是一样的，就没有办法划分。我们没有区分出敏感和不敏感的单位。为了解决这个问题，考虑第二个模型：</p>
+<div class="math notranslate nohighlight">
+\[
+sales_i = \beta_0 + \beta_1 price_i + \beta_2 \, price_i \times temp_i \, + \pmb{\beta_3} X_i + e_i
+\]</div>
+<p>这个第二个模型包括价格与温度之间的<strong>交互项</strong>，这意味着它允许敏感度在不同温度下有所不同。我们实际上是在说，人们对价格上涨的敏感程度取决于温度的高低。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">m2</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;sales ~ price*temp + C(weekday) + cost&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">train</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">m2</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span><span class="o">.</span><span class="n">tables</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><table class="simpletable">
+<tr>
+         <td></td>            <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th>       <td>  192.4767</td> <td>    4.371</td> <td>   44.037</td> <td> 0.000</td> <td>  183.907</td> <td>  201.046</td>
+</tr>
+<tr>
+  <th>C(weekday)[T.2]</th> <td>  -25.0805</td> <td>    0.924</td> <td>  -27.143</td> <td> 0.000</td> <td>  -26.892</td> <td>  -23.269</td>
+</tr>
+<tr>
+  <th>C(weekday)[T.3]</th> <td>  -24.5871</td> <td>    0.901</td> <td>  -27.290</td> <td> 0.000</td> <td>  -26.354</td> <td>  -22.821</td>
+</tr>
+<tr>
+  <th>C(weekday)[T.4]</th> <td>  -24.4225</td> <td>    0.897</td> <td>  -27.231</td> <td> 0.000</td> <td>  -26.181</td> <td>  -22.664</td>
+</tr>
+<tr>
+  <th>C(weekday)[T.5]</th> <td>  -24.8953</td> <td>    0.894</td> <td>  -27.844</td> <td> 0.000</td> <td>  -26.648</td> <td>  -23.142</td>
+</tr>
+<tr>
+  <th>C(weekday)[T.6]</th> <td>  -24.1269</td> <td>    0.903</td> <td>  -26.726</td> <td> 0.000</td> <td>  -25.897</td> <td>  -22.357</td>
+</tr>
+<tr>
+  <th>C(weekday)[T.7]</th> <td>   -0.8581</td> <td>    0.888</td> <td>   -0.966</td> <td> 0.334</td> <td>   -2.599</td> <td>    0.883</td>
+</tr>
+<tr>
+  <th>price</th>           <td>   -3.6299</td> <td>    0.618</td> <td>   -5.873</td> <td> 0.000</td> <td>   -4.842</td> <td>   -2.418</td>
+</tr>
+<tr>
+  <th>temp</th>            <td>    1.7459</td> <td>    0.176</td> <td>    9.912</td> <td> 0.000</td> <td>    1.401</td> <td>    2.091</td>
+</tr>
+<tr>
+  <th>price:temp</th>      <td>    0.0366</td> <td>    0.025</td> <td>    1.443</td> <td> 0.149</td> <td>   -0.013</td> <td>    0.086</td>
+</tr>
+<tr>
+  <th>cost</th>            <td>    4.4558</td> <td>    0.529</td> <td>    8.431</td> <td> 0.000</td> <td>    3.420</td> <td>    5.492</td>
+</tr>
+</table></div></div>
+</div>
+<p>一旦我们估计了该模型，预测的敏感度为</p>
+<div class="math notranslate nohighlight">
+\[
+\widehat{\frac{\delta sales_i}{\delta price_i}} = \hat{\beta_1} + \hat{\beta_2} \, temp_i
+\]</div>
+<p>注意，<span class="math notranslate nohighlight">\(\hat{\beta_2}\)</span> 为正值 0.03，而基线敏感度 <span class="math notranslate nohighlight">\(\beta_1\)</span>（在 0 摄氏度的敏感度）是 -3.6。这意味着平均而言，当价格上升时，销量会下降，这是合理的。这也意味着温度每上升一度，人们对冰淇淋价格上涨的敏感度会降低（虽然幅度不大）。例如，在 25 摄氏度时，冰淇淋价格每上涨 1 巴西雷亚尔，销量下降 2.8 单位 <span class="math notranslate nohighlight">\((-3.6 + (0.03 \times 25))\)</span>；而在 35 摄氏度时，价格每上涨 1 雷亚尔，销量只下降 2.5 单位 <span class="math notranslate nohighlight">\((-3.6 + (0.03 \times 35))\)</span>。这也算是直观的：天气越热，人们越愿意为冰淇淋支付更高的价格。</p>
+<p>我们还可以更进一步。下一个模型在整个特征空间上加入了交互项。这意味着敏感度会随着温度、星期几以及成本而变化。</p>
+<div class="math notranslate nohighlight">
+\[
+sales_i = \beta_0 + \beta_1 price_i + \pmb{\beta_2 X_i} \times price_i + \pmb{\beta_3} X_i + e_i
+\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">m3</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;sales ~ price*cost + price*C(weekday) + price*temp&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">train</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>根据上述模型，单位层面的敏感度，也即 CATE，可以表示为</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\delta Sales}{\delta Price} = \beta_1 + \pmb{\beta_2 X_i}
+\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(\beta_1\)</span> 是价格系数，<span class="math notranslate nohighlight">\(\pmb{\beta_2}\)</span> 是交互项系数的向量。</p>
+<p>最后，让我们看看如何实际做出这些敏感度预测。一种方法是直接从模型中提取敏感度参数并使用上面的公式。然而，我们将采用一种更通用的近似方法。既然敏感度不过是结果对处理的导数，我们可以利用导数的定义：</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\delta y}{\delta t} = \dfrac{y(t+\epsilon) - y(t)}{ (t + \epsilon) - t }
+\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(\epsilon\)</span> 趋于零。我们可以用 <span class="math notranslate nohighlight">\(\epsilon = 1\)</span> 来近似这个定义：</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\delta y}{\delta t} \approx \hat{y}(t+1) - \hat{y}(t)
+\]</div>
+<p>这里的 <span class="math notranslate nohighlight">\(\hat{y}\)</span> 是模型的预测值。换句话说，我将用模型做两次预测：一次使用原始数据，另一次使用将处理变量增加一个单位的原始数据。这两个预测的差就是我的 CATE 预测。</p>
+<p>下面可以看到一个实现这一操作的函数。由于我们已经使用训练集估计了模型，现在将在测试集上做预测。首先让我们使用第一个平均处理效应模型 <span class="math notranslate nohighlight">\(m1\)</span>。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">pred_sensitivity</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="s2">&quot;price&quot;</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
+        <span class="s2">&quot;pred_sens&quot;</span><span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="n">t</span><span class="p">:</span><span class="n">df</span><span class="p">[</span><span class="n">t</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">}))</span> <span class="o">-</span> <span class="n">m</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="p">})</span>
+
+<span class="n">pred_sensitivity</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="n">test</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>temp</th>
+      <th>weekday</th>
+      <th>cost</th>
+      <th>price</th>
+      <th>sales</th>
+      <th>pred_sens</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2648</th>
+      <td>18.6</td>
+      <td>7</td>
+      <td>0.5</td>
+      <td>10</td>
+      <td>185</td>
+      <td>-2.751463</td>
+    </tr>
+    <tr>
+      <th>2456</th>
+      <td>26.0</td>
+      <td>3</td>
+      <td>0.5</td>
+      <td>10</td>
+      <td>200</td>
+      <td>-2.751463</td>
+    </tr>
+    <tr>
+      <th>4557</th>
+      <td>23.7</td>
+      <td>3</td>
+      <td>0.3</td>
+      <td>8</td>
+      <td>192</td>
+      <td>-2.751463</td>
+    </tr>
+    <tr>
+      <th>4884</th>
+      <td>28.9</td>
+      <td>4</td>
+      <td>1.5</td>
+      <td>6</td>
+      <td>213</td>
+      <td>-2.751463</td>
+    </tr>
+    <tr>
+      <th>92</th>
+      <td>23.7</td>
+      <td>1</td>
+      <td>0.5</td>
+      <td>8</td>
+      <td>207</td>
+      <td>-2.751463</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>使用模型 <span class="math notranslate nohighlight">\(m1\)</span> 来预测敏感度毫无趣味。我们可以看到它对所有天都预测完全相同的值。这是因为该模型没有任何交互项。然而，如果我们使用模型 <span class="math notranslate nohighlight">\(m3\)</span> 进行预测，它会为每一天输出不同的敏感度预测。这是因为此时敏感度或处理效应取决于当天的特征。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pred_sens3</span> <span class="o">=</span> <span class="n">pred_sensitivity</span><span class="p">(</span><span class="n">m3</span><span class="p">,</span> <span class="n">test</span><span class="p">)</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">pred_sens3</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>temp</th>
+      <th>weekday</th>
+      <th>cost</th>
+      <th>price</th>
+      <th>sales</th>
+      <th>pred_sens</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>4764</th>
+      <td>31.1</td>
+      <td>6</td>
+      <td>1.0</td>
+      <td>3</td>
+      <td>212</td>
+      <td>1.144309</td>
+    </tr>
+    <tr>
+      <th>4324</th>
+      <td>24.8</td>
+      <td>7</td>
+      <td>0.5</td>
+      <td>10</td>
+      <td>182</td>
+      <td>-9.994303</td>
+    </tr>
+    <tr>
+      <th>4536</th>
+      <td>25.0</td>
+      <td>2</td>
+      <td>1.5</td>
+      <td>6</td>
+      <td>205</td>
+      <td>0.279273</td>
+    </tr>
+    <tr>
+      <th>3466</th>
+      <td>26.0</td>
+      <td>3</td>
+      <td>1.5</td>
+      <td>3</td>
+      <td>205</td>
+      <td>0.308320</td>
+    </tr>
+    <tr>
+      <th>115</th>
+      <td>19.3</td>
+      <td>3</td>
+      <td>0.3</td>
+      <td>9</td>
+      <td>177</td>
+      <td>-0.349745</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>注意这些预测的数值大约在 -9 到 1 之间。它们并不是对销售量列的预测，后者的数量级在数百。相反，<strong>它们是对将价格提高一个单位时销售量将变化多少的预测</strong>。一开始我们会看到一些奇怪的数字。例如，看看第 4764 天，它预测了正的敏感度。换句话说，我们预测如果提高冰淇淋价格，销量会增加。这与经济常识不符，很可能是模型在该点进行了奇怪的外推。幸运的是，你不必过于担心这一点。记得我们的最终目标是按单位对处理的敏感程度进行分组，<strong>并不是</strong>要得到最准确的敏感度预测。为达成我们的主要目标，只要敏感度预测能按照敏感度大小对单位排序即可。换句话说，即使像 1.1 或 0.5 这样的正敏感度预测看起来没有意义，我们所需要的只是排序正确，即预测值为 1.1 的单位对价格上涨的影响小于预测值为 0.5 的单位。</p>
+<p>好的，我们有了敏感度或 CATE 模型。但仍然有一个潜在的问题：它们与传统的机器学习预测模型相比如何？现在让我们试一下。我们将使用一种机器学习算法，把价格、温度、是否工作日以及成本作为特征 <span class="math notranslate nohighlight">\(X\)</span>，并尝试预测冰淇淋的销量。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;temp&quot;</span><span class="p">,</span> <span class="s2">&quot;weekday&quot;</span><span class="p">,</span> <span class="s2">&quot;cost&quot;</span><span class="p">,</span> <span class="s2">&quot;price&quot;</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;sales&quot;</span>
+<span class="n">ml</span> <span class="o">=</span> <span class="n">GradientBoostingRegressor</span><span class="p">()</span>
+<span class="n">ml</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">X</span><span class="p">],</span> <span class="n">train</span><span class="p">[</span><span class="n">y</span><span class="p">])</span>
+
+<span class="c1"># make sure the model is not overfiting.</span>
+<span class="n">ml</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="n">X</span><span class="p">],</span> <span class="n">test</span><span class="p">[</span><span class="n">y</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.9124088322890127
+</pre></div>
+</div>
+</div>
+</div>
+<p>该模型可以预测每天的销售量。但是它适合我们的真正需求吗？换言之，这个模型能区分哪些天人们对冰淇淋价格更敏感吗？它能帮助我们根据价格敏感度决定收取多少费用吗？</p>
+<p>为了看哪种模型更有用，让我们尝试利用它们来分割单位。对于每个模型，我们都将把单位划分为两组。我们希望其中一组对价格上涨反应强烈，另一组反应不那么明显。如果的确如此，我们就可以围绕这些分组来安排业务：对于落在高反应性组的日子，最好不要把价格定得太高；而对低反应性组，我们可以提高价格，而不会过多损失销量。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bands_df</span> <span class="o">=</span> <span class="n">pred_sens3</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span>
+    <span class="n">sens_band</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">qcut</span><span class="p">(</span><span class="n">pred_sens3</span><span class="p">[</span><span class="s2">&quot;pred_sens&quot;</span><span class="p">],</span> <span class="mi">2</span><span class="p">),</span> <span class="c1"># create two groups based on sensitivity predictions </span>
+    <span class="n">pred_sales</span> <span class="o">=</span> <span class="n">ml</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">pred_sens3</span><span class="p">[</span><span class="n">X</span><span class="p">]),</span>
+    <span class="n">pred_band</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">qcut</span><span class="p">(</span><span class="n">ml</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">pred_sens3</span><span class="p">[</span><span class="n">X</span><span class="p">]),</span> <span class="mi">2</span><span class="p">),</span> <span class="c1"># create two groups based on sales predictions</span>
+<span class="p">)</span>
+
+<span class="n">bands_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>temp</th>
+      <th>weekday</th>
+      <th>cost</th>
+      <th>price</th>
+      <th>sales</th>
+      <th>pred_sens</th>
+      <th>sens_band</th>
+      <th>pred_sales</th>
+      <th>pred_band</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2648</th>
+      <td>18.6</td>
+      <td>7</td>
+      <td>0.5</td>
+      <td>10</td>
+      <td>185</td>
+      <td>-10.301045</td>
+      <td>(-10.597999999999999, -0.00555]</td>
+      <td>186.878081</td>
+      <td>(161.089, 198.735]</td>
+    </tr>
+    <tr>
+      <th>2456</th>
+      <td>26.0</td>
+      <td>3</td>
+      <td>0.5</td>
+      <td>10</td>
+      <td>200</td>
+      <td>0.036165</td>
+      <td>(-0.00555, 1.389]</td>
+      <td>203.188327</td>
+      <td>(198.735, 257.746]</td>
+    </tr>
+    <tr>
+      <th>4557</th>
+      <td>23.7</td>
+      <td>3</td>
+      <td>0.3</td>
+      <td>8</td>
+      <td>192</td>
+      <td>-0.132057</td>
+      <td>(-10.597999999999999, -0.00555]</td>
+      <td>188.800637</td>
+      <td>(161.089, 198.735]</td>
+    </tr>
+    <tr>
+      <th>4884</th>
+      <td>28.9</td>
+      <td>4</td>
+      <td>1.5</td>
+      <td>6</td>
+      <td>213</td>
+      <td>0.860663</td>
+      <td>(-0.00555, 1.389]</td>
+      <td>210.430813</td>
+      <td>(198.735, 257.746]</td>
+    </tr>
+    <tr>
+      <th>92</th>
+      <td>23.7</td>
+      <td>1</td>
+      <td>0.5</td>
+      <td>8</td>
+      <td>207</td>
+      <td>-9.953698</td>
+      <td>(-10.597999999999999, -0.00555]</td>
+      <td>209.044522</td>
+      <td>(198.735, 257.746]</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>接下来，我们需要比较这两种分割方案中哪一种更好。我现在可能有点超前了，因为我们只有在下一章才会详细讨论 CATE 模型的评估。不过我想给你提前看看它的样子。一个非常简单的办法来检验这些分区方案的效果——这里的“好”指的是实用——就是在每个分区中绘制价格对销量的回归线。我们可以利用 Seaborn 的 <code class="docutils literal notranslate"><span class="pre">regplot</span></code> 加上 <code class="docutils literal notranslate"><span class="pre">FacetGrid</span></code> 来轻松实现。</p>
+<p>下面，我们可以看到利用敏感度预测所做的分区。请记住，所有这些都在测试集上完成。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">FacetGrid</span><span class="p">(</span><span class="n">bands_df</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="s2">&quot;sens_band&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">map_dataframe</span><span class="p">(</span><span class="n">sns</span><span class="o">.</span><span class="n">regplot</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;price&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;sales&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">set_titles</span><span class="p">(</span><span class="n">col_template</span><span class="o">=</span><span class="s2">&quot;Sens. Band </span><span class="si">{col_name}</span><span class="s2">&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/1cc7a907c13e804564b480ec4a058ed6d1435b4d0148f2c25139584c33466fd8.png" src="_images/1cc7a907c13e804564b480ec4a058ed6d1435b4d0148f2c25139584c33466fd8.png" />
+</div>
+</div>
+<p>正如我们所看到的，这种划分方案似乎是有用的。在第一组中，价格敏感度很高。随着价格的上涨，销量大幅下降。然而在第二组中，随着价格上涨，销量大致保持不变。实际上，销量看起来甚至会随着价格的提高而上升，但这很可能是噪声。</p>
+<p>对比用机器学习预测模型做出的分区：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">FacetGrid</span><span class="p">(</span><span class="n">bands_df</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="s2">&quot;pred_band&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">map_dataframe</span><span class="p">(</span><span class="n">sns</span><span class="o">.</span><span class="n">regplot</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;price&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;sales&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">set_titles</span><span class="p">(</span><span class="n">col_template</span><span class="o">=</span><span class="s2">&quot;Pred. Band </span><span class="si">{col_name}</span><span class="s2">&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/0b0be19bd10d100bcca7c37a5c074130bbb2f0ec364b281a7096a1edd42d436f.png" src="_images/0b0be19bd10d100bcca7c37a5c074130bbb2f0ec364b281a7096a1edd42d436f.png" />
+</div>
+</div>
+<p>我非常喜欢这幅图，因为它传达了一个重要的观点。如你所见，预测模型的分区是在 y 轴上分割单位。在第一组那样的日子，我们卖出的冰淇淋不多，而在第二组那样的日子，我们卖得更多。我觉得这很神奇，因为预测模型正是在做它应该做的事情：预测销售量。它能区分冰淇淋销量低的日子和销量高的日子。</p>
+<p>唯一的问题是这种预测在这里并不是特别有用。最终我们想知道什么时候可以提价，什么时候不能。但是当我们查看预测模型分区中回归线的斜率时，会发现它们几乎没有变化。换句话说，由预测模型所定义的两个分区对价格上涨的响应程度几乎相同。这并不能为我们提供多少关于哪些日子可以提高价格的洞见，因为看起来价格对销量根本没有影响。</p>
+</section>
+<section id="id4">
+<h2>关键观点<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<p>我们终于正式提出了条件平均处理效应的概念，以及它如何在个性化中发挥作用。也就是说，如果我们能够理解每个单位如何对处理作出反应，也即理解处理效应的异质性，那么我们就可以根据单位的个体特征给予最佳的处理。</p>
+<p>我们还将这一目标与预测模型的目标进行了对比。我们正在重新思考估计任务，从预测 <span class="math notranslate nohighlight">\(Y\)</span> 的原始形式转变为预测 <span class="math notranslate nohighlight">\(Y\)</span> 随 <span class="math notranslate nohighlight">\(T\)</span> 的变化率 <span class="math notranslate nohighlight">\(\frac{\delta y}{\delta t}\)</span>。</p>
+<p>遗憾的是，如何为此构建模型并不明显。由于我们无法直接观察敏感度，很难建立一个能够预测它的模型。但线性回归来帮忙了。通过拟合一个预测 <span class="math notranslate nohighlight">\(Y\)</span> 的回归模型，我们找到了一种方法来同时预测 <span class="math notranslate nohighlight">\(\frac{\delta y}{\delta t}\)</span>。我们还必须加入处理与特征的交互项。这样一来，我们的敏感度预测对每个顾客都不同。换句话说，我们实际上是在估计 <span class="math notranslate nohighlight">\(E[Y'(t) \,|\, X]\)</span>。然后利用这些敏感度预测，我们将单位分成对处理更敏感和不那么敏感的两类，最终帮助我们为每个分组决定合适的处理水平。</p>
+<p><img alt="img" src="_images/economists.png" /></p>
+<p>由此产生的一个自然问题是，我们是否可以用一种通用的机器学习模型替代线性回归，用它来预测敏感度？答案是可以的，但需要注意一些细节。本章使用了一个非常简单的 CATE 模型，因为我认为用线性回归更容易理解其背后的概念。不过别担心，在接下来的章节中我们会看到一些更复杂的模型。但在那之前，我需要先讲解一个非常重要的话题，即如何比较两个 CATE 模型并决定哪个更好。</p>
+</section>
+<section id="id5">
+<h2>参考说明<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<p>本章内容主要基于作者个人的经验总结，许多观点和方法源自实践中的体会。因此，无法提供严格意义上的学术参考文献。与正规科研工作不同，这些内容没有经过系统性的学术审查，也未经过同行评议与理论论证。读者或许会注意到，本文更多讨论的是“实践中有效的方法”，而非详细阐述其背后的理论基础。这种方法可以被视为“来自一线的经验科学”（a sort of science from the streets）。尽管如此，既然这些内容已公开发布，也非常欢迎批评与反馈——如果读者发现其中有明显错误或不妥之处，欢迎提出 issue，作者会尽力回应。</p>
+</section>
+<section id="id6">
+<h2>参与贡献<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<p><strong>《Causal Inference for the Brave and True》</strong> 是一本关于因果推断的开源教材，致力于以经济上可负担、认知上可理解的方式，普及这门“科学的统计基础”。全书基于 Python，仅使用自由开源软件编写，原始英文版本由 <a class="reference external" href="https://github.com/matheusfacure">Matheus Facure</a> 编写与维护。</p>
+<p>本书的中文版由黄文喆与许文立助理教授合作翻译，并托管在 <a class="reference external" href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh">GitHub 中文主页</a>。希望本地化的内容能帮助更多中文读者学习和掌握因果推断方法。</p>
+<p>如果你觉得这本书对你有帮助，并希望支持该项目，可以前往 <a class="reference external" href="https://www.patreon.com/causal_inference_for_the_brave_and_true">Patreon</a> 支持原作者。</p>
+<p>如果你暂时不方便进行经济支持，也可以通过以下方式参与贡献：</p>
+<ul class="simple">
+<li><p>修正错别字</p></li>
+<li><p>提出翻译或表达建议</p></li>
+<li><p>反馈你未能理解的部分内容</p></li>
+</ul>
+<p>欢迎前往英文版或中文版仓库点击 <a class="reference external" href="https://github.com/matheusfacure/python-causality-handbook/issues">issues 区</a> 或 <a class="reference external" href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh/issues">中文版 issues 区</a> 提出反馈。</p>
+<p>最后，如果你喜欢这本书的内容，也请将其分享给可能感兴趣的朋友，并为项目在 GitHub 上点亮一颗星：<a class="reference external" href="https://github.com/matheusfacure/python-causality-handbook">英文版仓库</a> / <a class="reference external" href="https://github.com/Wenzhe-Huang/python-causality-handbook-zh">中文版仓库</a>。</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="17-Predictive-Models-101.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">17 - 预测模型入门</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="19-Evaluating-Causal-Models.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">19 - 评估因果模型</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">从预测到因果推断</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cate">从平均处理效应到条件平均处理效应（CATE）</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">预测敏感度</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">关键观点</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">参考说明</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">参与贡献</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Matheus Facure (original work) and Wenzhe Huang & Wenli Xu (Chinese translation)
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
